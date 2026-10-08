@@ -1,0 +1,35 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a global system used to collect and track information on companies' environmental impacts, specifically on climate change, water, and deforestation. It's a standardized method for reporting non-financial data, which helps investors, policymakers, and other stakeholders to make informed decisions.
+
+The CDP framework assesses companies' efforts to mitigate climate change and their overall environmental performance. It's used to:
+
+1. **Measure and report greenhouse gas emissions**: Companies report their scope 1 (direct), scope 2 (indirect), and scope 3 (value chain) emissions, as well as their renewable energy use.
+2. **Assess water management practices**: Companies report their water usage, water risks, and strategies to manage water resources.
+3. **Evaluate deforestation and forest degradation**: Companies report on their supply chain's impact on forests, including their policies and practices related to forest conservation.
+
+Companies across various sectors and industries are required to report under the CDP framework, including:
+
+1. **Fortune 500 companies**: Many large, publicly traded companies, such as Apple, Google, and Walmart, report under CDP.
+2. **Major investors**: Investment firms, like BlackRock and Vanguard, use CDP data to inform their investment decisions.
+3. **Government agencies**: Governments, like the UK and the European Union, require companies to report under CDP as part of their climate change mitigation efforts.
+4. **Large private companies**: Companies like ExxonMobil, Shell, and Amazon report under CDP.
+5. **Sectors with high environmental impact**: Companies in industries like agriculture, mining, and energy production are often required to report under CDP due to their significant environmental footprint.
+
+To report under CDP, companies typically submit a response to the CDP questionnaire, which includes providing data and information on their environmental performance. The response is then reviewed and scored by CDP, with a score of A to D assigned to each company. Companies with a score of C or higher are considered to be ""leaders"" in environmental sustainability.
+
+Overall, the CDP framework is widely recognized as a global standard for corporate environmental disclosure, providing stakeholders with critical information to make informed decisions about investments, policies, and business practices.",80.57763004302979,ok,,0.0001710540811060065,0.1710540811060065,0.0002397592528408,1.91057293185819e-05,0.0,0.0002206535235222
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","A very specific question!
+
+ESG (Environmental, Social, and Governance) QA benchmarks typically involve questions related to companies' environmental, social, and governance practices. When it comes to uncertain responses, the literature often recommends using a ""Don't Know"" or ""Uncertain"" (DK/U) answer protocol.
+
+In this protocol, respondents are instructed to answer ""DK/U"" if they are unsure or lack sufficient information to provide a definitive answer to a particular question. This approach acknowledges that respondents may not have the necessary information or confidence to provide an accurate answer.
+
+Some common variations of the DK/U answer protocol include:
+
+1. **DK/U**: Respondents answer ""DK"" (Don't Know) if they are unsure or lack information, and ""U"" (Uncertain) if they have some information but are still uncertain.
+2. **DK**: Respondents answer ""DK"" if they are unsure or lack information, with no option to indicate the level of uncertainty.
+3. **U**: Respondents answer ""U"" if they are uncertain, with no option to indicate lack of information.
+
+The choice of answer protocol depends on the specific goals and design of the ESG QA benchmark, as well as the target audience and respondent characteristics.
+
+If you're interested in the specifics of a particular study or benchmark, I'd be happy to help you find more information!",45.303807497024536,ok,,9.692455960344699e-05,0.096924559603447,0.0001358550456217,1.0066479377348262e-05,0.0,0.0001257885662444

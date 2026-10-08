@@ -1,0 +1,2 @@
+model_name,num_queries,successful_queries,failed_queries,total_runtime_s,avg_latency_s,median_latency_s,total_emissions_kg,total_energy_kwh,avg_emissions_g_per_req,median_emissions_g_per_req
+llama3.1:latest+RAG,2,2,0,151.8617238998413,72.92727744579315,72.92727744579315,0.0007299684983047229,0.0010231658936122904,0.36498424915236144,0.36498424915236144

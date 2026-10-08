@@ -1,0 +1,23 @@
+question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+custom,anthony name,"Anthony!
+
+Anthony is a classic masculine given name that has been popular for centuries. Here are some interesting facts and associations with the name Anthony:
+
+1. **Origin**: The name Anthony is of Latin origin, derived from the name Antonius, which was given to the Roman general Mark Antony.
+2. **Meaning**: The name Anthony means ""priceless"" or ""invaluable"" in Latin.
+3. **Popularity**: Anthony has been a consistently popular name throughout history. It was a top 10 name in the US from 1880 to 1976, and remains a popular name today.
+4. **Notable Antonyms**: There have been many notable people with the name Anthony, including:
+	* Saint Anthony of Padua (1195-1231), a Catholic priest and doctor of the Church.
+	* Mark Antony (83-30 BCE), a Roman general and statesman.
+	* Tony Bennett (born 1926), an American singer and artist.
+	* Anthony Hopkins (born 1937), a Welsh actor and director.
+	* Anthony Hopkins (born 1957), an American football player.
+5. **Variations**: The name Anthony has many variations, including:
+	* Tony
+	* Antony
+	* Antone
+	* Antwon
+	* Antwan
+	* Antwon
+
+Overall, Anthony is a timeless and classic name that evokes a sense of strength, confidence, and sophistication.",llama3:latest,57.383015394210815,ok,,0.00012276782897887063,0.12276782897887063,0.0001720784605578,1.2749625019790627e-05,0.0,0.000159328835538

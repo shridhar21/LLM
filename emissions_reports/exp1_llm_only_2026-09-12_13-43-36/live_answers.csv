@@ -1,0 +1,45 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a widely recognized and used method for reporting an organization's environmental, social, and governance (ESG) performance. CDP is a non-profit organization that aims to promote transparency and accountability in the way companies manage their environmental impacts.
+
+The CDP framework is used for reporting on four areas:
+
+1. **Climate Change**: This includes greenhouse gas emissions, climate-related risks, and opportunities.
+2. **Water Security**: This includes water usage, water-related risks, and opportunities.
+3. **Forests**: This includes deforestation, habitat destruction, and other forest-related impacts.
+4. **Supply Chain**: This includes the environmental and social impacts of an organization's supply chain, including labor rights, human rights, and sustainability practices.
+
+Companies are not strictly ""required"" to report under the CDP framework, but many choose to do so for various reasons:
+
+1. **Stakeholder engagement**: Reporting to CDP helps companies engage with their stakeholders, including investors, customers, and NGOs, on their ESG performance.
+2. **Risk management**: By disclosing their environmental and social impacts, companies can better manage their risks and opportunities.
+3. **Regulatory compliance**: In some industries or countries, reporting to CDP is seen as a best practice or even a regulatory requirement.
+4. **Brand reputation**: Companies that report to CDP can demonstrate their commitment to sustainability and ESG performance, enhancing their brand reputation.
+
+Many large companies, as well as some smaller ones, report to CDP. Some examples of companies that have reported to CDP include:
+
+1. **Fortune Global 500** companies, such as Apple, Google, Microsoft, and Amazon.
+2. **Major international companies**, such as Unilever, Nestle, and Coca-Cola.
+3. **Banks and financial institutions**, such as JPMorgan Chase, Barclays, and HSBC.
+4. **Retail and consumer goods companies**, such as Walmart, Carrefour, and Tesco.
+
+In 2020, over 10,000 companies reported to CDP, including:
+
+* 10,700 companies in the Climate Change program
+* 8,400 companies in the Water Security program
+* 1,300 companies in the Forests program
+* 6,400 companies in the Supply Chain program
+
+While reporting to CDP is not mandatory, it has become a widely accepted and influential platform for ESG reporting and disclosure.",81.81630420684814,ok,,0.0001726619320872357,0.17266193208723568,0.0002420129093887,1.7931444666575996e-05,0.0,0.0002240814647221
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","A very specific question!
+
+ESG (Environmental, Social, and Governance) QA benchmarks typically involve assessing a company's performance on various ESG issues. For uncertain responses, a common answer protocol used is:
+
+**""Don't Know"" (DK) or ""Not Available"" (NA)**
+
+However, some sources also mention the following protocols:
+
+* **""Unable to Determine"" (UTD)**: This response indicates that the respondent is unsure or lacks sufficient information to provide a meaningful answer.
+* **""Not Applicable"" (N/A)**: This response is used when the question is not relevant to the company's operations or activities.
+* **""DK/NA/UTD""**: Some protocols use a combination of the above responses, allowing respondents to indicate that they either don't know, lack sufficient information, or consider the question not applicable.
+
+It's worth noting that the specific answer protocols used may vary depending on the ESG benchmark or rating agency.",31.694159746170044,ok,,6.780321538970213e-05,0.06780321538970213,9.503689217426828e-05,7.042100560416959e-06,0.0,8.79947916138513e-05

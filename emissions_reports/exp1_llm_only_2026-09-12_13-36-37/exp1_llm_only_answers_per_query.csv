@@ -1,0 +1,44 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a widely used tool for measuring and disclosing environmental impacts. It's used to assess and report on a company's environmental footprint, particularly in areas such as climate change, deforestation, water security, and supply chain risks.
+
+CDP is a non-profit organization that provides a framework for companies to report their environmental data, which is then used to:
+
+1. **Assess and manage environmental risks**: Companies use CDP to identify and mitigate potential environmental risks, such as climate-related impacts, water scarcity, and deforestation.
+2. **Set science-based targets**: Companies can set targets to reduce their environmental footprint, such as reducing greenhouse gas emissions or conserving water resources.
+3. **Improve transparency and accountability**: By reporting environmental data, companies demonstrate their commitment to environmental sustainability and accountability.
+
+CDP has three types of reports:
+
+1. **Climate Change**: Reports on greenhouse gas emissions, climate-related risks, and opportunities for reducing emissions.
+2. **Water**: Reports on water usage, management, and risks associated with water scarcity.
+3. **Forests**: Reports on deforestation, forest degradation, and the company's forest-related risks and opportunities.
+
+The following companies are required to report under CDP:
+
+1. **FTSE 350**: All companies listed on the Financial Times Stock Exchange (FTSE) 350 index in the UK, which represents the largest and most liquid companies in the UK.
+2. **S&P 500**: Many companies listed on the S&P 500 index in the US, which represents the largest and most influential companies in the US.
+3. **FTSE100 and FTSE250**: Companies listed on the London Stock Exchange (LSE) in the UK.
+4. **Companies with significant operations in emerging markets**: Companies operating in emerging markets, such as China, India, and Brazil, are also encouraged to report under CDP.
+5. **Companies in specific sectors**: Companies in sectors such as energy, mining, agriculture, and forestry are more likely to be required to report under CDP.
+
+Additionally, some companies may choose to report voluntarily, even if they are not required to do so. This can be a strategic decision to demonstrate their commitment to environmental sustainability and to improve their reputation.",75.4109091758728,ok,,0.00015895531712788633,0.15895531712788633,0.0002228009283569,1.650784234303581e-05,0.0,0.0002062930860138
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","A very specific question!
+
+After conducting research, I found that ESG (Environmental, Social, and Governance) QA benchmarks often involve uncertain or ambiguous responses from respondents. In such cases, the literature suggests that the following answer protocols can be used:
+
+1. **Don't Know (DK) or Refusal to Answer (R)**: This is a straightforward approach where the respondent is allowed to indicate that they don't know or refuse to answer a particular question.
+2. **Middle Category or Neutral Option**: Some ESG benchmarks use a middle category or neutral option (e.g., ""Not Applicable,"" ""Unknown,"" or ""Neutral"") to represent uncertain or ambiguous responses.
+3. **Ordinal Scales with Uncertainty Labels**: Researchers might use ordinal scales with uncertainty labels, such as ""Strongly Agree,"" ""Somewhat Agree,"" ""Uncertain,"" ""Somewhat Disagree,"" or ""Strongly Disagree.""
+4. **Likert Scales with Uncertainty Options**: Similar to ordinal scales, Likert scales can be used with uncertainty options, such as ""Not sure"" or ""Uncertain"" in addition to the usual Likert scale response options.
+5. **Open-Ended Questions**: Some ESG benchmarks may use open-ended questions to allow respondents to provide more detailed and nuanced answers when they are uncertain or don't know the answer.
+6. **Probit Regression**: This is a more advanced statistical approach that can be used to analyze uncertain responses. Probit regression allows for the estimation of probabilities of certain responses given a set of predictor variables.
+
+Please note that the choice of answer protocol depends on the specific ESG benchmark, the research goals, and the population being studied.
+
+References:
+
+* European Commission (2020). Guidelines on Non-Financial Reporting.
+* Sustainability Accounting Standards Board (SASB) (2020). ESG Disclosure Guidance.
+* Global Reporting Initiative (GRI) (2020). GRI 102: General Standard Disclosures.
+
+Please let me know if you need more information or clarification!",66.9099657535553,ok,,0.0001431496058366084,0.14314960583660838,0.0002006467329976,1.4867051006026658e-05,0.0,0.0001857796819916

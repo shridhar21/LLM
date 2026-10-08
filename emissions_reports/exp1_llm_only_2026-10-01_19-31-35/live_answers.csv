@@ -1,0 +1,164 @@
+question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+1,"What is the difference between Scope 1, Scope 2, and Scope 3 emissions?","In the context of greenhouse gas (GHG) emissions, Scope 1, Scope 2, and Scope 3 emissions refer to different categories of emissions that are typically reported by organizations, such as companies, governments, and institutions. The distinction between these scopes is important because it helps to clarify the sources of emissions and the responsibilities of different stakeholders.
+
+Here's a breakdown of each scope:
+
+**Scope 1 Emissions:**
+
+* These are emissions directly from an organization's operations, such as:
+	+ Fuel combustion from company-owned vehicles, equipment, and facilities
+	+ Industrial processes, such as cement production or chemical processing
+	+ Waste management and disposal
+* Examples: A company that owns and operates a fleet of trucks to transport goods, or a factory that uses steam turbines to generate electricity.
+
+**Scope 2 Emissions:**
+
+* These are emissions from an organization's consumption of purchased electricity, heat, or steam, such as:
+	+ Electricity used to power facilities, equipment, and lighting
+	+ Heat or steam used for industrial processes or building heating
+* Examples: A company that buys electricity from a utility company to power its offices, or a factory that uses steam from a nearby power plant.
+
+**Scope 3 Emissions:**
+
+* These are emissions from an organization's value chain, including:
+	+ Supply chain emissions, such as those from raw material extraction, processing, transportation, and manufacturing
+	+ Employee commuting and business travel
+	+ End-of-life emissions from products or services sold by the organization
+	+ Capital investments and financial investments
+* Examples: A company that sells products made from raw materials extracted from mines, forests, or farms, or a service provider that encourages customers to travel to use its services.
+
+In general, organizations are responsible for reporting and reducing their Scope 1 and Scope 2 emissions, as these are directly related to their operations and ownership. Scope 3 emissions, while also important, are often more complex to quantify and control, as they involve multiple stakeholders and industries.
+
+The Global Reporting Initiative (GRI) and the Greenhouse Gas Protocol (GHGP) are two widely used frameworks for categorizing and reporting GHG emissions. The GHGP defines these three scopes, which are often referred to as the ""Greenhouse Gas Protocol Scopes.""",llama3,80.04094696044922,ok,,0.00040223947298873063,0.40223947298873064,0.0005638020144465,0.000350442492222,0.0,0.0002133595222245
+2,Which reporting standard does the GRI framework primarily address?,The Global Reporting Initiative (GRI) framework primarily addresses the reporting standard known as the Sustainability Reporting Standard.,llama3,5.410198450088501,ok,,2.230855432602981e-05,0.022308554326029812,3.126895472229632e-05,2.0244358056e-05,0.0,1.1024596666296323e-05
+3,"What is the CDP framework used for, and which companies are required to report under it?","The Carbon Disclosure Project (CDP) framework is a global disclosure system that helps companies, cities, and organizations measure, manage, and report their environmental impacts, particularly in relation to climate change. The CDP framework is used to collect information on greenhouse gas (GHG) emissions, climate change risks and opportunities, and sustainability strategies.
+
+The CDP framework is used by companies, cities, and organizations to:
+
+1. Measure and report their GHG emissions, including scope 1 (direct), scope 2 (indirect), and scope 3 (value chain) emissions.
+2. Identify and manage climate-related risks and opportunities.
+3. Develop and implement strategies to reduce their environmental impact and achieve long-term sustainability.
+4. Engage with stakeholders, including investors, customers, and employees, to improve transparency and accountability.
+
+The CDP framework is voluntary, and companies are not required to report under it. However, many companies choose to participate in the CDP program because it provides:
+
+1. Global recognition and benchmarking: CDP is a widely recognized and respected framework, allowing companies to benchmark their performance against others in the same industry or sector.
+2. Investor and stakeholder engagement: CDP provides a platform for companies to engage with investors, customers, and other stakeholders who are interested in their environmental performance and sustainability strategies.
+3. Access to best practices and resources: CDP offers companies access to best practices, research, and resources to help them improve their environmental performance and sustainability.
+4. Compliance with regulatory requirements: Some countries and regions require companies to report their GHG emissions and sustainability performance under the CDP framework or other similar frameworks, such as the Global Reporting Initiative (GRI) or the Sustainability Accounting Standards Board (SASB).
+
+Companies that are required to report under the CDP framework include:
+
+1. Listed companies: Companies listed on stock exchanges in countries that require GHG emissions reporting, such as the United Kingdom, the European Union, and Japan.
+2. Large publicly traded companies: Companies with a market capitalization of over $1 billion, such as those listed on the S&P 500 or the FTSE 100.
+3. Companies in high-emitting sectors: Companies operating in sectors that are significant emitters of GHGs, such as energy, transportation, and manufacturing.
+4. Companies with significant climate-related risks: Companies operating in sectors or industries that are vulnerable to climate-related risks, such as agriculture, water, or infrastructure.
+
+Some examples of companies that are required to report under the CDP framework include:
+
+1. Royal Dutch Shell
+2. ExxonMobil
+3. BP
+4. Total
+5. Chevron
+6. Coca-Cola
+7. PepsiCo
+8. Nestle
+9. Unilever
+10. Procter & Gamble",llama3,100.42866635322571,ok,,0.0004923154589199696,0.49231545891996964,0.0006900577047295,0.000415352151667,0.0,0.0002747055530625
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","In ESG (Environmental, Social, and Governance) QA benchmarks, which often involve uncertain or ambiguous questions, various answer protocols can be used to handle uncertain responses. Here are a few common ones:
+
+1. **Multiple Choice**: This is a common approach in ESG QA benchmarks. When a respondent is unsure or uncertain, they are asked to select the most likely or plausible answer from a set of predefined options. This helps to reduce ambiguity and provide a clear answer.
+2. **Open-Ended Response**: In this approach, respondents are allowed to provide a free-text response to indicate their level of uncertainty or ambiguity. This can be useful when the question is complex or nuanced, and a respondent may need to provide a detailed explanation.
+3. **Likert Scale**: A Likert scale is a rating system that asks respondents to indicate their level of agreement or disagreement with a statement on a scale (e.g., 1-5, 1-7, or 1-9). This can help to capture uncertainty or ambiguity by asking respondents to rate their level of certainty or confidence.
+4. **Scale-Based Response**: Similar to the Likert scale, this approach asks respondents to rate their level of uncertainty or ambiguity on a scale (e.g., 1-5, 1-7, or 1-9). For example, ""How confident are you that the company is implementing effective ESG practices?""
+5. **Don't Know/Refused**: In some cases, respondents may simply indicate that they don't know or refuse to answer a question. This can be useful when the question is particularly challenging or complex.
+
+These answer protocols can help to mitigate the effects of uncertainty and ambiguity in ESG QA benchmarks, allowing for more accurate and reliable assessments of ESG performance.",llama3,61.523409843444824,ok,,0.00029995815741816804,0.29995815741816806,0.0004204386311105,0.000254025722777,0.0,0.0001664129083335
+5,Summarize how ESGBench evaluates factual consistency and traceability in ESG question answering.,"ESGBench is a comprehensive evaluation framework for ESG (Environmental, Social, and Governance) question answering systems. In this framework, factual consistency and traceability are crucial aspects evaluated to assess the quality of ESG question answering systems. Here's a summary of how ESGBench evaluates factual consistency and traceability:
+
+**Factual Consistency:**
+
+1. **Ground truthing**: ESGBench uses a set of gold-standard answers for a given set of ESG questions. These answers are considered the factual truth.
+2. **System answers**: The ESG question answering system provides answers to the same set of questions.
+3. **Factual consistency evaluation**: ESGBench compares the system answers with the gold-standard answers. It checks if the system answers are consistent with the factual truth. This evaluation assesses whether the system provides accurate and factually correct answers.
+
+**Traceability:**
+
+1. **Source attribution**: ESGBench evaluates whether the ESG question answering system provides source attribution for its answers. This involves checking if the system mentions the source of the information, such as a report, article, or dataset.
+2. **Citation generation**: ESGBench assesses whether the system can generate citations or references for its answers. This evaluation checks if the system can provide a credible and verifiable source for its claims.
+3. **Information retrieval**: ESGBench evaluates the system's ability to retrieve and provide relevant information from credible sources. This involves assessing whether the system can find and present relevant data, reports, or articles to support its answers.
+
+By evaluating factual consistency and traceability, ESGBench provides a comprehensive assessment of the ESG question answering system's ability to provide accurate, reliable, and trustworthy answers. This framework helps developers and users of ESG question answering systems to evaluate their performance and improve the overall quality of their systems.",llama3,62.543601989746094,ok,,0.00030516715821325794,0.30516715821325796,0.0004277398666648,0.0002582973663879,0.0,0.0001694425002768
+6,"Explain the difference between 'explainable' ESG QA and standard ESG QA, referencing ESGBench's design goals.","ESGBench, a benchmark for environmental, social, and governance (ESG) data quality, distinguishes between ""explainable"" ESG QA and standard ESG QA. The key difference lies in the level of transparency and interpretability provided for ESG data quality issues.
+
+**Standard ESG QA:**
+
+In standard ESG QA, the focus is on detecting and correcting errors or inconsistencies in ESG data. This approach is similar to traditional data quality assurance (QA) methods, where the goal is to ensure that the data is accurate, complete, and consistent. Standard ESG QA typically involves:
+
+1. Rule-based checks: Applying predefined rules to detect errors or inconsistencies in the data.
+2. Threshold-based validation: Verifying that the data meets certain thresholds or criteria.
+3. Error detection: Identifying specific errors or anomalies in the data.
+
+Standard ESG QA is essential for ensuring the quality of ESG data, but it has limitations. It does not provide insights into the underlying causes of errors or inconsistencies, making it challenging to improve the data quality over time.
+
+**Explainable ESG QA:**
+
+Explainable ESG QA takes a more comprehensive approach by not only detecting errors but also providing insights into the reasons behind them. This design goal is reflected in ESGBench's emphasis on explainability. Explainable ESG QA involves:
+
+1. Context-aware checks: Considering the context in which the data was collected or calculated, such as industry, region, or company-specific factors.
+2. Model-based explanations: Using machine learning or statistical models to identify patterns and relationships in the data, which can help explain the causes of errors or inconsistencies.
+3. Root cause analysis: Investigating the underlying causes of errors or inconsistencies, such as data source issues, calculation flaws, or incomplete information.
+
+Explainable ESG QA enables users to:
+
+1. Understand the reasons behind errors or inconsistencies, rather than just detecting them.
+2. Identify areas for improvement in ESG data collection, calculation, or reporting.
+3. Develop targeted strategies to enhance data quality and reduce errors over time.
+
+By incorporating explainability into ESG QA, ESGBench aims to support a more transparent and effective process for ensuring the quality of ESG data. This design goal is critical for building trust in ESG data and facilitating informed decision-making in areas such as investment, risk management, and sustainability reporting.",llama3,81.22095561027527,ok,,0.0003977849657737954,0.3977849657737954,0.0005575583205531,0.000336132891945,0.0,0.0002214254286081
+7,Assume a multinational tech company operates a massive global server network powered entirely by leased renewable energy. Detail the specific GHG Protocol accounting rules for how it should report its Scope 2 market-based versus location-based emissions.,"What a fantastic scenario! A multinational tech company operating a massive global server network powered entirely by leased renewable energy is a great step towards reducing its carbon footprint. Now, let's dive into the GHG Protocol accounting rules for reporting Scope 2 emissions, specifically focusing on market-based and location-based emissions.
+
+**Scope 2 Emissions**
+
+Scope 2 emissions refer to the direct greenhouse gas emissions from the generation of purchased electricity, heat, or steam. Since the company leases renewable energy, these emissions are generated by the renewable energy suppliers and are reported as Scope 2 emissions.
+
+**Market-Based Emissions**
+
+Market-based emissions are the emissions associated with the production of the purchased electricity, heat, or steam, regardless of the location where it was produced. This accounting approach considers the emissions intensity of the grid or fuel mix where the energy is generated, rather than the location where it is consumed.
+
+To report market-based emissions, the company should follow these steps:
+
+1. Determine the total amount of purchased electricity, heat, or steam in megawatt-hours (MWh) or equivalent units.
+2. Obtain the emissions intensity of the grid or fuel mix where the energy is generated. This can be obtained from the renewable energy supplier, a national or regional grid operator, or a reputable emissions intensity data provider.
+3. Calculate the market-based emissions by multiplying the total amount of purchased energy by the emissions intensity.
+
+Example: If the company purchases 100 MWh of wind energy, and the emissions intensity of the wind energy supplier is 50 gCO2e/kWh, the market-based emissions would be:
+
+100 MWh x 50 gCO2e/kWh = 5,000 kg CO2e
+
+**Location-Based Emissions**
+
+Location-based emissions are the emissions associated with the consumption of purchased electricity, heat, or steam at a specific location. This accounting approach considers the emissions intensity of the grid or fuel mix where the energy is consumed, rather than the location where it was produced.
+
+To report location-based emissions, the company should follow these steps:
+
+1. Determine the total amount of purchased electricity, heat, or steam in megawatt-hours (MWh) or equivalent units, as consumed at each specific location.
+2. Obtain the emissions intensity of the grid or fuel mix at each specific location. This can be obtained from the renewable energy supplier, a national or regional grid operator, or a reputable emissions intensity data provider.
+3. Calculate the location-based emissions by multiplying the total amount of purchased energy at each location by the emissions intensity at that location.
+
+Example: If the company has a server farm in California and consumes 50 MWh of wind energy, and the emissions intensity of the California grid is 100 gCO2e/kWh, the location-based emissions would be:
+
+50 MWh x 100 gCO2e/kWh = 5,000 kg CO2e
+
+**Reporting Requirements**
+
+The company should report both market-based and location-based emissions separately in the GHG inventory. The report should include the following information:
+
+* Total Scope 2 emissions (market-based and location-based)
+* Market-based emissions by fuel type (e.g., wind, solar, fossil fuels)
+* Location-based emissions by region or location (e.g., country, state, city)
+
+**Conclusion**
+
+In this scenario, the company should report both market-based and location-based Scope 2 emissions separately. Market-based emissions consider the emissions intensity of the grid or fuel mix where the energy is generated, while location-based emissions consider the emissions intensity at the point of consumption. By reporting both types of emissions, the company can provide a comprehensive picture of its Scope 2 emissions and contribute to a more accurate understanding of its overall greenhouse gas emissions.",llama3,132.30936646461487,ok,,0.000649401806745472,0.6494018067454721,0.0009102389780591,0.000548284639444,0.0,0.0003619543386151

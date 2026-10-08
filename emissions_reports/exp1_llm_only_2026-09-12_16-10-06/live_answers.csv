@@ -1,0 +1,24 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a globally recognized voluntary standard for measuring and reporting greenhouse gas (GHG) emissions, water usage, and deforestation/land use change impacts (CDP-DF). The framework is used by companies, cities, and other organizations to assess and manage their environmental impacts and report their progress to stakeholders.
+
+CDP is a non-profit organization that collects, analyzes, and reports data on environmental impacts. The framework is widely used by companies across various industries, including:
+
+1. Large corporations: Companies like Amazon, Microsoft, and Unilever use CDP to report on their environmental performance.
+2. Multinational corporations: Companies like Apple, Google, and Tesla use CDP to report on their supply chain impacts and GHG emissions.
+3. Energy and utilities: Companies like Royal Dutch Shell, TotalEnergies, and Enel use CDP to report on their energy production and consumption.
+4. Financial institutions: Banks and financial institutions like BlackRock, HSBC, and JPMorgan Chase use CDP to report on their environmental impacts.
+
+Companies are required to report under CDP based on their size and industry. The main categories for reporting under CDP are:
+
+1. A: Companies with annual revenues over $5 billion.
+2. B: Companies with annual revenues between $500 million and $5 billion.
+3. C: Companies with annual revenues under $500 million.
+
+However, not all companies need to report under CDP. Some examples of companies that may not need to report under CDP include:
+
+1. Small and medium-sized enterprises (SMEs).
+2. Companies with annual revenues under $500 million.
+3. Companies that are not required to report under other sustainability reporting frameworks, such as GRI (Global Reporting Initiative).
+
+It's worth noting that while CDP is a voluntary framework, some countries and states have made CDP reporting mandatory for certain industries or companies. For example, the UK has made CDP reporting mandatory for companies listed on the London Stock Exchange.",29.730488300323486,ok,,6.359965784674938e-05,0.06359965784674938,8.914494379598226e-05,6.605075004314196e-06,0.0,8.253986879166806e-05
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?",I can't find information on a specific answer protocol used for uncertain responses in ESG QA benchmarks in literature.,2.1414380073547363,ok,,4.572505292904057e-06,0.004572505292904057,6.409086796110761e-06,4.750362377757585e-07,0.0,5.9340505583350025e-06

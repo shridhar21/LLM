@@ -1,0 +1,42 @@
+question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a globally recognized system for measuring, reporting, and verifying an organization's environmental impact, particularly greenhouse gas (GHG) emissions. CDP is also known as the Global Standard on Climate Change, Water and Forests.
+
+The CDP framework is used to help organizations understand and manage their environmental impact, identify areas for improvement, and disclose their sustainability performance to stakeholders. The framework covers three main areas:
+
+1. Climate Change: Measures an organization's GHG emissions and removals, as well as its climate-related risks and opportunities.
+2. Water: Assesses an organization's water management practices, including water usage, risk, and opportunities for improvement.
+3. Forests: Evaluates an organization's forest management practices, including deforestation, forest degradation, and supply chain risks.
+
+Companies are required to report under CDP if they meet certain criteria, which vary depending on the sector and size of the organization. The CDP requirements are as follows:
+
+1. Small and medium-sized enterprises (SMEs): CDP offers a simplified version of the framework, called CDP Small, for SMEs with annual revenues of £10 million or less.
+2. Large corporations: Most large corporations with annual revenues of £10 million or more are required to report under CDP.
+3. Public sector organizations: Many public sector organizations, including government agencies and public companies, are required to report under CDP.
+4. Non-financial organizations: Some non-financial organizations, such as NGOs and educational institutions, may also be required to report under CDP.
+
+CDP reporting requirements are set by the following tiers:
+
+1. A (leader): Organizations that demonstrate exceptional environmental performance and leadership.
+2. B (contributor): Organizations that demonstrate good environmental performance and a commitment to reducing their environmental impact.
+3. C (ladder): Organizations that demonstrate basic environmental performance and a commitment to reducing their environmental impact.
+4. D (demonstrator): Organizations that demonstrate a basic level of environmental performance and a commitment to reducing their environmental impact.
+
+Companies that report under CDP are subject to various benefits, including:
+
+* Improved transparency and accountability
+* Enhanced reputation and credibility
+* Access to capital markets and investors
+* Opportunities for collaboration and knowledge sharing with other organizations
+* Alignment with regulatory requirements and industry standards
+
+Overall, the CDP framework provides a comprehensive and standardized approach to measuring and reporting an organization's environmental impact, helping companies to reduce their environmental footprint and contribute to a more sustainable future.",llama3.2:latest,35.526103019714355,ok,,7.600075744288239e-05,0.07600075744288239,0.0001065270392967,7.892851082804177e-06,0.0,9.863418821390344e-05
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","I'm not able to provide information on a specific answer protocol for uncertain responses in ESG QA benchmarks based on my training data. However, I can suggest some possible approaches that are commonly used in similar contexts:
+
+1. **Three-Rate Framework**: This framework involves providing three levels of responses to unclear or uncertain questions, such as:
+	* ""Undetermined"" or ""Not Applicable"" to indicate that the question cannot be answered with confidence.
+	* A ""Best Estimate"" or ""Expected"" response, which is a reasonable estimate based on available information.
+	* A ""Don't Know"" or ""N/A"" response, which indicates that the information is not available or cannot be provided.
+2. **Qualitative Scoring**: This approach involves assigning a qualitative score to responses, such as ""Strongly Agree,"" ""Moderately Agree,"" ""Neutral,"" ""Moderately Disagree,"" or ""Strongly Disagree,"" to indicate the level of uncertainty or confidence in the response.
+3. **Rating Scales**: This approach involves using numerical rating scales, such as 1-5 or 1-10, to indicate the level of uncertainty or confidence in the response.
+
+It's worth noting that the specific answer protocol used in ESG QA benchmarks may depend on the organization's policies, procedures, and guidelines for responding to uncertain or unclear questions.",llama3.2:latest,19.930846691131592,ok,,4.263380907634113e-05,0.04263380907634113,5.975800252065851e-05,4.428218637307291e-06,0.0,5.532978388335121e-05

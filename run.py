@@ -1,0 +1,366 @@
+import os
+import time
+import uuid
+import sys
+import json
+from datetime import datetime
+from pathlib import Path
+
+import faiss
+import pandas as pd
+import requests
+from sentence_transformers import SentenceTransformer
+from codecarbon import OfflineEmissionsTracker
+from measurement import finite, reading, complete_sum, coverage, stop_tracker
+from question_order import BANK, load_bank, select_questions, identity, save_order
+
+# Paths
+QUESTIONS_FILE = BANK
+RAG_INDEX_DIR = Path("indexes/rag_faiss")
+COUNTRY_ISO = "IND"
+MODEL_NAME = "llama3.1:latest"
+
+def query_llm(prompt: str, model: str = MODEL_NAME) -> str:
+    """Send prompt to local Ollama instance and return generated response."""
+    url = "http://127.0.0.1:11434/api/generate"
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "keep_alive": "15m",  # Added to prevent model unloading
+    }
+    response = requests.post(url, json=payload, timeout=9000)
+    response.raise_for_status()
+    data = response.json()
+    
+    if "response" in data:
+        return data["response"].strip()
+    elif "message" in data and "content" in data["message"]:
+        return data["message"]["content"].strip()
+    else:
+        return str(data)
+
+def load_questions(path: Path = QUESTIONS_FILE):
+    if Path(path).name == BANK.name:
+        return load_bank(path)
+    if not path.exists():
+        print(f"File not found: {path}")
+        return pd.DataFrame()
+        
+    df = pd.read_excel(path)
+    
+    # Normalize column names
+    df.columns = [str(c).lower().strip() for c in df.columns]
+    
+    if "questions" in df.columns:
+        df = df.rename(columns={"questions": "Question"})
+    elif "question" in df.columns:
+        df = df.rename(columns={"question": "Question"})
+    else:
+        raise ValueError(f"'Question' column not found. Found: {df.columns.tolist()}")
+        
+    if "question id" in df.columns:
+        df = df.rename(columns={"question id": "Question ID"})
+    elif "Question ID" not in df.columns:
+        df["Question ID"] = range(1, len(df) + 1)
+        
+    return df
+
+def load_rag_index():
+    index_file = RAG_INDEX_DIR / "index.faiss"
+    chunks_file = RAG_INDEX_DIR / "chunks.json"
+
+    if not index_file.exists() or not chunks_file.exists():
+        raise FileNotFoundError(f"FAISS index or chunks not found. Please run rag_setter.py first.")
+
+    index = faiss.read_index(str(index_file))
+    with open(chunks_file, "r", encoding="utf-8") as f:
+        chunks = json.load(f)
+
+    return index, chunks
+
+def build_augmented_prompt(query: str, contexts: list) -> str:
+    if not contexts:
+        return (
+            f"You are a helpful assistant.\n\n"
+            f"Question: {query}\n\n"
+            f"Answer clearly and concisely based on your general knowledge."
+        )
+
+    context_block = "\n\n".join(contexts)
+    return (
+        f"You are a helpful assistant.\n\n"
+        f"Use the following context to help answer the question:\n"
+        f"---------------------\n"
+        f"{context_block}\n"
+        f"---------------------\n\n"
+        f"Question: {query}\n\n"
+        f"Answer clearly and concisely."
+    )
+
+def make_tracker(project_name: str, output_dir: Path, output_file: str = "emissions.csv"):
+    output_dir.mkdir(parents=True, exist_ok=True)
+    tracker = OfflineEmissionsTracker(
+        project_name=project_name,
+        output_dir=str(output_dir),
+        output_file=output_file,
+        country_iso_code=COUNTRY_ISO,
+        tracking_mode="machine",
+        save_to_api=False,
+        pue=1.0,                  # Added: Direct device-level benchmark baseline
+        measure_power_secs=1,     # Added: 1-second polling to capture short inferences
+        log_level="error",
+        allow_multiple_runs=True,
+    )
+    return tracker
+
+def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=None):
+    if not emissions_csv.exists():
+        return None
+    try:
+        df = pd.read_csv(emissions_csv)
+    except Exception:
+        return None
+    if df.empty:
+        return None
+        
+    if "run_id" in df.columns:
+        if expected_run_id is None:
+            return None
+        new_df = df[(df["run_id"].astype(str) == str(expected_run_id)) & ~df["run_id"].astype(str).isin(known_run_ids)]
+        if not new_df.empty:
+            return new_df.iloc[-1].to_dict()
+            
+    return None  # Never substitute an earlier session's measurements.
+
+def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, embedder, model_name: str = "llama3"):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    
+    if batch_mode:
+        run_dir = Path(f"emissions_reports/exp2_rag_{timestamp}")
+    else:
+        run_dir = Path("emissions_reports/temp_manual_run")
+        
+    run_dir.mkdir(parents=True, exist_ok=True)
+    
+    emissions_filename = "emissions.csv" if batch_mode else "temp_emissions.csv"
+    emissions_csv = run_dir / emissions_filename
+    
+    known_run_ids = set()
+    if emissions_csv.exists() and batch_mode:
+        try:
+            old = pd.read_csv(emissions_csv)
+            if "run_id" in old.columns:
+                known_run_ids = set(old["run_id"].astype(str).tolist())
+        except Exception:
+            pass
+    elif emissions_csv.exists() and not batch_mode:
+        try:
+            os.remove(emissions_csv)
+        except Exception:
+            pass
+
+# ---> NEW: Clear old live answers to prevent column mismatch crashes
+    live_csv = run_dir / "answers.csv"
+    if live_csv.exists() and not batch_mode:
+        try:
+            os.remove(live_csv)
+        except Exception:
+            pass
+
+# ---> NEW WARMUP BLOCK GOES HERE <---
+    if batch_mode:
+        print("\nWarming up LLM into VRAM...")
+        try:
+            query_llm("Warmup", model=model_name)
+        except Exception:
+            pass
+
+    rows = []
+    if batch_mode:
+        save_order(queries_df, run_dir)
+    run_start = time.time()
+    
+    for _, row_data in queries_df.iterrows():
+        qid = row_data.get("Question ID", "custom")
+        q = str(row_data["Question"])
+        
+        print(f"\n[RAG] Running prompt: {q[:80]}...")
+        
+        # --- PHASE 1: RETRIEVAL ---
+        tracker_ret = make_tracker(f"RAG_ret_q{qid}_{uuid.uuid4().hex[:4]}", run_dir, emissions_filename)
+        tracker_ret.start()
+        t_ret_start = time.time()
+        
+        q_emb = embedder.encode([q], convert_to_numpy=True).astype("float32")
+        distances, idxs = index.search(q_emb, k=3)
+        # Threshold for L2 distance (all-MiniLM-L6-v2)
+        # Any chunk with distance > 1.3 is considered irrelevant noise
+        DISTANCE_THRESHOLD = 1.3
+        retrieved_chunks = [
+            chunks[idx] for dist, idx in zip(distances[0], idxs[0]) 
+            if idx < len(chunks) and dist <= DISTANCE_THRESHOLD
+        ]
+        
+        ret_latency_s = time.time() - t_ret_start
+        ret_emissions_kg = stop_tracker(tracker_ret, run_dir)
+        
+        row_ret = latest_row_for_run(emissions_csv, known_run_ids, getattr(tracker_ret, '_run_id', None))
+        if row_ret and "run_id" in row_ret:
+            known_run_ids.add(str(row_ret["run_id"]))
+
+        # --- PHASE 2: GENERATION ---
+        tracker_gen = make_tracker(f"RAG_gen_q{qid}_{uuid.uuid4().hex[:4]}", run_dir, emissions_filename)
+        tracker_gen.start()
+        t_gen_start = time.time()
+        
+        augmented_prompt = build_augmented_prompt(q, retrieved_chunks)
+        
+        try:
+            ans = query_llm(augmented_prompt, model=model_name)
+            status = "ok"
+            error_msg = ""
+        except Exception as e:
+            ans = ""
+            status = "error"
+            error_msg = str(e)
+            print(f"  ✗ Error: {error_msg}")
+            
+        gen_latency_s = time.time() - t_gen_start
+        gen_emissions_kg = stop_tracker(tracker_gen, run_dir)
+        
+        row_gen = latest_row_for_run(emissions_csv, known_run_ids, getattr(tracker_gen, '_run_id', None))
+        if row_gen and "run_id" in row_gen:
+            known_run_ids.add(str(row_gen["run_id"]))
+            
+        # --- COMBINED METRICS ---
+        total_latency_s = ret_latency_s + gen_latency_s
+        total_emissions_kg = ret_emissions_kg + gen_emissions_kg
+        
+        ret_energy = reading(row_ret, 'energy_consumed')
+        gen_energy = reading(row_gen, 'energy_consumed')
+        total_energy = ret_energy + gen_energy
+        
+        cpu_energy = reading(row_ret, 'cpu_energy') + reading(row_gen, 'cpu_energy')
+        gpu_energy = reading(row_ret, 'gpu_energy') + reading(row_gen, 'gpu_energy')
+        ram_energy = reading(row_ret, 'ram_energy') + reading(row_gen, 'ram_energy')
+
+        
+        print(f"\n--- ANSWER --- \n{ans}\n--------------")
+        print(f"Retrieval Latency: {ret_latency_s:.2f}s | Generation Latency: {gen_latency_s:.2f}s")
+        print(f"Total emissions: {total_emissions_kg * 1000:.4f} g CO2eq")
+        
+        if not batch_mode:
+            print(f"Total Energy Consumed: {total_energy:.6f} kWh")
+        
+        rows.append({
+            **identity(row_data, len(rows) + 1),
+            "question_id": qid,
+            "question": q,
+            "answer": ans,
+            "model_name": model_name,
+            "status": status,
+            "error": error_msg,
+            "chunks": retrieved_chunks,
+            "retrieved_k": len(retrieved_chunks),
+            "retrieval_latency_s": ret_latency_s,
+            "generation_latency_s": gen_latency_s,
+            "total_latency_s": total_latency_s,
+            "retrieval_emissions_kg": ret_emissions_kg,
+            "generation_emissions_kg": gen_emissions_kg,
+            "total_emissions_kg": total_emissions_kg,
+            "total_emissions_g": total_emissions_kg * 1000.0,
+            "energy_kwh": total_energy,
+            "retrieval_energy_kwh": ret_energy,
+            "generation_energy_kwh": gen_energy,
+            "cpu_energy_kwh": cpu_energy,
+            "gpu_energy_kwh": gpu_energy,
+            "ram_energy_kwh": ram_energy,
+        })
+        # Save each result as it completes.
+        live_csv = run_dir / "answers.csv"
+        pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+    total_runtime_s = time.time() - run_start
+    answers_df = pd.DataFrame(rows)
+    
+    if batch_mode:
+        answers_path = run_dir / "answers.csv"
+        summary_path = run_dir / "summary.csv"
+        
+        success_df = answers_df[answers_df["status"] == "ok"]
+        total_emissions_kg = complete_sum(answers_df["total_emissions_kg"])
+        total_energy_kwh = complete_sum(answers_df["energy_kwh"])
+        
+        summary_df = pd.DataFrame([{
+            "model_name": f"{model_name}+RAG",
+            "num_queries": len(answers_df),
+            "successful_queries": int((answers_df["status"] == "ok").sum()),
+            "failed_queries": int((answers_df["status"] == "error").sum()),
+            "total_runtime_s": total_runtime_s,
+            "avg_latency_s": answers_df["total_latency_s"].mean(),
+            "median_latency_s": answers_df["total_latency_s"].median(),
+            "total_emissions_kg": total_emissions_kg,
+            "total_energy_kwh": total_energy_kwh,
+            "avg_emissions_g_per_req": answers_df["total_emissions_g"].mean(),
+            "median_emissions_g_per_req": answers_df["total_emissions_g"].median(),
+        }])
+        
+        for metric in ("total_emissions_kg", "energy_kwh", "cpu_energy_kwh", "gpu_energy_kwh", "ram_energy_kwh"):
+            for key, value in coverage(answers_df[metric]).items():
+                summary_df[f"{metric}_{key}"] = value
+        summary_df.to_csv(summary_path, index=False)
+        print(f"\nSaved RAG batch results to {answers_path}")
+        print(f"Saved RAG batch summary to {summary_path}")
+    else:
+        if emissions_csv.exists():
+            try:
+                os.remove(emissions_csv)
+            except Exception:
+                pass
+
+
+def main():
+    print("Loading RAG index and embedding model...")
+    try:
+        index, chunks = load_rag_index()
+        embedder = SentenceTransformer("all-MiniLM-L6-v2")
+    except Exception as e:
+        print(f"Failed to load index or model: {e}")
+        return
+
+    while True:
+        print("\n" + "="*45)
+        print("RAG Pipeline Query Options:")
+        print("1. Run a specific question (choose topic sheet and serial number)")
+        print("2. Run the entire question bank")
+        print("3. Run a range (choose topic sheet and serial numbers)")
+        print("4. Write a custom prompt")
+        print("5. Exit")
+        print("="*45)
+        
+        choice = input("Select an option (1-5): ").strip()
+        
+        if choice in ('1', '2', '3'):
+            try:
+                df_q = select_questions(choice)
+            except ValueError as exc:
+                print(exc)
+                continue
+            process_queries(df_q, batch_mode=(choice != '1'), index=index, chunks=chunks, embedder=embedder)
+            
+        elif choice == '4':
+            user_query = input("\nEnter your custom prompt: ").strip()
+            if not user_query:
+                print("Prompt cannot be empty.")
+                continue
+            df_q = pd.DataFrame([{"Question ID": "custom", "Question": user_query}])
+            process_queries(df_q, batch_mode=False, index=index, chunks=chunks, embedder=embedder)
+            
+        elif choice == '5':
+            print("Exiting RAG Pipeline...")
+            break
+        else:
+            print("Invalid selection. Please try again.")
+
+if __name__ == "__main__":
+    main()

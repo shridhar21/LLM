@@ -1,0 +1,2 @@
+num_new_docs,num_modified_docs,num_unchanged_docs,num_new_chunks,num_replacement_chunks,total_docs_in_index,total_chunks_in_index,index_runtime_s,index_emissions_kg,index_emissions_g,total_energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh,embedding_model,chunk_size,chunk_overlap,index_type
+1,0,17,1,0,19,4097,13.619284391403198,3.097334521188404e-05,0.030973345211884037,4.341402472227421e-05,1.4899165278000002e-05,0.0,2.8514859444274203e-05,all-MiniLM-L6-v2,800,200,IndexFlatL2

@@ -1,0 +1,37 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a widely recognized and used framework for measuring and reporting an organization's environmental impact, particularly in the areas of climate change, deforestation, water, and supply chain. The framework is used to help organizations:
+
+1. **Measure and disclose their greenhouse gas (GHG) emissions** and reduction targets.
+2. **Assess and report on their water management practices** and water usage.
+3. **Report on their supply chain risks** related to environmental issues, such as deforestation, water pollution, and labor practices.
+4. **Monitor and manage their environmental impacts**, including waste, energy consumption, and biodiversity.
+
+Companies are encouraged, but not required, to report under the CDP framework. However, many companies choose to do so voluntarily as a way to:
+
+1. Demonstrate their commitment to environmental sustainability and corporate social responsibility.
+2. Identify areas for improvement and opportunities for cost savings through environmental efficiency.
+3. Enhance their reputation and brand value by showcasing their environmental performance.
+4. Meet the requirements of investors, customers, and other stakeholders who demand transparency and accountability on environmental issues.
+
+Some of the companies that are required to report under the CDP framework include:
+
+1. **Listed companies** on major stock exchanges, such as the London Stock Exchange (LSE), New York Stock Exchange (NYSE), and NASDAQ.
+2. **Companies with significant carbon footprint**, such as those in the energy, manufacturing, and transportation sectors.
+3. **Companies with high exposure to climate-related risks**, such as those with operations in coastal areas or those with significant supply chain dependencies.
+4. **Companies with significant water usage**, such as those in the agricultural, mining, or manufacturing sectors.
+
+Examples of companies that have reported under the CDP framework include:
+
+* Apple
+* Google
+* Microsoft
+* Amazon
+* ExxonMobil
+* Shell
+* BP
+* Unilever
+* Coca-Cola
+* PepsiCo
+
+While reporting under the CDP framework is not mandatory, many companies see it as a valuable opportunity to demonstrate their commitment to environmental sustainability and to improve their environmental performance.",70.31630396842957,ok,,0.00015043735105175986,0.15043735105175984,0.0002108616564674,1.5623092245161897e-05,0.0,0.0001952385642222
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","I'm not able to provide a specific answer protocol for handling uncertain responses in ESG (Environmental, Social, and Governance) QA benchmarks as my current information does not include detailed protocols for this specific scenario. ESG benchmarks and their associated methodologies are continually evolving as new research and best practices emerge. For the most accurate and up-to-date information, consulting the latest literature or the official resources of ESG benchmark providers would be advisable.",14.77558970451355,ok,,3.1604712873163716e-05,0.031604712873163715,4.429898600327668e-05,3.282300436623989e-06,0.0,4.101668556665269e-05

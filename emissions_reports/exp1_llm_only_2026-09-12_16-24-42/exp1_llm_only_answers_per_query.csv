@@ -1,0 +1,50 @@
+question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Carbon Disclosure Project) framework is a widely used tool for measuring and reporting an organization's environmental impact, specifically on greenhouse gas (GHG) emissions, water use, and other sustainability metrics. It's an annual reporting process that provides stakeholders with information about an organization's:
+
+1. **Greenhouse gas (GHG) emissions**: Scope 1 (direct emissions), Scope 2 (indirect emissions from energy consumption), and Scope 3 (indirect emissions from supply chain, product use, and disposal).
+2. **Water usage**: Quantifying and reporting water usage, including both direct and indirect uses.
+3. **Supply chain management**: Reporting on the organization's efforts to manage and mitigate environmental risks and impacts in its supply chain.
+4. **Biodiversity**: Reporting on policies and practices related to biodiversity conservation and management.
+
+The CDP framework is used by various stakeholders, including:
+
+1. **Investors**: To assess companies' environmental performance, identify risks, and make informed investment decisions.
+2. **Policymakers**: To inform policy decisions and set regulatory standards for environmental sustainability.
+3. **Customers**: To make informed choices about the environmental impact of the products and services they purchase.
+4. **NGOs and advocacy groups**: To track and analyze companies' environmental performance and advocate for improved practices.
+
+As for which companies are required to report under CDP, the framework is open to any organization, but some countries and industries have mandatory reporting requirements. For example:
+
+1. **The European Union's (EU) Non-Financial Reporting Directive**: Requires large publicly traded companies to report on their environmental, social, and governance (ESG) performance, including under CDP.
+2. **The UK's Modern Slavery Act**: Requires companies with a turnover of £36 million or more to report on their modern slavery risks and efforts to prevent it, which often involves CDP reporting.
+3. **The UK's Climate Change Act**: Sets a framework for companies to report on their GHG emissions and climate-related risks.
+
+In addition, many countries and regions have voluntary CDP reporting requirements, and some industries, like finance and energy, have a higher level of participation.
+
+Some notable companies that report under CDP include:
+
+1. Apple
+2. Microsoft
+3. Amazon
+4. Google
+5. Facebook
+6. ExxonMobil
+7. Shell
+8. BP
+9. Royal Dutch Shell
+10. Procter & Gamble
+
+These companies, and many others, recognize the importance of transparency and accountability in environmental sustainability reporting.",llama3.1:latest,86.73998522758484,ok,,0.0001831959451860971,0.1831959451860971,0.0002567779889102,1.9025259499158403e-05,0.0,0.000237752729411
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","A very specific question!
+
+After conducting research, I found that ESG (Environmental, Social, and Governance) QA benchmarks typically follow a protocol to handle uncertain responses. The answer protocol used in ESG QA benchmarks is often referred to as ""Don't Know"" or ""DK"" marking.
+
+In ESG QA benchmarks, respondents are asked to rate companies on various ESG criteria, and the responses are often measured on a scale (e.g., 1-5 or 1-10). However, in cases where respondents are unsure or lack sufficient information to provide a rating, they are typically instructed to mark their answer as ""Don't Know"" or simply ""DK"".
+
+This ""DK"" marking is used to indicate that the respondent is uncertain or lacks sufficient information to provide a rating. The ""DK"" responses are then often treated separately in the analysis and reporting process.
+
+For example, in the Global Reporting Initiative (GRI) guidelines, which is a widely used framework for reporting ESG information, the guidelines suggest that respondents should indicate ""DK"" or ""Not Available"" for questions where they lack sufficient information to provide a rating.
+
+It's worth noting that different ESG QA benchmark providers may have slightly different answer protocols, but the ""DK"" marking is a common approach used to handle uncertain responses.
+
+If you have any further questions or would like more specific information on a particular ESG QA benchmark, please let me know!",llama3.1:latest,46.110748052597046,ok,,9.865185364430122e-05,0.09865185364430122,0.000138276120442,1.024565714205508e-05,0.0,0.0001280304633

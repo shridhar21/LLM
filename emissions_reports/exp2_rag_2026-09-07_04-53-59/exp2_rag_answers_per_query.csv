@@ -1,0 +1,17 @@
+question_id,question,answer,status,error,retrieved_k,retrieval_latency_s,generation_latency_s,total_latency_s,retrieval_emissions_kg,generation_emissions_kg,total_emissions_kg,total_emissions_g,energy_kwh,retrieval_energy_kwh,generation_energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+32,Simulate diagnosing a failing CI/CD pipeline where the error log indicates a missing shared object file (.so) during a Docker build. Detail the specific Dockerfile additions and package manager commands needed to resolve it.,,error,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=120)",3,0.06687736511230469,122.0608856678009,122.12776303291321,2.1818631012605952e-07,0.0006081415458035436,0.0006083597321136696,0.6083597321136697,0.0008527120422202648,3.058224998648235e-07,0.0008524062197204,0.0005137288341669,0.0,0.00033898320805326483
+33,Write a function in Python that sorts a list of dictionaries based on a specific key value.,"Here is a simple function in Python that sorts a list of dictionaries based on a specific key value:
+
+```python
+def sort_dict_list(dict_list, key):
+    return sorted(dict_list, key=lambda x: x[key])
+
+# Example usage:
+dict_list = [{'energy (kWh)': 1, 'co2eq (g)': 2}, {'energy (kWh)': 3, 'co2eq (g)': 4}, {'energy (kWh)': 5, 'co2eq (g)': 6}]
+sorted_dict_list = sort_dict_list(dict_list, 'energy (kWh)')
+print(sorted_dict_list)
+```
+
+This function uses the built-in `sorted()` function in Python, which returns a new sorted list from the elements of any sequence. The `key` argument is a function that takes a dictionary and returns the value to be used for sorting.
+
+**Note**: This function sorts the list in ascending order. If you want to sort it in descending order, you can use the `reverse=True` argument with the `sorted()` function, like this: `sorted(dict_list, key=lambda x: x[key], reverse=True)`.",ok,,3,0.04929184913635254,234.46115469932556,234.5104465484619,9.322691966116175e-09,0.0008254257378254046,0.0008254350605173706,0.8254350605173706,0.0011569773261101495,1.3067222049358216e-08,0.0011569642588881,0.0004259187241659,0.0,0.0007310586019441494

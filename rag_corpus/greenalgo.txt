@@ -1,0 +1,673 @@
+1
+Green Algorithms: Quantifying the carbon
+footprint of computation
+Loïc Lannelongue^1,4,7 , Jason Grealey^ 2,3 , Michael Inouye* 1,2,4,5,6,7,8
+1 Cambridge Baker Systems Genomics Initiative, Department of Public Health and Primary Care, University of Cambridge,
+Cambridge, UK
+2 Cambridge Baker Systems Genomics Initiative, Baker Heart and Diabetes Institute, Melbourne, Victoria, Australia
+3 Department of Mathematics and Statistics, La Trobe University, Melbourne, Australia
+4 British Heart Foundation Cardiovascular Epidemiology Unit, Department of Public Health and Primary Care, University of
+Cambridge, Cambridge, UK
+5 British Heart Foundation Centre of Research Excellence, University of Cambridge, Cambridge, UK
+6 National Institute for Health Research Cambridge Biomedical Research Centre, University of Cambridge and Cambridge
+University Hospitals, Cambridge, UK
+7 Health Data Research UK Cambridge, Wellcome Genome Campus and University of Cambridge, Cambridge, UK
+8 The Alan Turing Institute, London, UK
+^ Joint first authors
+* Correspondence: MI (mi336@medschl.cam.ac.uk; minouye@baker.edu.au)
+Abstract
+Climate change is profoundly affecting nearly all aspects of life on earth, including human societies,
+economies and health. Various human activities are responsible for significant greenhouse gas
+emissions, including data centres and other sources of large-scale computation. Although many
+important scientific milestones have been achieved thanks to the development of high-performance
+computing, the resultant environmental impact has been underappreciated. In this paper, we present
+a methodological framework to estimate the carbon footprint of any computational task in a
+standardised and reliable way, based on the processing time, type of computing cores, memory
+available and the efficiency and location of the computing facility. Metrics to interpret and
+contextualise greenhouse gas emissions are defined, including the equivalent distance travelled by
+car or plane as well as the number of tree-months necessary for carbon sequestration. We develop
+a freely available online tool, Green Algorithms (www.green-algorithms.org), which enables a user
+to estimate and report the carbon footprint of their computation. The Green Algorithms tool easily
+integrates with computational processes as it requires minimal information and does not interfere
+with existing code, while also accounting for a broad range of CPUs, GPUs, cloud computing, local
+servers and desktop computers. Finally, by applying Green Algorithms, we quantify the greenhouse
+gas emissions of algorithms used for particle physics simulations, weather forecasts and natural
+language processing. Taken together, this study develops a simple generalisable framework and
+freely available tool to quantify the carbon footprint of nearly any computation. Combined with a
+series of recommendations to minimise unnecessary CO2 emissions, we hope to raise awareness
+and facilitate greener computation.2
+Introduction
+The concentration of greenhouse gases in the atmosphere has a dramatic influence on climate
+change with both global and locally focused consequences, such as rising sea levels, devastating
+wildfires in Australia, extreme typhoons in the Pacific, severe droughts across Africa, as well as
+repercussions for human health.
+With 100 megatonnes of CO2 emissions per yeara , similar to American commercial aviation, the
+contribution of data centres and high-performance computing facilities to climate change is
+substantial. So far, rapidly increasing demand has been paralleled by increasingly energy-efficient
+facilities, with overall electricity consumption of data centres somewhat stable. However, this stability
+is likely to end in the coming years, with a best-case scenario forecasting a three-fold increase in the
+energy needs of the sector1,2 .
+Advances in computation, including those in hardware, software and algorithms, have enabled
+scientific research to progress at unprecedented rates. Weather forecasts have increased in
+accuracy to the point where 5-day forecasts are approximately as accurate as 1-day forecasts 40
+years ago3 , physics algorithms have produced the first direct image of a black hole 55 million light-
+years away4–6 , the human genome has been mined to uncover thousands of genetic variants for
+disease7 , and machine learning permeates many aspects of society, including economic and social
+interactions8–11 . However, the costs associated with large-scale computation are not being fully
+captured.
+Power consumption results in greenhouse gas (GHG) emissions and the environmental costs of
+performing computations using data centres, personal computers, and the immense diversity of
+architectures are unclear. While programmes in green computing (the study of environmentally
+responsible information and communications technologies) have been developed over the past
+decade, these mainly focus on energy-efficient hardware and cloud-related technologies 12–14 .
+With widely recognised power-hungry and expensive training algorithms, deep learning has begun
+to address its carbon footprint. Machine learning (ML) models have grown exponentially in size over
+the past few years 15 , with some algorithms training for thousands of core-hours, and the associated
+energy consumption and cost have become a growing concern 16 . In natural language processing
+(NLP), Strubell et al.17 found that designing and training translation engines can emit between 0.6
+and 280 tonnes of CO2 . While not all NLP algorithms require frequent retraining, algorithms in other
+fields are run daily or weekly, multiplying their energy consumption.
+Previous studies have made advances in estimating GHG emissions of computation but have
+limitations which preclude broad applicability. These limitations include the requirement that users
+self-monitor their power consumption17 and are restricted with respect to hardware (e.g. GPUs and/or
+cloud systems18,19 ), software (e.g. Python package integration19 ), or applications (e.g. machine
+learning)17–19 . To facilitate green computing and widespread user uptake, there is a clear, and
+arguably urgent, need for both a general and easy-to-use methodology for estimating carbon
+emissions that can be applied to any computational task.
+In this study, we present a simple and widely applicable method and a tool for estimating the carbon
+footprint of computation. The method considers the different sources of energy usage, such as
+a Supplementary Note 13
+processors and memory, overhead of computing facilities and geographic location, while balancing
+accuracy and practicality. The online calculator (www.green-algorithms.org) implements this
+methodology and provides further context by interpreting carbon amounts using travel distances and
+carbon sequestration. We demonstrate the applicability of the Green Algorithms method by
+estimating the carbon footprint of particle physics simulations, weather forecast models, and NLP
+algorithms as well as the carbon effects of distributed computation using multiple CPUs. Finally, we
+make recommendations on ways for scientists to reduce their GHG emissions as well as discuss the
+limitations of our approach.
+Methods
+The carbon footprint of an algorithm depends on two factors: the energy needed to run it and the
+pollutants emitted when producing such energy. The former depends on the computing resources
+used (e.g. number of cores, running time, data centre efficiency) while the later, called carbon
+intensity, depends on the location and production methods used (e.g. nuclear, gas or coal).
+There are several competing definitions of “carbon footprint”, and in this project, we use the extended
+definition from Wright et al.20 . The climate impact of an event is presented in terms of carbon dioxide
+equivalent (CO2 eb ) and summarises the global warming effect of the GHG emitted in the determined
+timeframe, here running a set of computations. The GHGs considered are carbon dioxide (CO2 ),
+methane (CH4 ) and nitrous oxide (N 2 O)21 ; these are the three most common GHGs of the “Kyoto
+basket” defined in the Kyoto Protocol22 and represent 97.9% of global GHG emissions23 . The
+conversion into CO2 e is done using Global Warming Potential (GWP) factors from the
+Intergovernmental Panel on Climate Change (IPCC) 21,24 based on a 100-year horizon (GWP100).
+When estimating these parameters, accuracy and feasibility must be balanced. This study focuses
+on a methodology that can be easily and broadly adopted by the community and therefore, restricts
+the scope of the environmental impact considered to GHGs emitted to power computing facilities for
+a specific task. Moreover, the framework presented requires no extra computation, nor involves
+invasive monitoring tools.
+Energy consumption
+We model an algorithm’s energyc needs as a function of the running time, the number, type and
+process time of computing cores (CPU or GPU), the amount of memory mobilised and the power
+draw of these resources. The model further includes the efficiency of the data centre d
+, i.e. how much
+extra power is necessary to run the facility (e.g. cooling and lighting).
+Similar to previous works17,18 , our estimate is based on the power draw from processors and memory,
+as well as the efficiency of the data centre. However, we refine the formula and add flexibility by
+b Sometimes also called CO2 eq, CO2 equivalent or CDE.
+c Power (in Watt, W) measures the instantaneous draw of a component. Energy (in kilowatt-hours, kWh)
+measures the power draw over time and is obtained by multiplying the power draw by the running time.
+d By data centre, we mean the facility hosting the cores and memory, which may not be a dedicated data
+centre.4
+including a unitary power draw (per core and per GB of memory) and the processor’s usage factor.
+We express the energy consumption 𝐸 (in kilowatt-hours, kWh) as:
+𝐸 = 𝑡 × (𝑛! × 𝑃! × 𝑢! + 𝑛" × 𝑃" ) × 𝑃𝑈𝐸 × 0.001 (1)
+where 𝑡 is the running time (hours), 𝑛! the number of cores and 𝑛" the size of memory available
+(gigabytes). 𝑢! is the core usage factor (between 0 and 1). 𝑃! is the power draw of a computing core
+and 𝑃" the power draw of the memory (Watt). 𝑃𝑈𝐸 is the efficiency coefficient of the data centre.
+The assumptions made regarding the different components are discussed below. It has been
+previously shown that the power draw of the motherboard is negligible25 .
+Power draw of the computing core
+The metric commonly used to report the power draw of a processor, either CPU or GPU, is its thermal
+design power (TDP, in Watt) and is provided by the manufacturer. TDP values frequently correspond
+to CPU specifications which include multiple cores, thus here TDP values are normalised to per-
+core. While TDP is not a direct measure of power consumption, rather the amount of heat a cooling
+system dissipates during regular use - it is commonly considered a reasonable approximation.
+The energy used by the processor is the power draw multiplied by processing time, scaled by the
+usage factor. However, processing time cannot be known a priori and, on some platforms, tracking
+can be impractical at scale. Modelling exact processing time of past projects may also necessitate
+re-running jobs, which would generate unnecessary emissions. Therefore, when this processing time
+is unknown, we make the simplifying assumption that core usage is 100% of run time (𝑢! = 1 in (1)).
+Power draw from memory
+Memory power draw is mainly due to background consumption with a negligible contribution from
+the workload and database size 26 . Moreover, the power draw is mainly affected by the total memory
+allocated, not by the actual size of the database used, because the load is shared between all
+memory slots which keeps every slot in a power-hungry active state. Therefore, the primary factor
+influencing power draw from memory is the quantity of memory mobilised, which simply requires an
+estimation of the power draw per gigabyte. Measured experimentally, this has been estimated to be
+0.3725 W/GB26,27 .
+For example, requesting 29GB of memory draws 10.8 W, which is the same as one core of a popular
+Core-i5 CPU. Supplementary Figure 1 further compares the power draw of memory to a range of
+popular CPUs.
+Power draw from storage
+The power draw of storage equipment (HDD or SSD) varies significantly with workload28 . However,
+in regular use, storage is typically solicited far less than memory and is mainly used as a more
+permanent record of the data, independently of the task at hand. In idle mode (i.e. not servicing a
+request but ready to begin the next one), non-optimised HDDs rarely consume more than 6W for
+1TB of storage and modern SSDs can draw as little as 0.6W for 800GB of storage28 . Under
+conservative assumptions, storage power draw would be 0.006 W/GB. As above, by comparison,
+the power draw of memory (0.3725 W/GB) and a Core-i5 CPU (10.8W/core) are more than an order
+of magnitude greater. While the researcher overhead for approximating storage usage may not be5
+substantial, it is unlikely to make a significant difference to overall power usage (and GHG emissions)
+estimation. Therefore, we do not consider the power consumption of storage in this work.
+Energy efficiency
+Data centre energy consumption includes additional factors, such as server cooling systems, power
+delivery components and lighting. The efficiency of a given data centre can be measured by the
+Power Usage Effectiveness (PUE)29,30 , defined as the ratio between the total power drawn by the
+facility and the power used by IT equipment:
+𝑃𝑈𝐸 = 𝑃#$#%&
+𝑃!$"'(#)
+(2)
+A data centre PUE of 1.0 represents an ideal situation where all power supplied to the building is
+utilised by computing equipment. The global average of data centres has been estimated as 1.67 in
+201931 . While data centres with relatively inefficient PUE may not report it as such, some data centres
+and companies have invested significant resources to bring their PUEs as close to 1.0 as possible;
+for example, Google has utilised machine learning to reduce its global yearly average PUE to
+1.1032,33 .
+Carbon intensity of energy production
+For a given country and energy mix, the carbon footprint in CO2 e represents the amount of CO 2 with
+the same global warming impact as the GHGs emitted, which simplifies the comparison between
+different electricity production methods. The carbon footprint of producing 1 kWh of energy is called
+Carbon Intensity (CI) and varies significantly between locations due to the broad range of production
+methods (Supplementary Figure 2), e.g. from 19 gCO2 e/kWh in Switzerland (mainly powered by
+hydro) to 880 gCO2 e/kWh in Australia (mainly powered by coal and gas)34,35 . We use the 2020 carbon
+intensity values aggregated by Carbon Footprint35 . These production factors take into account the
+GHG emissions at the power plants (power generation) as well as, when available, the footprint of
+distributing energy to the data centre.
+Estimation of carbon footprint
+The carbon footprint 𝐶 (in gCO2 e) of producing a quantity of energy 𝐸 (in kWh) from sources with a
+carbon intensity 𝐶𝐼 (in gCO2 e/kWh) is then:
+𝐶 = 𝐸 × 𝐶𝐼 (3)
+By putting together equations (1) and (3), we obtain the long-form equation of the carbon footprint
+𝐶:
+𝐶 = 𝑡 × (𝑛! × 𝑃! × 𝑢! + 𝑛" × 𝑃" ) × 𝑃𝑈𝐸 × 𝐶𝐼 × 0.001 (4)
+CO 2e of driving and air travel
+We contextualise gCO2 e by estimating an equivalence in terms of distance travelled by car or by
+passenger aircraft. Previous studies have estimated the emissions of the average passenger car in6
+Europe as 175 gCO2 e/km21,36 (251 gCO2 e/km in the United States37 ). The emissions of flying on a
+jet aircraft in economy class have been estimated between 139 and 244 gCO2 e/km/person,
+depending on the length of the flight21 . We use three reference flights: Paris to London (50,000
+gCO2 e), New York to San Francisco (570,000 gCO 2 e) and New York to Melbourne (2,310,000
+gCO2 e)38 .
+CO 2 sequestration by trees
+Trees play a major role in carbon sequestration and although not all GHGs emitted can be
+sequestered, CO2 represents 74.4% of these emissions 39 . To provide a metric of reversion for CO2 e,
+we compute the number of trees needed to sequester the equivalent of the emissions of a given
+computation. We define the metric tree-months, the number of months a mature tree needs to absorb
+a given quantity of CO2 . While the amount of CO 2 sequestered by a tree per unit of time depends on
+a number of factors, such as its species, size or environment, it has been estimated that a mature
+tree sequesters, on average, approximately 11 kg of CO2 per year40 , giving the multiplier in tree-
+months a value close to 1kg of CO2 per month (0.92g).
+Pragmatic scaling factor
+Many analyses are presented as a single run of a particular algorithm or software tool; however,
+computations are rarely performed only once. Algorithms are run multiple times, sometimes
+hundreds, systematically or manually, with different parameterisations. Statistical models may
+include any number of combinations of covariates, fitting procedures, etc. It is important to include
+these repeats in the carbon footprint. To take into account the number of times a computation is
+performed in practice, we define the pragmatic scaling factor (PSF), a scaling factor by which the
+estimated GHG emissions are multiplied.
+The value and causes of the PSF vary greatly between tasks. In machine learning, tuning the hyper-
+parameters of a model requires hundreds, if not thousands17 , of runs, while other tools require less
+tuning and can sometimes be run a smaller number of times. As per published work or the user’s
+own experience, the PSF should be estimated for any specific task; however, in Green Algorithms
+we provide for, and recommend that, each user estimate their own PSF.7
+Figure 1: The Green Algorithms calculator (www.green-algorithms.org)
+Results
+We developed a simple method which estimates the carbon footprint of an algorithm based on a
+number of factors, including the hardware requirements of the tool, the runtime and the location of
+the data centre (Methods). Using a pragmatic scaling factor, we further augment our model by
+allowing for empirical estimates of repeated computations for a particular task, e.g. parameter tuning
+and trial-and-errors. The resultant gCO2 e is compared to the amount of carbon sequestered by trees
+and the emissions of common activities such as driving a car and air travel. We designed a freely
+available online tool, Green Algorithms (www.green-algorithms.org; Figure 1), which implements our
+approach and allows users to evaluate their computations or estimate the carbon savings or costs
+of redeploying them on other architectures.8
+We apply this tool to a range of algorithms selected from a variety of scientific fields: physics (particle
+simulations and DNA irradiation), atmospheric sciences (weather forecasting), and machine learning
+(natural language processing) (Figure 2). For each task, we curate published benchmarks and use
+www.green-algorithms.org to estimate the GHG emissions (Methods). For parameters independent
+of the algorithm itself, we use average worldwide values, such as the worldwide average PUE of
+1.6731 and carbon intensity of 475 gCO2 e/kWh41 .
+Figure 2: Carbon footprint (gCO2 e) for a selection of algorithms, with and without their
+Pragmatic Scaling Factor.
+Particle physics simulations
+In particle physics, complex simulations are used to model the passage of particles through matter.
+Geant442 is a popular toolkit based on Monte-Carlo methods with wide-ranging applications, such as
+the simulation of detectors in the Large Hadron Collider and analysis of radiation burden on patients
+in clinical practice or external beam therapy43–45 . Meylan et al. 46 investigated the biological effects of
+ionising radiations on DNA on an entire human genome (6.4 ́109 nucleotide pairs) using GEANT4-
+DNA, an extension of GEANT4.
+To quantify the DNA damage of radiation, they run experiments with photons of different energy,
+from 0.5 MeV to 20 MeV. Each experiment runs for three weeks to simulate 5,000 particles (protons)
+using 24 processing threads and up to 10GB of memory. Using the Green Algorithms tool, and
+assuming an average CPU power draw (such as the Xeon E5-2680, capable of running 24 threads
+on 12 cores), and worldwide average values for PUE and carbon intensity, we estimated that a single
+experiment emits 49,465 gCO2 e. When taking into account a PSF of 11, corresponding to the 11
+different energy levels tested, the carbon footprint of such study is 544,115 gCO2 e. Using estimates
+of car and air travel (Methods), 544,115 gCO2 e is approximately equivalent to driving 3,109 km (in9
+a European car) or flying economy from New York to San Francisco. In terms of carbon sequestration
+(Methods), it would take a mature tree 49 years to remove the CO2 equivalent to the GHG emissions
+of this study from the atmosphere (593 tree-months).
+A common way to reduce the running time of algorithms is to distribute the computations over
+multiple processing cores. If the benefit in terms of time is well documented for each task, as in 47 ,
+the environmental impact is usually not taken into account. GEANT4 is a versatile toolbox; it contains
+an electromagnetic package simulating particle transport in matter and high energy physics detector
+response 48 . Schweitzer et al.47 use a standardised example, TestEm1249 , to compare the
+performances of different hardware configurations, from 1 to 60 cores (i.e. a full Xeon Phi CPU).
+With the Green Algorithms tool, we estimated the carbon footprint of each configuration (Figure 3),
+which shows that increasing the number of cores up to 15 improves both running time and GHG
+emissions. However, when multiplying the number of cores further by 4 (from 15 to 60), the running
+time is only halved, resulting in a two-fold increase in emissions, from 238 to 481 gCO2e. Generally,
+if the reduction in running time is lower than the relative increase in the number of cores, distributing
+the computations will worsen the carbon footprint. In particular, scientists should be mindful of
+marginal improvements in running time which have disproportionally large effects on GHG
+emissions, as demonstrated by the gap between 30 and 60 cores in Figure 3. For any parallelised
+computation, there is likely to be a specific optimal number of cores for minimal GHG emissions.
+Figure 3: Effect of parallelisation using multiple cores on run time and carbon footprint using
+TestEm12 GEANT4 simulation.
+Weather forecasting
+Weather forecasts are based on sophisticated models simulating the dynamics between different
+components of the earth (such as the atmosphere and oceans). Operational models face stringent
+time requirements to provide live predictions to the public, with a goal of running about 200-300
+forecast days (FDs) in one (wall clock) day 50 . Neumann et al.50 present the performances of two10
+models in use for current weather forecasts: (i) the Integrated Forecast System (IFS)51 used by the
+European Centre for Medium-Range Weather Forecasts (ECMWF) for 10-day forecasts, and (ii) the
+ICOsahedral Non-hydrostatic (ICON)52 designed by the German Weather Service (Deutscher
+Wetterdienst, DWD) and whose predictions are used by more than 30 national weather services53 .
+The configurations in daily use by the ECMWF include a supercomputer based in Reading, UK,
+which has a PUE of 1.4554 , while ICON is run on the German Meteorological Computation Centre
+(DMRZ)55 based in Germany (PUE unknown). Neumann et al. 50 ran their experiments on hardware
+similar to that equipped by both facilities, “Broadwell” CPU nodes (Intel E5-2695v4, 36 cores) and
+minimum 64GB memory per node. We utilise these parameters for our CO2 e emission estimates. It
+is important to note that ICON and IFS each solve slightly different problems, and therefore are not
+directly comparable.
+The DWD uses ICON with a horizontal resolution of 13kme and generates a forecast day in 8
+minutes. Based on the experiments run by Neumann et al. 50 , this requires 575 Broadwell nodes
+(20,700 CPU cores). We estimate that generating one forecast day emits 12,848 gCO2 e (14 tree-
+months). With a running time of 8min/FD, ICON can generate 180 forecast days in 24 hours. When
+taking into account this pragmatic scaling factor of 180, we estimated that each day, the ICON
+weather forecasting algorithm releases approximately 2,312,653 gCO2 e, equivalent to driving 13,215
+km or flying from New York to San Francisco four times. In terms of carbon sequestration, the
+emissions of each day of ICON weather forecast are equivalent to 2,523 tree-months.
+At ECMWF, IFS makes 10-day operational weather forecasts with a resolution of 9km. To achieve
+a similar threshold of 180 FDs/day, 128 Broadwell nodes are necessary (4,608 cores)50,56 . Using the
+PUE of the UK ECMWF facility (1.45), we estimate the impact of producing one forecast day with
+IFS to be 1,660 gCO2 e. Using a PSF of 180 for one day’s forecasts, we estimated emissions of
+298,915 gCO2 e, equivalent to driving 1,708 km or three return flights between Paris and London.
+These emissions are equivalent to 326 tree-months.
+Furthermore, we modelled the planned scenario of the ECMWF transferring its supercomputing to
+Bologna, Italy, in 202157 . Compared to the data centre in Reading, the new data centre in Bologna
+is estimated to have a more efficient PUE of 1.2758 . Prima facie this move appears to save substantial
+GHG emissions; however, it is notable that the carbon intensity of Italy is 33% higher than the UK35 .
+Unless the sources of electricity for the data centre in Bologna are different from the rest of Italy and
+in the absence of further optimisations, we estimated that the move would result in an 18% increase
+in GHG emissions from the ECMWF (from 298,915 to 350,063 gCO2 e).
+Natural language processing
+In natural language processing (NLP), the complexity and financial costs of model training are major
+issues16 . This has motivated the development of language representations that can be trained once
+to model the complexity of natural language, and which could be used as input for more specialised
+algorithms. The BERT (Bidirectional Encoder Representations from Transformers)59 algorithm is a
+field leader which yields both high performance and flexibility: state-of-the-art algorithms for more
+specific tasks are obtained by fine-tuning a pre-trained BERT model, for example in scientific text
+analysis60 or biomedical text mining 61 . Yet, while the BERT model is intended to avoid retraining,
+e The horizontal resolution represents the level of geographical detail achieved when modelling the different
+weather phenomenon.11
+many data scientists, perhaps understandably, continue to recreate or attempt to improve upon
+BERT, leading to redundant and ultimately inefficient computation as well as excess CO2 e
+emissions. Even with optimised hardware (such as NVIDIA Volta GPUs), a BERT training run may
+take three days or more 62 .
+Using these optimised parameters, Strubell et al.17 showed that a run time of 79 hours on 64 Tesla
+V100 GPUs was necessary to train BERT, with a usage factor of the GPUs of 62.7%. With the
+Greens Algorithms calculator, we estimated that a BERT training run would emit 754,407 gCO2 e
+(driving 4,311 km in a European car; 1.3 flights from New York to San Francisco; and 823 tree-
+months). When considering a conservative PSF of 100 for hyperparameters search, we obtain a
+carbon footprint of 75,440,740 gCO2 e.
+While BERT is a particularly widely utilised NLP tool, Google has also developed a chatbot algorithm,
+Meena, which was trained for 30 days on a TPU-v3 Pod containing 2,048 Tensor Processing Unit
+(TPU) cores63 . There is limited information on the power draw of TPU cores and memory; however,
+the power supply of this pod has been estimated to be 288 kW64 . Using a run time of 30 days,
+assuming full usage of the TPUs and ignoring memory power draw, the Greens Algorithms calculator
+estimated that Meena training emitted 164,488,320 gCO2 e, which corresponds to 179,442 tree-
+months or 71 flights between New-York and Melbourne.
+Discussion
+The method and Green Algorithms tool presented here provides users with a practical way to
+estimate the carbon footprint of their computations. The method focuses on producing sensible
+estimates with small overheads for scientists wishing to measure the footprint of their work.
+Consequently, the online calculator is simple to use and generalisable to nearly any computational
+task. We applied the Green Algorithms calculator to a variety of tasks, including particle physics
+simulations, weather forecasting and natural language processing, to estimate their relative and
+ongoing carbon emissions. Real-world changes to computational infrastructures, such as moving
+data centres, was also quantifiable in terms of carbon footprint and was shown to be of substantive
+importance, e.g. moving data centres may attain a more efficient PUE but a difference in carbon
+intensity may negate any efficiency gains, potentially making such a move detrimental to the
+environment.
+Our work substantially enhances and extends prior frameworks for estimating the carbon footprint of
+computation. In particular, we have integrated and formalised previously unclear factors such as
+usage factor and unitary power draw (per-core or per-GB of memory). As a result, and as presented
+in the Methods, the carbon footprint of an algorithm can be broken down to a small number of key,
+easily quantifiable elements, such as number of cores, memory size and usage factor. This reduces
+the burden on the user, who is not required to either measure the power draw of hardware manually
+or use a limited range of cloud providers for their computations. This makes the method highly flexible
+in comparison to previous work. Besides drawing attention to the growing issue of GHG emissions
+of data centres, one of the benefits of presenting a detailed open methodology and tool is to provide
+users with the information they need to reduce their carbon footprint. Perhaps the most important
+challenge in green computing is to make the estimation and reporting of GHG emissions a standard
+practice. This requires transparent and easy-to-use methodology, such as the Green Algorithms
+calculator (www.green-algorithms.org) and open-source code and data presented here (see Code
+availability).12
+Our approach has a number of limitations. First, the carbon footprint estimated is restricted to GHGs
+emitted to power computers during a particular task. We do not perform a Life Cycle Assessment
+(LCA) and therefore, do not consider the full environmental and social impact of manufacturing,
+maintaining and disposing of the hardware used, or the maintenance of the power plants. Including
+these is impractical at scale and would greatly reduce who can use the method. Besides, the
+conversion of the impact of various GHG into CO2 e is commonly based on a 100-year timescale;
+however, this is now debated as it can misrepresent the impact of short-lived climate pollutants like
+methane65 and new standards may be needed in the future. Second, the TDP may substantially
+underestimate power draw in some situations. For example, when hyperthreading is used, the real
+power consumption can be double the indicated TDP 66 . The TDP value remains a sensible estimate
+of the base consumption of the processor in most situations, but users using hyperthreading should
+be aware of the impact on power consumption. Third, while the power consumption from storage is
+usually minimal at the scale of one computation, if central storage is constantly queried by the
+algorithm (e.g. to avoid overloading memory), this can be an important factor in power draw;
+however, there are resources which can be utilised if the algorithm is designed to be heavily storage
+reliant28 . Moreover, at the scale of the data centre, storage represents a significant part of electricity
+usage28 and research projects relying on large databases should separately acknowledge the long-
+term carbon footprint of storage. Fourth, while some averaging is necessary, the energy mix of a
+country varies by the hour. For example, the carbon intensity of South Australia, which relies on wind
+and gas to produce electricity67 , can vary between 112 and 592 gCO2 e/kWh within one day,
+depending on the quantity of coal-produced electricity imported from the neighbouring state of
+Victoria34 . Although most regions are relatively stable, these outliers may require a finer estimation.
+Our online calculator uses averaged values sourced from government reports35 . Fifth, the PUE has
+some limitations as a measure of data centres energy usage68,69 , due to inconsistencies in ways to
+calculate it. For example, reporting of PUE is highly variable from yearly averages to best-case
+scenarios, e.g. in winter when minimal cooling is required (as demonstrated by Google’s quarterly
+results32 ). Whether to include infrastructure components such as security or on-site power generation
+is also source of discrepancies between data centres30 . Although some companies present well-
+justified results, many PUEs have no or insufficient justification. Furthermore, PUE is not defined
+when computations are run on a laptop or desktop computer. As the device is used for multiple tasks
+simultaneously, it is impossible to estimate the power overhead due to the algorithm. In the
+calculator, we use a PUE of 1 because of the lack of information, but we caution this should not be
+interpreted as a sign of efficiency. Even though discrepancies will remain, the widespread adoption
+of an accurate, transparent and certified estimation of PUE, such as the ISO/IEC standard70 , would
+be a substantial step for the computing community. Sixth, the carbon emissions in the Results are
+based on manual curation of the literature. When parameters such as usage factor or PUE were not
+specified, we made some assumptions (100% core usage, or using average PUE) that can explain
+differences between our estimates and the real emissions. For best results, authors should estimate
+and publish their emissions.
+There are various, realistic actions one can take to reduce the carbon footprint of their computation.
+Acting on the various parameters in Green Algorithms (see Methods), is a clear and easy way
+approach. Below, we describe a selection of practical changes one can make:
+Algorithm optimisation: Increasing the efficiency of an algorithm can have myriad benefits, even
+apart from reducing its carbon footprint. Therefore, we highly recommend this and foresee algorithm
+optimisation as one of the most productive, easily recognisable core activities of green computing.
+While speed is an obvious efficiency gain, part of algorithm optimisation also includes memory
+minimisation. The power draw from memory mainly depends on the memory requested, not the
+actual memory used26 , and the memory requested is often the peak memory needed for one step of13
+the algorithm (typically a merge or aggregation). By optimising these steps, one can easily reduce
+energy consumption.
+Reduce the Pragmatic Scaling Factor: Limiting the number of times an algorithm runs, especially
+those that are power hungry, is perhaps the easiest way to reduce carbon footprint. Relatedly, best
+practices to limit PSF (as well as financial cost) include limiting parameter fine-tuning to the minimum
+necessary and building a small-scale example for debugging.
+Choice of data centre: Carbon footprint is directly proportional to data centre efficiency and the
+carbon intensity of the location. The latter is perhaps the parameter which most affects total carbon
+footprint because of inter-country variation, from under 20 gCO2e/kWh in Norway and Switzerland
+to over 800 gCO2e/kWh in Australia, South Africa and some US states. To rigorously assess the
+impact of punctually relocating computations, the marginal carbon intensity, rather than the average
+one, should be used 71 . The marginal value depends on which power plant would be solicited to meet
+the unexpected increased demand. Although it would ideally be used, it varies by the hour and is
+often not practical to estimate accurately at scale. When the marginal carbon intensity is unknown,
+the average one (presented in Methods and Supplementary Figure 2) can be used by scientists
+as a practical lower bound estimate to assess the benefit of moving computations. Indeed, due to
+the low operating cost of renewable technologies, the marginal power plants (which are the last one
+solicited) are generally high-carbon technologies such as fuel or gas71 which leads the marginal CI
+to be higher than the average CI. Besides, if the move is permanent, by relocating an HPC facility or
+using cloud computing for example, then the energy needs are incorporated into utility planning and
+the average carbon intensity is the appropriate metric to use. Data centre efficiency (PUE) varies
+widely between facilities but, in general, large data centres optimise cooling and power supply,
+reducing the energy overhead and make them more efficient than personal servers. Notably, a 2016
+report estimated that if 80% of small US data centres were aggregated into hyperscale facilities,
+energy usage would reduce by 25%72 . For users to make informed choices, data centres should
+report their PUE and other energy metrics. While large providers like Google or Microsoft widely
+advertise their servers’ efficiency32,73 , smaller structures often do not.
+Offsetting GHG emissions: Carbon offsetting is a flexible way to compensate for carbon footprint.
+An institution or a user themself can directly support reductions in CO2 or other greenhouse gases,
+e.g. fuel-efficient stoves in developing countries, reducing deforestation or hydroelectric or wind-
+based power plants74,75 . The pros and cons of carbon offsetting are still debated due to the variety
+of mechanisms and intricate international legislations and competing standards. Therefore, we only
+present here an overview and point interested scientists at some resources. Multiple international
+standards regulate the purchase of carbon credits and ensure the efficiency of the projects
+supported76 . Most of the well-established standards are managed by non-profits and abide by the
+mechanisms set in place by the Kyoto protocol (in particular Certified Emission Reduction) 77 and the
+PAS 2060 Carbon Neutrality standard from the British Standards Institution78 . Although the primary
+aim is carbon offsetting, projects are often also selected in line with the United Nations’ Agenda 30
+for Sustainable Development 79 , a broader action plan addressing inequalities, food security and
+peace. Amongst the most popular standards are the Gold Standard (founded by WWF and other
+NGOs)80 , Verra (formerly Verified Carbon Standard) 81 and the American Carbon Registry (a private
+voluntary greenhouse gas registry) 82 . In addition to direct engagement with these standards,
+platforms like Carbon Footprint74 select certified projects and facilitate the purchase of credits.14
+Conclusions
+The framework presented here is generalisable to nearly any computation and may be used as a
+foundation for other aspects of green computing. The carbon footprint of computation is substantial
+and may be affecting the climate. We therefore hope that this new tool and metrics raise awareness
+of these issues as well as facilitate pragmatic solutions which may help to mitigate the environmental
+consequences of modern computation. Overall, with the right tools and practices, we believe HPC
+and cloud computing can be immensely positive forces for both improving the human condition and
+saving the environment.15
+Data availability
+All data used for the calculator is available on GitHub:
+https://github.com/GreenAlgorithms/green-algorithms-tool/tree/master/data.
+Code availability
+All code supporting the calculator is available on GitHub:
+https://github.com/GreenAlgorithms/green-algorithms-tool
+References
+1. Jones, N. How to stop data centres from gobbling up the world’s electricity. Nature 561, 163–
+166 (2018).
+2. Andrae, A. & Edler, T. On Global Electricity Usage of Communication Technology: Trends to
+2030. Challenges 6, 117–157 (2015).
+3. Alley, R. B., Emanuel, K. A. & Zhang, F. Advances in weather prediction. Science 363, 342–344
+(2019).
+4. Collaboration, T. E. H. T. et al. First M87 Event Horizon Telescope Results. I. The Shadow of
+the Supermassive Black Hole. Astrophys. J. Lett. 875, L1 (2019).
+5. Collaboration, T. E. H. T. et al. First M87 Event Horizon Telescope Results. III. Data Processing
+and Calibration. Astrophys. J. Lett. 875, L3 (2019).
+6. Collaboration, T. E. H. T. et al. First M87 Event Horizon Telescope Results. IV. Imaging the
+Central Supermassive Black Hole. Astrophys. J. Lett. 875, L4 (2019).
+7. Buniello, A. et al. The NHGRI-EBI GWAS Catalog of published genome-wide association
+studies, targeted arrays and summary statistics 2019. Nucleic Acids Res. 47, D1005–D1012
+(2019).
+8. Ben-Israel, D. et al. The impact of machine learning on patient care: A systematic review. Artif.
+Intell. Med. 103, 101785 (2020).
+9. Dimiduk, D. M., Holm, E. A. & Niezgoda, S. R. Perspectives on the Impact of Machine Learning,
+Deep Learning, and Artificial Intelligence on Materials, Processes, and Structures Engineering.
+Integrating Mater. Manuf. Innov. 7, 157–172 (2018).
+10. Choy, G. et al. Current Applications and Future Impact of Machine Learning in Radiology.
+Radiology 288, 318–328 (2018).
+11. Athey, S. The Impact of Machine Learning on Economics. Econ. Artif. Intell. Agenda 507–547
+(2018).
+12. Towards Green ICT Strategies: Assessing Policies and Programmes on ICT and the
+Environment. vol. 155 https://www.oecd-ilibrary.org/science-and-technology/towards-green-ict-
+strategies_222431651031 (2009).
+13. Sarkar, S. & Misra, S. Theoretical modelling of fog computing: a green computing paradigm to
+support IoT applications. IET Netw. 5, 23–29 (2016).16
+14. Gai, K., Qiu, M., Zhao, H., Tao, L. & Zong, Z. Dynamic energy-aware cloudlet-based mobile
+cloud computing model for green computing. J. Netw. Comput. Appl. 59, 46–54 (2016).
+15. Goodfellow, I., Bengio, Y. & Courville, A. Deep Learning. (MIT Press, 2016).
+16. Schwartz, R., Dodge, J., Smith, N. A. & Etzioni, O. Green AI. ArXiv190710597 Cs Stat (2019).
+17. Strubell, E., Ganesh, A. & McCallum, A. Energy and Policy Considerations for Deep Learning in
+NLP. ArXiv190602243 Cs (2019).
+18. Lacoste, A., Luccioni, A., Schmidt, V. & Dandres, T. Quantifying the Carbon Emissions of
+Machine Learning. ArXiv191009700 Cs (2019).
+19. Henderson, P. et al. Towards the Systematic Reporting of the Energy and Carbon Footprints of
+Machine Learning. ArXiv200205651 Cs (2020).
+20. Wright, L. A., Kemp, S. & Williams, I. ‘Carbon footprinting’: towards a universally accepted
+definition. Carbon Manag. 2, 61–72 (2011).
+21. Hill, N. et al. 2020 Government greenhouse gas conversion factors for company reporting:
+Methodology paper. Dep. Bus. Energy Ind. Strategy 128 (2020).
+22. Kyoto Protocol To The United Nations Framework Convention On Climate Change. (1997).
+23. Ritchie, H. & Roser, M. CO₂ and Greenhouse Gas Emissions. Our World Data (2020).
+24. Fourth Assessment Report — IPCC. https://www.ipcc.ch/assessment-report/ar4/.
+25. Geng, H. Data Center Handbook. (John Wiley & Sons, 2014).
+26. Karyakin, A. & Salem, K. An analysis of memory power consumption in database systems. in
+Proceedings of the 13th International Workshop on Data Management on New Hardware -
+DAMON ’17 1–9 (ACM Press, 2017). doi:10.1145/3076113.3076117.
+27. Angelini, C., August 29, I. W. & 2014. Intel Core i7-5960X, -5930K And -5820K CPU Review:
+Haswell-E Rises. Tom’s Hardware https://www.tomshardware.com/uk/reviews/intel-core-i7-
+5960x-haswell-e-cpu,3918-13.html.
+28. Tomes, E. & Altiparmak, N. A Comparative Study of HDD and SSD RAIDs’ Impact on Server
+Energy Consumption. in 2017 IEEE International Conference on Cluster Computing (CLUSTER)
+625–626 (2017). doi:10.1109/CLUSTER.2017.103.
+29. Belady, C. L. & Malone, C. G. Metrics and an Infrastructure Model to Evaluate Data Center
+Efficiency. in 751–755 (American Society of Mechanical Engineers Digital Collection, 2010).
+doi:10.1115/IPACK2007-33338.
+30. Avelar, V., Azevedo, D., French, A. & Power, E. N. PUE: a comprehensive examination of the
+metric. White Pap. 49, (2012).
+31. Andy Lawrence. Is PUE actually going UP? Uptime Institute Blog
+https://journal.uptimeinstitute.com/is-pue-actually-going-up/ (2019).
+32. Efficiency – Data Centers – Google. Google Data Centers
+https://www.google.com/about/datacenters/efficiency/.
+33. Gao, J. Machine Learning Applications for Data Center Optimization. (2014).
+34. Tranberg, B. et al. Real-time carbon accounting method for the European electricity markets.
+Energy Strategy Rev. 26, 100367 (2019).
+35. carbonfootprint.com - International Electricity Factors.
+https://www.carbonfootprint.com/international_electricity_factors.html.17
+36. Helmers, E., Leitão, J., Tietge, U. & Butler, T. CO2-equivalent emissions from European
+passenger vehicles in the years 1995–2015 based on real-world use: Assessing the climate
+benefit of the European “diesel boom”. Atmos. Environ. 198, 122–132 (2019).
+37. US EPA, O. Greenhouse Gas Emissions from a Typical Passenger Vehicle. US EPA
+https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle
+(2016).
+38. Carbon Footprint Calculator. https://calculator.carbonfootprint.com/calculator.aspx?tab=3.
+39. Ritchie, H. & Roser, M. Greenhouse gas emissions. Our World in Data
+https://ourworldindata.org/greenhouse-gas-emissions.
+40. Akbari, H. Shade trees reduce building energy use and CO2 emissions from power plants.
+Environ. Pollut. 116, S119–S126 (2002).
+41. Emissions – Global Energy & CO2 Status Report 2019 – Analysis. IEA
+https://www.iea.org/reports/global-energy-co2-status-report-2019/emissions.
+42. Agostinelli, S. et al. Geant4—a simulation toolkit. Nucl. Instrum. Methods Phys. Res. Sect. Accel.
+Spectrometers Detect. Assoc. Equip. 506, 250–303 (2003).
+43. Jan, S. et al. GATE - Geant4 Application for Tomographic Emission: a simulation toolkit for PET
+and SPECT. Phys. Med. Biol. 49, 4543–4561 (2004).
+44. Jan, S. et al. GATE V6: a major enhancement of the GATE simulation platform enabling
+modelling of CT and radiotherapy. Phys. Med. Biol. 56, 881–901 (2011).
+45. Sarrut, D. et al. A review of the use and potential of the GATE Monte Carlo simulation code for
+radiation therapy and dosimetry applications. Med. Phys. 41, 064301 (2014).
+46. Meylan, S. et al. Simulation of early DNA damage after the irradiation of a fibroblast cell nucleus
+using Geant4-DNA. Sci. Rep. 7, (2017).
+47. Schweitzer, P. et al. Performance Evaluation of Multithreaded Geant4 Simulations Using an Intel
+Xeon Phi Cluster. Scientific Programming vol. 2015 e980752
+https://www.hindawi.com/journals/sp/2015/980752/ (2015).
+48. Apostolakis, J. et al. Validation and verification of Geant4 standard electromagnetic physics. J.
+Phys. Conf. Ser. 219, 032044 (2010).
+49. Geant4 - an Object-Oriented Toolkit for Simulation in HEP. GitLab
+https://gitlab.cern.ch/geant4/geant4/tree/edb408b5618b3b1cd3f40c5759aa5da4aa56bb7b/exa
+mples/extended/electromagnetic/TestEm5.
+50. Neumann, P. et al. Assessing the scales in numerical weather and climate predictions: will
+exascale be the rescue? Philos. Trans. R. Soc. Math. Phys. Eng. Sci. 377, 20180148 (2019).
+51. Keeley, S. Modelling and Prediction: Integrated Forecast System. ECMWF
+https://www.ecmwf.int/en/research/modelling-and-prediction (2013).
+52. Zängl, G., Reinert, D., Rípodas, P. & Baldauf, M. The ICON (ICOsahedral Non-hydrostatic)
+modelling framework of DWD and MPI-M: Description of the non-hydrostatic dynamical core. Q.
+J. R. Meteorol. Soc. 141, 563–579 (2015).
+53. Wetter und Klima - Deutscher Wetterdienst - Numerical weather prediction models - ICON
+(Icosahedral Nonhydrostatic) Model.
+https://www.dwd.de/EN/research/weatherforecasting/num_modelling/01_num_weather_predict
+ion_modells/icon_description.html.18
+54. Baylis, S. Green computing. (2011) doi:10.21957/CEMUB9F8.
+55. Wetter und Klima - Deutscher Wetterdienst - Information technology - Data processing, DMRZ.
+https://www.dwd.de/EN/aboutus/it/functions/Teasergroup/dataprocessing.html?nn=24864.
+56. León, J. A. P. Progress in using single precision in the IFS. ECMWF
+https://www.ecmwf.int/en/newsletter/157/meteorology/progress-using-single-precision-ifs
+(2018).
+57. Lentze, G. ECMWF signs contract with Atos for new supercomputer. ECMWF
+https://www.ecmwf.int/en/about/media-centre/news/2020/ecmwf-signs-contract-atos-new-
+supercomputer (2020).
+58. ECMWF. ECMWF Q&A. https://www.ecmwf.int/sites/default/files/medialibrary/2019-
+02/Industry_day_-_QA.pdf.
+59. Devlin, J., Chang, M.-W., Lee, K. & Toutanova, K. BERT: Pre-training of Deep Bidirectional
+Transformers for Language Understanding. ArXiv181004805 Cs (2019).
+60. Beltagy, I., Lo, K. & Cohan, A. SciBERT: A Pretrained Language Model for Scientific Text. in
+Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and
+the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) 3615–
+3620 (Association for Computational Linguistics, 2019). doi:10.18653/v1/D19-1371.
+61. Lee, J. et al. BioBERT: a pre-trained biomedical language representation model for biomedical
+text mining. Bioinformatics 36, 1234–1240 (2020).
+62. NVIDIA AI. BERT Meets GPUs – Future Vision – Medium.
+https://web.archive.org/web/20190521104957/https://medium.com/future-vision/bert-meets-
+gpus-403d3fbed848 (2019).
+63. Adiwardana, D. et al. Towards a Human-like Open-Domain Chatbot. ArXiv200109977 Cs Stat
+(2020).
+64. Teich, P. Tearing Apart Google’s TPU 3.0 AI Coprocessor. The Next Platform
+https://www.nextplatform.com/2018/05/10/tearing-apart-googles-tpu-3-0-ai-coprocessor/
+(2018).
+65. Allen, M. R. et al. A solution to the misrepresentations of CO 2 -equivalent emissions of short-
+lived climate pollutants under ambitious mitigation. Npj Clim. Atmospheric Sci. 1, 1–8 (2018).
+66. Cutress, I. Why Intel Processors Draw More Power Than Expected: TDP and Turbo Explained.
+https://www.anandtech.com/show/13544/why-intel-processors-draw-more-power-than-
+expected-tdp-turbo.
+67. SA.GOV.AU - SA’s electricity supply and market. https://www.sa.gov.au/topics/energy-and-
+environment/energy-supply/sas-electricity-supply-and-market.
+68. Zoie, R. C., Mihaela, R. D. & Alexandru, S. An analysis of the power usage effectiveness metric
+in data centers. in 2017 5th International Symposium on Electrical and Electronics Engineering
+(ISEEE) 1–6 (2017). doi:10.1109/ISEEE.2017.8170650.
+69. Yuventi, J. & Mehdizadeh, R. A critical analysis of Power Usage Effectiveness and its use in
+communicating data center energy consumption. Energy Build. 64, 90–94 (2013).
+70. ISO/IEC 30134-2:2016(en), Information technology — Data centres — Key performance
+indicators — Part 2: Power usage effectiveness (PUE). https://www.iso.org/obp/ui/#iso:std:iso-
+iec:30134:-2:ed-1:v1:en.19
+71. McCarthy, R. & Yang, C. Determining marginal electricity for near-term plug-in and fuel cell
+vehicle demands in California: Impacts on vehicle greenhouse gas emissions. J. Power Sources
+195, 2099–2109 (2010).
+72. Shehabi, A. et al. United States Data Center Energy Usage Report. (2016).
+73. Azure global infrastructure | Microsoft Azure. https://azure.microsoft.com/en-gb/global-
+infrastructure/.
+74. carbonfootprint.com - Carbon Offset Projects.
+https://www.carbonfootprint.com/carbonoffsetprojects.html.
+75. Project Map – ClimateCare. https://climatecare.org/project-map/.
+76. Michaelowa, Axel, Shishlov, Igor, Hoch, Stephan, Bofill, Patricio & Espelage, Aglaja. Overview
+and comparison of existing carbon crediting schemes. https://www.nefco.org/wp-
+content/uploads/2019/05/NICA-Crediting-Mechanisms-Final-February-2019.pdf (2019).
+77. Emissions Trading | UNFCCC. https://unfccc.int/process/the-kyoto-
+protocol/mechanisms/emissions-trading.
+78. PAS 2060 Carbon Neutrality. https://www.bsigroup.com/en-GB/PAS-2060-Carbon-Neutrality/.
+79. United Nations. Transforming our world: the 2030 Agenda for Sustainable Development.
+https://www.un.org/ga/search/view_doc.asp?symbol=A/RES/70/1&Lang=E (2015).
+80. The Gold Standard. https://www.goldstandard.org/.
+81. Verra. Verra https://verra.org/.
+82. American Carbon Registry. https://americancarbonregistry.org/.
+Acknowledgements
+LL was supported by the University of Cambridge MRC DTP (MR/S502443/1). JG was supported by
+a La Trobe University Postgraduate Research Scholarship jointly funded by the Baker Heart and
+Diabetes Institute and a La Trobe University Full-Fee Research Scholarship. This work was
+supported by core funding from: the UK Medical Research Council (MR/L003120/1), the British Heart
+Foundation (RG/13/13/30194; RG/18/13/33946) and the National Institute for Health Research
+[Cambridge Biomedical Research Centre at the Cambridge University Hospitals NHS Foundation
+Trust] [*]. This work was also supported by Health Data Research UK, which is funded by the UK
+Medical Research Council, Engineering and Physical Sciences Research Council, Economic and
+Social Research Council, Department of Health and Social Care (England), Chief Scientist Office of
+the Scottish Government Health and Social Care Directorates, Health and Social Care Research
+and Development Division (Welsh Government), Public Health Agency (Northern Ireland), British
+Heart Foundation and Wellcome. MI was supported by the Munz Chair of Cardiovascular Prediction
+and Prevention. This study was supported by the Victorian Government’s Operational Infrastructure
+Support (OIS) program.
+*The views expressed are those of the authors and not necessarily those of the NHS, the NIHR or
+the Department of Health and Social Care.20
+Supplementary Materials
+Supplementary Figure 1: Comparison of power draw (per core) between popular CPUs and
+memory.21
+Supplementary Figure 2: Worldwide carbon intensity distribution by countries, curated from
+Carbon Footprint35 .
+Supplementary Note 1
+We estimated the annual GHG emissions of data centres to be around 100 Mt CO2 e using two
+distinct approaches. First, using the total electricity demand of data centres, estimated to be around
+200 TWh1 (1% of global demand) and the world average carbon intensity (475 gCO2 e/kWh41 ).
+Equation (3) (Methods) gives a total footprint of 95 x 106 tCO2 e. Another estimation is based on data
+centres being responsible for 0.3% of global emissions1 (0.3% of 36 x 10 9 tCO2 e23 ), which yields
+108 x 106 tCO2 e.

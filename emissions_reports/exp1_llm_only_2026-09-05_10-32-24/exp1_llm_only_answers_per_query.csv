@@ -1,0 +1,122 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+10,"Outline a rigorous methodology an ESG auditor would use to compare the emissions intensity year-over-year for two competing aviation firms, detailing the specific normalization metrics they must use.",,123.79562401771545,error,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=120)",0.0006145827989233871,0.6145827989233871,0.0008614346511111,0.000522454799445,0.0,0.0003389798516661
+11,"Construct a hypothetical comparative sustainability scorecard between an EV manufacturer and a traditional internal combustion engine (ICE) manufacturer, justifying the weights given to Scope 3 supply chain vs. product use-phase emissions.",,124.39070463180542,error,"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=120)",0.0006071030700032634,0.6071030700032634,0.0008509506322222,0.000511979354167,0.0,0.0003389712780552
+12,Detail the step-by-step logical reconciliation process required to align a company's carbon footprint reported under the EU's CSRD with the figures reported in its standard US SEC 10-K filing.,"Reconciling a company's carbon footprint reported under the EU's Corporate Sustainability Reporting Directive (CSRD) with the figures reported in its standard US Securities and Exchange Commission (SEC) 10-K filing requires a systematic and logical approach. Here's a step-by-step guide to facilitate this reconciliation:
+
+**Step 1: Review CSRD and SEC 10-K Reporting Requirements**
+
+ Familiarize yourself with the specific requirements and guidelines for sustainability reporting under CSRD and the SEC's 10-K filing format. This includes understanding the scope, boundaries, and methodologies used for calculating greenhouse gas (GHG) emissions in both reporting frameworks.
+
+**Step 2: Identify Key Differences Between CSRD and SEC 10-K**
+
+ Document the key differences between the two reporting frameworks, including:
+
+*   Scope: Is the scope of emissions reporting the same or different between CSRD and SEC 10-K?
+*   Methodologies: Are the methodologies used for calculating GHG emissions consistent between both frameworks?
+*   Boundaries: Are the boundaries for emissions reporting (e.g., supply chain, operations, etc.) consistent between both frameworks?
+*   Reporting periods: Are the reporting periods for CSRD and SEC 10-K the same?
+
+**Step 3: Gather Relevant Data**
+
+Collect and review data from various sources, including:
+
+*   Energy consumption and production data
+*   Fuel consumption and emissions data
+*   Transportation-related emissions data
+*   Supply chain-related emissions data
+*   Emissions data from business travel and employee commuting
+
+**Step 4: Apply CSRD and SEC 10-K Methodologies**
+
+Apply the methodologies specified in both CSRD and SEC 10-K to the gathered data, ensuring that you follow the specific requirements for each framework. This includes:
+
+*   CSRD: Apply the EU's Greenhouse Gas Protocol (GHGP) methodology and report emissions in line with the EU's Emissions Trading System (ETS) and the Non-ETS sectors.
+*   SEC 10-K: Apply the GHG Protocol Corporate Accounting and Reporting Standard (2015) and report emissions in line with the SEC's rules and guidelines.
+
+**Step 5: Reconcile Data**
+
+Reconcile the data reported under CSRD with the data reported in the SEC 10-K filing by:
+
+*   Identifying any differences in scope, methodologies, or boundaries between the two frameworks
+*   Calculating the impact of these differences on the reported emissions data
+*   Adjusting the data as necessary to ensure consistency between both frameworks
+
+**Step 6: Document and Verify Reconciliation**
+
+Document the reconciliation process and the adjustments made to ensure consistency between CSRD and SEC 10-K reporting. Verify the accuracy of the reconciliation by:
+
+*   Reviewing the data and calculations for accuracy and completeness
+*   Ensuring that all adjustments are properly documented and justified
+*   Obtaining approval from relevant stakeholders and management.
+
+**Step 7: Continuous Improvement**
+
+Continuously monitor and improve the reconciliation process by:
+
+*   Reviewing and updating the reconciliation methodology as necessary to ensure alignment with evolving regulatory requirements and industry best practices.
+*   Identifying areas for improvement and implementing changes to enhance the accuracy and efficiency of the reconciliation process.",110.72318410873413,ok,,0.0007057033994156977,0.7057033994156977,0.000989154533333,0.000687326006111,0.0,0.000301828527222
+13,"Imagine a logistics company sets a baseline of 500,000 metric tons of Scope 1 emissions for FY2025. What specific operational factors could drive that number?","A baseline of 500,000 metric tons of Scope 1 emissions for FY2025 would require a thorough analysis of the logistics company's operations. Here are some specific operational factors that could drive that number:
+
+**Fleet-related factors:**
+
+1. **Number of vehicles:** The company has a large fleet of vehicles, including trucks, vans, and other equipment, which are the primary sources of Scope 1 emissions.
+2. **Fuel type and efficiency:** The company's vehicles are mostly diesel-powered, which is a more emissions-intensive fuel compared to electric or alternative fuels. The fuel efficiency of the vehicles, including idle time, could also contribute to higher emissions.
+3. **Vehicle age and maintenance:** Older vehicles or those with poor maintenance could lead to higher emissions due to inefficient engines or faulty emissions controls.
+
+**Operational factors:**
+
+1. **Mileage and routes:** The company's transportation network involves a significant number of miles traveled, which would contribute to higher emissions. Routes with heavy traffic, congestion, or construction delays could also increase emissions.
+2. **Cargo volume and weight:** The company's transportation services involve handling large volumes of cargo, which would increase the weight and, consequently, the emissions associated with each shipment.
+3. **Loading and unloading processes:** Inefficient loading and unloading processes could lead to increased emissions due to idling vehicles, which would contribute to higher Scope 1 emissions.
+
+**Warehouse and facility-related factors:**
+
+1. **Energy consumption:** The company's warehouses and facilities consume a significant amount of energy for lighting, heating, cooling, and other operations.
+2. **Equipment and machinery:** The use of forklifts, cranes, and other equipment for material handling contributes to emissions from energy consumption and equipment operation.
+
+**Business and operational practices:**
+
+1. **Transportation mode:** The company's reliance on trucks and other fossil-fuel-based vehicles could contribute to higher emissions compared to alternative modes of transportation, such as rail or water.
+2. **Service level agreements:** The company's commitment to meeting certain service level agreements (SLAs), such as same-day delivery or tight delivery windows, could lead to increased emissions due to faster transportation times or more frequent shipments.
+3. **Peak season demand:** The company's peak season demand, which could be driven by e-commerce growth or seasonal fluctuations, might require additional resources, leading to higher emissions.
+
+**Geographic and regulatory factors:**
+
+1. **Location of operations:** The company's operations are concentrated in areas with high population density, traffic congestion, or strict regulations, which could contribute to higher emissions.
+2. **Regulatory requirements:** The company is subject to specific regulations, such as fuel standards or emissions limits, which could drive the baseline emissions number.
+
+These factors would need to be quantified and analyzed to determine their specific contribution to the company's Scope 1 emissions baseline of 500,000 metric tons.",103.74400353431702,ok,,0.0007123985001925276,0.7123985001925276,0.0009985387722215,0.000714353818333,0.0,0.0002841849538885
+14,"If they transition 20% of their fleet to electric vehicles by FY2026, what is the expected directional shift in their Scope 1 versus Scope 2 emissions?","To answer this question, we'll need to make some assumptions about the company's current fleet composition and emissions profile, as well as the emissions characteristics of electric vehicles (EVs) versus their internal combustion engine (ICE) counterparts.
+
+**Assumptions:**
+
+1. The company has a total fleet of 100,000 vehicles.
+2. 20% of the fleet will be transitioned to electric vehicles (EVs) by FY2026.
+3. The current fleet consists entirely of ICE vehicles, which we'll assume have a average emissions rate of 200 g/mile (Scope 1 emissions).
+4. EVs have a average emissions rate of 50 g/mile (Scope 1 emissions), reflecting the lower emissions associated with electricity generation and charging.
+5. The company's Scope 2 emissions are assumed to be negligible, as they are not directly related to the fleet's emissions.
+
+**Calculations:**
+
+1. Current fleet emissions (Scope 1): 100,000 vehicles x 200 g/mile = 20,000,000 g/mile
+2. Emissions reduction from transitioning 20% of the fleet to EVs: 20% of 100,000 vehicles = 20,000 EVs
+3. Emissions savings from EVs: 20,000 EVs x 50 g/mile = 1,000,000 g/mile
+4. Net emissions reduction: 20,000,000 g/mile - 1,000,000 g/mile = 19,000,000 g/mile
+
+**Expected directional shift in Scope 1 emissions:**
+
+By transitioning 20% of their fleet to electric vehicles, the company can expect a significant reduction in Scope 1 emissions. The expected directional shift would be:
+
+* A 95% reduction in Scope 1 emissions, from 20,000,000 g/mile to 1,000,000 g/mile.
+
+**Scope 2 emissions:**
+
+As mentioned earlier, Scope 2 emissions are assumed to be negligible. However, if the company were to transition to renewable energy sources or increase their energy efficiency, Scope 2 emissions might also be affected.
+
+Keep in mind that these calculations are simplified and based on several assumptions. In reality, the emissions impact of transitioning to electric vehicles can be influenced by various factors, such as:
+
+* The source of electricity used to charge EVs (e.g., renewable energy sources, grid mix)
+* The efficiency of EVs versus ICE vehicles
+* The specific emissions profiles of different vehicle models and manufacturers
+
+This analysis provides a rough estimate of the potential emissions reductions associated with transitioning a portion of the fleet to electric vehicles.",99.45333361625671,ok,,0.0006815775428081108,0.6815775428081108,0.0009553383430558,0.000683375629167,0.0,0.0002719627138888

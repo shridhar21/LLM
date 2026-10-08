@@ -1,0 +1,30 @@
+question_id,question,answer,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+3,"What is the CDP framework used for, and which companies are required to report under it?","The CDP (Climate Disclosure Project) framework is used for companies to measure and report their environmental impact, specifically in relation to climate change, water, and deforestation. The framework assesses a company's disclosure on these topics and provides a score based on the quality and completeness of their reporting.
+
+CDP is an independent, non-profit organization that collects, analyzes, and disseminates environmental, social, and governance (ESG) data from companies around the world. The framework is widely recognized and used by investors, governments, and other stakeholders to assess a company's sustainability performance.
+
+Companies are required to report under CDP based on their industry, size, and sector. Some of the sectors that are typically required to report under CDP include:
+
+1. Financial institutions
+2. Manufacturing
+3. Mining
+4. Real estate
+5. Retail
+6. Technology
+7. Transportation
+
+In addition, companies with a certain level of market capitalization or revenue are also required to report under CDP. The specific requirements vary depending on the sector and size of the company.
+
+CDP also offers different levels of reporting, including:
+
+1. CDP A-List: Companies that report high-quality data and are considered leaders in their sector.
+2. CDP B-List: Companies that report good-quality data, but may have some gaps or limitations.
+3. CDP C-List: Companies that report limited or no data on these topics.
+4. CDP Labeled: Companies that have been verified by CDP to have reported their data with high accuracy.
+
+By reporting under CDP, companies can demonstrate their commitment to sustainability and transparency, which can help to build trust with investors, customers, and other stakeholders.",25.781538724899292,ok,,5.515110406480016e-05,0.05515110406480016,7.730296417615496e-05,5.727711867833899e-06,0.0,7.157525230832108e-05
+4,"According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?","I couldn't find a specific answer protocol for uncertain responses in ESG QA benchmarks in the literature. ESG (Environmental, Social, and Governance) QA benchmarks are designed to assess the quality of an organization's ESG reporting, but I couldn't find a widely accepted protocol for handling uncertain responses.
+
+However, it's possible that the protocol used for uncertain responses in ESG QA benchmarks is similar to the protocols used in other areas, such as data validation or uncertainty handling in scientific research.
+
+If you're looking for a specific protocol or guidance on handling uncertain responses in ESG QA benchmarks, I recommend consulting the guidelines or standards used by organizations such as the Global Reporting Initiative (GRI), the Sustainability Accounting Standards Board (SASB), or the Task Force on Climate-related Financial Disclosures (TCFD). These organizations provide guidance on ESG reporting and disclosure, which may include recommendations for handling uncertain or unclear responses.",14.03597354888916,ok,,2.996833115229452e-05,0.029968331152294518,4.200533912726423e-05,3.112785243947735e-06,0.0,3.88925538833165e-05
