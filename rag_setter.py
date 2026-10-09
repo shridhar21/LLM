@@ -11,7 +11,7 @@ import pandas as pd
 import faiss
 from sentence_transformers import SentenceTransformer
 from markitdown import MarkItDown
-from codecarbon import OfflineEmissionsTracker
+from measurement import make_codecarbon_tracker
 
 
 # ============================================================
@@ -630,26 +630,14 @@ def main():
         f"{OUTDIR}..."
     )
 
-    tracker = OfflineEmissionsTracker(
-
+    tracker = make_codecarbon_tracker(
+        'rag_indexing',
         project_name=(
             f"RAG_incremental_index_"
             f"{uuid.uuid4().hex[:8]}"
         ),
-
-        output_dir=str(OUTDIR),
-
+        output_dir=OUTDIR,
         output_file="emissions.csv",
-
-        country_iso_code="IND",
-
-        pue=1.0,
-
-        measure_power_secs=1,
-
-        log_level="error",
-
-        allow_multiple_runs=True,
     )
 
     start_time = time.time()

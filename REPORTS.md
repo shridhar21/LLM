@@ -44,6 +44,12 @@ The optional PDF includes ordering information and an execution-to-question mapp
 New inference runs explicitly request CodeCarbon machine scope so supported local
 hardware activity includes the separate Ollama process. This includes background
 activity and is not a wall-socket measurement or isolated model measurement.
+`codecarbon_config.json` is the source of the tracker settings: normal LLM and RAG
+inference use the `inference` profile; RAG indexing uses `rag_indexing`. The indexing
+profile intentionally leaves `tracking_mode` and `save_to_api` to CodeCarbon's
+installed-version defaults. Each inference session also records the config profile
+and settings snapshot in its metadata; per-batch PDFs and comparison metadata tables
+display the recorded profile and settings.
 `measurement_metadata.json` records each session's effective scope, tracker version,
 hardware/backend evidence, sampling interval, country, PUE and stop failures.
 Unknown backends remain unverified. Actual coverage must be checked on the machine

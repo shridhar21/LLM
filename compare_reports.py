@@ -85,7 +85,8 @@ def load_run(folder):
         'Completion evidence': 'Summary present' if summary else 'No summary; completion unverified',
     }
     sessions = measurement.get('sessions', [])
-    for key in ('codecarbon_version', 'os', 'effective_scope', 'measure_power_secs', 'pue', 'country_iso_code', 'hardware', 'backends', 'hardware_evidence'):
+    for key in ('codecarbon_version', 'os', 'effective_scope', 'measure_power_secs', 'pue', 'country_iso_code',
+                'config_profile', 'configured_settings', 'hardware', 'backends', 'hardware_evidence'):
         metadata[key] = '; '.join(sorted({json.dumps(s[key], sort_keys=True) for s in sessions if key in s})) or 'Not recorded'
     return {'folder': folder, 'questions': indexed, 'metadata': metadata, 'summary': summary}
 

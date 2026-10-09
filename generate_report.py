@@ -131,6 +131,9 @@ def generate(folder):
         paragraph(f"Tracking sessions recorded: {len(sessions)}. Expected for this CSV: {len(rows) * (2 if rag else 1)}. Metadata describes configuration and backend evidence, not independent meter validation.")
         for key in ("codecarbon_version", "os", "effective_scope", "measure_power_secs", "pue", "country_iso_code"):
             paragraph(key + ": " + ", ".join(sorted({str(s.get(key, 'unknown')) for s in sessions})))
+        for key in ("config_profile", "configured_settings"):
+            values = sorted({json.dumps(s.get(key, 'unknown'), sort_keys=True) for s in sessions})
+            paragraph(key.replace('_', ' ').title() + ": " + "; ".join(values))
         for component in ("cpu", "gpu", "ram"):
             paragraph(component.upper() + " backend: " + "; ".join(sorted({str(s.get('backends', {}).get(component, 'unknown')) for s in sessions})))
         paragraph("Hardware: " + "; ".join(sorted({str(s.get('hardware', {})) for s in sessions})))

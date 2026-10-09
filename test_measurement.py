@@ -5,8 +5,9 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
-from measurement import complete_sum, coverage, finite, reading, stop_tracker
+from measurement import complete_sum, coverage, finite, reading, stop_tracker, load_codecarbon_config, make_codecarbon_tracker
 from generate_report import generate
 
 
@@ -36,15 +37,45 @@ class MeasurementTests(unittest.TestCase):
         self.assertTrue(math.isnan(complete_sum([])))
         self.assertEqual(coverage([0, None, 2]), {'valid': 2, 'expected': 3, 'complete': False, 'observed_sum': 2})
 
+    def test_codecarbon_config_profiles(self):
+        inference = load_codecarbon_config('inference')
+        indexing = load_codecarbon_config('rag_indexing')
+        self.assertEqual(inference['tracking_mode'], 'machine')
+        self.assertFalse(inference['save_to_api'])
+        self.assertEqual(inference['measure_power_secs'], 1)
+        self.assertEqual(indexing['measure_power_secs'], 1)
+        self.assertNotIn('tracking_mode', indexing)
+        self.assertNotIn('save_to_api', indexing)
+
+    def test_tracker_uses_named_config_profile(self):
+        captured = {}
+
+        class FakeTracker:
+            def __init__(self, **kwargs):
+                captured.update(kwargs)
+
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as temp:
+            with patch.dict('sys.modules', {'codecarbon': SimpleNamespace(OfflineEmissionsTracker=FakeTracker)}):
+                tracker = make_codecarbon_tracker('inference', 'test-run', Path(temp) / 'reports')
+        self.assertEqual(captured['project_name'], 'test-run')
+        self.assertEqual(captured['tracking_mode'], 'machine')
+        self.assertFalse(captured['save_to_api'])
+        self.assertEqual(tracker._app_config_profile, 'inference')
+        self.assertEqual(tracker._app_config_settings, load_codecarbon_config('inference'))
+
     def test_metadata_and_pdf(self):
         from pypdf import PdfReader
         with tempfile.TemporaryDirectory() as temp:
             folder = Path(temp)
             tracker = SimpleNamespace(stop=lambda: None, _tracking_mode='machine', _run_id='sample',
-                                      _conf={}, _hardware=[])
+                                      _conf={}, _hardware=[], _app_config_profile='inference',
+                                      _app_config_settings={'tracking_mode': 'machine'},
+                                      _app_config_path='codecarbon_config.json')
             self.assertTrue(math.isnan(stop_tracker(tracker, folder)))
             metadata = json.loads((folder / 'measurement_metadata.json').read_text())
             self.assertFalse(metadata['sessions'][0]['emissions_available'])
+            self.assertEqual(metadata['sessions'][0]['config_profile'], 'inference')
+            self.assertEqual(metadata['sessions'][0]['configured_settings'], {'tracking_mode': 'machine'})
             with (folder / 'answers.csv').open('w', newline='') as handle:
                 writer = csv.DictWriter(handle, fieldnames=['status', 'model_name', 'latency_s', 'energy_kwh', 'emissions_kg'])
                 writer.writeheader()

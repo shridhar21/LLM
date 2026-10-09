@@ -6,6 +6,38 @@ from datetime import datetime, timezone
 from importlib.metadata import version, PackageNotFoundError
 from pathlib import Path
 
+CODECARBON_CONFIG_PATH = Path(__file__).resolve().with_name('codecarbon_config.json')
+
+
+def load_codecarbon_config(profile):
+    """Load one named CodeCarbon configuration from the project config file."""
+    try:
+        config = json.loads(CODECARBON_CONFIG_PATH.read_text(encoding='utf-8'))
+    except (OSError, ValueError) as exc:
+        raise ValueError(f'Cannot read CodeCarbon configuration {CODECARBON_CONFIG_PATH}: {exc}') from exc
+    if not isinstance(config, dict) or not isinstance(config.get(profile), dict):
+        raise ValueError(f'CodeCarbon configuration profile {profile!r} is missing or invalid')
+    return dict(config[profile])
+
+
+def make_codecarbon_tracker(profile, project_name, output_dir, output_file='emissions.csv'):
+    """Create an offline tracker using the selected project configuration profile."""
+    from codecarbon import OfflineEmissionsTracker
+
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    settings = load_codecarbon_config(profile)
+    tracker = OfflineEmissionsTracker(
+        project_name=project_name,
+        output_dir=str(output_dir),
+        output_file=output_file,
+        **settings,
+    )
+    tracker._app_config_profile = profile
+    tracker._app_config_settings = settings
+    tracker._app_config_path = str(CODECARBON_CONFIG_PATH)
+    return tracker
+
 
 def finite(value):
     try:
@@ -61,6 +93,9 @@ def stop_tracker(tracker, directory):
             'recorded_at': datetime.now(timezone.utc).isoformat(),
             'project_name': str(getattr(tracker, '_project_name', 'unknown')),
             'run_id': str(getattr(tracker, '_run_id', 'unknown')),
+            'config_file': str(getattr(tracker, '_app_config_path', CODECARBON_CONFIG_PATH)),
+            'config_profile': str(getattr(tracker, '_app_config_profile', 'unknown')),
+            'configured_settings': getattr(tracker, '_app_config_settings', {}),
             'codecarbon_version': installed, 'os': platform.platform(),
             'requested_scope': 'machine',
             'effective_scope': str(getattr(tracker, '_tracking_mode', conf.get('tracking_mode', 'unknown'))),

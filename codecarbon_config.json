@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "inference": {
+    "country_iso_code": "IND",
+    "tracking_mode": "machine",
+    "save_to_api": false,
+    "pue": 1.0,
+    "measure_power_secs": 1,
+    "log_level": "error",
+    "allow_multiple_runs": true
+  },
+  "rag_indexing": {
+    "country_iso_code": "IND",
+    "pue": 1.0,
+    "measure_power_secs": 1,
+    "log_level": "error",
+    "allow_multiple_runs": true
+  },
+  "notes": {
+    "inference": "Shared by normal LLM and RAG inference.",
+    "rag_indexing": "tracking_mode and save_to_api are intentionally omitted to preserve CodeCarbon's installed-version defaults."
+  }
+}

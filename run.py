@@ -10,14 +10,12 @@ import faiss
 import pandas as pd
 import requests
 from sentence_transformers import SentenceTransformer
-from codecarbon import OfflineEmissionsTracker
-from measurement import finite, reading, complete_sum, coverage, stop_tracker
+from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker
 from question_order import BANK, load_bank, select_questions, identity, save_order
 
 # Paths
 QUESTIONS_FILE = BANK
 RAG_INDEX_DIR = Path("indexes/rag_faiss")
-COUNTRY_ISO = "IND"
 MODEL_NAME = "llama3.1:latest"
 
 def query_llm(prompt: str, model: str = MODEL_NAME) -> str:
@@ -99,20 +97,7 @@ def build_augmented_prompt(query: str, contexts: list) -> str:
     )
 
 def make_tracker(project_name: str, output_dir: Path, output_file: str = "emissions.csv"):
-    output_dir.mkdir(parents=True, exist_ok=True)
-    tracker = OfflineEmissionsTracker(
-        project_name=project_name,
-        output_dir=str(output_dir),
-        output_file=output_file,
-        country_iso_code=COUNTRY_ISO,
-        tracking_mode="machine",
-        save_to_api=False,
-        pue=1.0,                  # Added: Direct device-level benchmark baseline
-        measure_power_secs=1,     # Added: 1-second polling to capture short inferences
-        log_level="error",
-        allow_multiple_runs=True,
-    )
-    return tracker
+    return make_codecarbon_tracker('inference', project_name, output_dir, output_file)
 
 def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=None):
     if not emissions_csv.exists():
