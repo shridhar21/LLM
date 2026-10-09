@@ -40,6 +40,9 @@ class ComparisonTests(unittest.TestCase):
         records=aligned_rows(runs,0)
         self.assertEqual(records[1]['question'],'Question A?')
         self.assertEqual(records[1]['position'],2)
+        self.assertEqual(records[1]['mean_emissions_g'],0.5)
+        self.assertEqual(records[1]['mean_emissions_valid_runs'],2)
+        self.assertEqual(records[1]['mean_emissions_total_runs'],2)
         self.assertIsNone(records[1]['emissions_change_percent'])
         self.assertEqual(records[3]['emissions_change_percent'],-50)
         self.assertTrue(any('Models differ' in s for s in observations(runs,0)))
@@ -62,6 +65,10 @@ class ComparisonTests(unittest.TestCase):
         runs=[load_run(self.a),load_run(c)]
         validate(runs)
         self.assertTrue(any('No overall efficiency winner' in s for s in observations(runs,0)))
+        records=aligned_rows(runs,0)
+        self.assertEqual(records[0]['mean_emissions_g'],0)
+        self.assertEqual(records[0]['mean_emissions_valid_runs'],1)
+        self.assertEqual(records[0]['mean_emissions_total_runs'],2)
         self.assertIsNone(percentage(1,0))
         self.assertIsNone(percentage(None,1))
 
@@ -69,12 +76,14 @@ class ComparisonTests(unittest.TestCase):
         from pypdf import PdfReader
         out=compare([self.a,self.b],output_root=self.root/'outputs')
         text=' '.join(p.extract_text() for p in PdfReader(out/'comparison.pdf').pages)
-        for expected in ('Metadata differences','Aligned question comparison','Question A?','Cumulative emissions','model-b'):
+        for expected in ('Metadata differences','Aligned question comparison','Question A?','Cumulative emissions','model-b','Mean g'):
             self.assertIn(expected,text)
         with (out/'aligned_comparison.csv').open(encoding='utf-8',newline='') as handle:
             records=list(csv.DictReader(handle))
         self.assertEqual(len(records),6)
         self.assertEqual(records[1]['position'],'2')
+        self.assertEqual(records[1]['mean_emissions_g'],'0.5')
+        self.assertEqual(records[1]['mean_emissions_valid_runs'],'2')
 
     def test_invalid_selection_creates_no_output(self):
         with self.assertRaises(ValueError):

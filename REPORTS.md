@@ -16,6 +16,10 @@ compares recorded metadata, coverage, observed costs, per-question changes and
 execution-order cumulative emissions. Partial data never qualifies for an overall
 efficiency ranking. Historical metadata omissions are explicit; missing configuration
 cannot establish that shuffling was the only experimental difference.
+The aligned question comparison also reports each question's mean emissions across
+the selected folders, with the number of recorded readings shown; missing readings
+are excluded. This is a per-question mean, not a mean of batch totals. The same mean
+and contributor counts are included in `aligned_comparison.csv`.
 
 ## Question selection and shuffling
 

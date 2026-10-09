@@ -122,10 +122,16 @@ def total(run, key):
 def aligned_rows(runs, reference):
     records = []
     for qid, (question, baseline) in enumerate(runs[reference]['questions'].items(), 1):
+        emissions = [run['questions'][question]['emissions_g'] for run in runs]
+        available_emissions = [value for value in emissions if value is not None]
+        mean_emissions = statistics.mean(available_emissions) if available_emissions else None
         for i, run in enumerate(runs):
             current = run['questions'][question]
             records.append({'question_key': f'Q{qid}', 'question': question, 'run': f'R{i+1}',
                             'folder': run['folder'].name, 'reference_run': f'R{reference+1}', **current,
+                            'mean_emissions_g': mean_emissions,
+                            'mean_emissions_valid_runs': len(available_emissions),
+                            'mean_emissions_total_runs': len(runs),
                             'emissions_delta_g': delta(current['emissions_g'], baseline['emissions_g']),
                             'emissions_change_percent': percentage(current['emissions_g'], baseline['emissions_g'])})
     return records
@@ -289,13 +295,17 @@ def write_pdf(runs, reference, records, output):
             d.add(Circle(65+420*(len(values)-1)/n,55+220*values[-1]/maximum,2,fillColor=color,strokeColor=None))
         story.append(d)
     page('Aligned question comparison')
-    p('Q identifiers follow the reference run. Text matching is exact. Each question block compares its execution position and measured costs across runs. Percentage changes are unavailable for a zero reference. Status is shown to distinguish failed attempts.')
+    p('Q identifiers follow the reference run. Text matching is exact. Mean emissions are calculated per question across all selected runs, using recorded values only; missing readings are excluded and the contributor count is shown. Recorded costs for failed attempts are included. Percentage changes are unavailable for a zero reference.')
     for qi,q in enumerate(questions,1):
         p(f'Q{qi}: {q}','Heading3')
-        data=[['Run','Position','Status','g CO2e','Wh','Seconds','Delta g','Change %']]
+        data=[['Run','Position','Status','g CO2e','Mean g (n/runs)','Wh','Seconds','Delta g','Change %']]
         for record in records[qi*len(runs)-len(runs):qi*len(runs)]:
-            data.append([record['run'],record['position'],record['status']]+[fmt(record[k]) for k in ('emissions_g','energy_wh','latency_s','emissions_delta_g','emissions_change_percent')])
-        table(data,[35,45,65,70,70,70,70,70])
+            mean_count=f"{record['mean_emissions_valid_runs']}/{record['mean_emissions_total_runs']}"
+            mean_value=f"{fmt(record['mean_emissions_g'])} ({mean_count})"
+            data.append([record['run'],record['position'],record['status'],fmt(record['emissions_g']),mean_value,
+                         fmt(record['energy_wh']),fmt(record['latency_s']),fmt(record['emissions_delta_g']),
+                         fmt(record['emissions_change_percent'])])
+        table(data,[30,48,48,55,80,45,55,62,62])
     def footer(canvas,doc):
         canvas.setFont('Helvetica',8)
         canvas.drawString(50,22,'Local comparison | exact question-text alignment')
