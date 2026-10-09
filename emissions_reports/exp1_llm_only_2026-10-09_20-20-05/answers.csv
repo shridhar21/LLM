@@ -1,0 +1,79 @@
+topic_sheet,question_number,question_type,domain,execution_position,ordering_mode,shuffle_seed,question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+General,7,Closed-Book Scenario,"General Topics (Cross-Domain, Daily Events, GK)",1,original,,General:7,"Generate a hypothetical, objective news summary of a major global supply chain disruption, ensuring neutral tone and no subjective analysis.","**GLOBAL SUPPLY CHAIN DISRUPTION ROCKS WORLD TRADE**
+
+A sudden and widespread disruption to global supply chains has been reported, affecting multiple industries and regions. The incident, which began on [Date], has caused widespread delays and shortages in the delivery of goods and materials.
+
+According to reports from various sources, a combination of factors contributed to the disruption, including:
+
+1. **Port Congestion**: Multiple major ports worldwide, including those in Asia, Europe, and the Americas, have experienced significant congestion due to a surge in cargo volumes and equipment failures.
+2. **Rail and Trucking Issues**: Rail networks and trucking fleets have been impacted by equipment failures, weather-related disruptions, and labor shortages, further exacerbating the supply chain bottleneck.
+3. **Shipping Container Shortages**: A shortage of shipping containers, particularly in Asia, has restricted the ability to transport goods, adding to the overall disruption.
+
+The impact of the disruption has been felt across various industries, including:
+
+1. **Manufacturing**: Delays in the delivery of raw materials and components have forced many manufacturers to slow or halt production.
+2. **Retail**: Stockpiling and inventory management have been affected, leading to shortages and delays in the delivery of consumer goods.
+3. **Energy**: Energy companies have reported delays in the transportation of fuel and other supplies, potentially affecting power generation and distribution.
+
+Efforts to mitigate the disruption are underway, including:
+
+1. **Government Intervention**: Authorities have implemented measures to ease congestion at ports, including increased staffing and equipment.
+2. **Private Sector Efforts**: Companies are working together to share resources, adjust logistics, and find alternative transportation options.
+3. **Global Coordination**: International organizations and industry associations are collaborating to share information, coordinate responses, and identify solutions.
+
+The full extent of the disruption and the time required to resolve the issue are currently unknown. As more information becomes available, this summary will be updated accordingly.",llama3,63.57205557823181,ok,,0.000373033193307993,0.37303319330799295,0.0005228648105561,0.0003579769580559,0.0,0.0001648878525001
+General,8,Closed-Book Scenario,"General Topics (Cross-Domain, Daily Events, GK)",2,original,,General:8,Synthesize the historical and economic impacts of the transition from the Gold Standard to fiat currency.,"The transition from the Gold Standard to fiat currency has had significant historical and economic impacts. The Gold Standard was a monetary system where currencies were pegged to the value of gold, with central banks backing their currencies with gold reserves. The switch to fiat currency, where currencies are not backed by any physical commodity, has led to changes in the global economy, international relations, and the role of central banks.
+
+Historical Impacts:
+
+1. **Interwar period**: The Gold Standard contributed to the economic downturn of the 1930s, as countries were forced to raise interest rates to maintain the gold standard, leading to a credit crunch and economic contraction.
+2. **Post-WWII**: The Bretton Woods system (1944) established a new monetary order, where the US dollar was pegged to gold, and other currencies were pegged to the US dollar. This system facilitated international trade and economic growth, but also created exchange rate rigidities.
+3. **1970s crisis**: The collapse of the Bretton Woods system in the early 1970s led to the abandonment of the Gold Standard, as countries switched to fiat currency systems. This crisis was caused by the US dollar's devaluation and the subsequent surge in oil prices.
+
+Economic Impacts:
+
+1. **Monetary policy flexibility**: Fiat currency allows central banks to implement monetary policies more effectively, as they are no longer constrained by the need to maintain gold reserves. This has enabled governments to respond more quickly to economic shocks.
+2. **Inflation control**: The lack of a gold anchor allows central banks to target inflation more effectively, as they can adjust the money supply to combat inflationary pressures.
+3. **Fiscal policy**: The switch to fiat currency has given governments more flexibility in implementing fiscal policies, as they are no longer constrained by the need to maintain gold reserves.
+4. **International trade**: The abandonment of the Gold Standard has facilitated international trade, as countries can now adjust their exchange rates more easily to accommodate trade imbalances.
+5. **Currency crises**: The lack of a gold anchor has increased the risk of currency crises, as countries may experience sudden and severe exchange rate fluctuations.
+6. **Global imbalances**: The switch to fiat currency has contributed to global imbalances, as countries with large trade surpluses (e.g., China) have been able to accumulate large foreign exchange reserves, which have fueled their economic growth.
+
+In conclusion, the transition from the Gold Standard to fiat currency has had significant historical and economic impacts. While the switch has provided central banks with more flexibility in implementing monetary and fiscal policies, it has also created new challenges, such as currency crises and global imbalances. The ongoing debate about the optimal monetary system continues, with some arguing that a return to a gold standard or a modified version of the Bretton Woods system could provide greater stability, while others believe that the flexibility provided by fiat currency is essential for economic growth and stability.",llama3,93.3936071395874,ok,,0.0005477457142041581,0.5477457142041582,0.000767751943334,0.0005127060336109,0.0,0.000255045909723
+General,9,Closed-Book Scenario,"General Topics (Cross-Domain, Daily Events, GK)",3,original,,General:9,"Write a comprehensive guide on basic personal digital cybersecurity hygiene, covering passwords, 2FA, and phishing awareness.","**Comprehensive Guide to Basic Personal Digital Cybersecurity Hygiene**
+
+In today's digital age, cybersecurity is an essential aspect of our online lives. As more of our personal and professional lives move online, it's crucial to take steps to protect ourselves from cyber threats. In this guide, we'll focus on three fundamental aspects of personal digital cybersecurity hygiene: passwords, two-factor authentication (2FA), and phishing awareness.
+
+**I. Passwords**
+
+1. **Use unique and complex passwords**: Aim for passwords that are at least 12 characters long, including uppercase and lowercase letters, numbers, and special characters.
+2. **Use a password manager**: Consider using a password manager like LastPass, 1Password, or Dashlane to generate and store unique, complex passwords for each of your accounts.
+3. **Change passwords regularly**: Update your passwords every 60-90 days, or immediately if you suspect a breach or compromise.
+4. **Avoid common patterns and sequences**: Don't use common patterns like ""qwerty"" or sequences like ""123456."" Instead, use a mix of characters and numbers to create a strong, unique password.
+5. **Don't reuse passwords**: Use a unique password for each account to prevent a single compromised password from granting access to multiple accounts.
+
+**II. Two-Factor Authentication (2FA)**
+
+1. **Enable 2FA for all accounts**: Whenever possible, enable 2FA for your online accounts, including email, social media, banking, and any other sensitive accounts.
+2. **Choose a reliable 2FA method**: Opt for 2FA methods like Google Authenticator, Authy, or Microsoft Authenticator, which generate time-based one-time passwords (TOTPs).
+3. **Use a physical token or authenticator app**: Consider using a physical token like a YubiKey or an authenticator app like Microsoft Authenticator for added security.
+4. **Be cautious of phishing attempts**: Be aware of phishing attempts that may try to trick you into providing your 2FA codes or authenticator app credentials.
+5. **Monitor your account activity**: Regularly check your account activity and notify the relevant authorities if you suspect any unauthorized access or suspicious activity.
+
+**III. Phishing Awareness**
+
+1. **Recognize phishing attempts**: Be aware of phishing attempts that may appear in your inbox, such as emails with urgent messages, poor grammar, or suspicious links.
+2. **Verify sender information**: Before clicking on any links or downloading attachments, verify the sender's email address and ensure it matches the expected sender's email address.
+3. **Be cautious of attachments**: Avoid opening attachments from unknown senders, as they may contain malware or viruses. Instead, ask the sender to describe the contents of the attachment.
+4. **Don't click on suspicious links**: Avoid clicking on links that seem suspicious or don't match the expected URL. Instead, type the URL directly into your browser or contact the sender to verify the link.
+5. **Report phishing attempts**: If you suspect a phishing attempt, report it to the relevant authorities, such as your email provider or the Federal Trade Commission (FTC).
+
+**Additional Tips**
+
+1. **Keep your operating system and software up to date**: Regularly update your operating system, browser, and other software to ensure you have the latest security patches.
+2. **Use a reputable antivirus software**: Install and regularly update antivirus software to protect against malware and viruses.
+3. **Back up your data**: Regularly back up your important files and data to prevent loss in the event of a cyber attack or data breach.
+4. **Monitor your credit reports**: Check your credit reports regularly to detect any suspicious activity or identity theft.
+5. **Stay informed**: Stay up to date with the latest cybersecurity news, trends, and best practices to ensure you're well-prepared to protect yourself online.
+
+By following these guidelines and practicing basic personal digital cybersecurity hygiene, you'll significantly reduce your risk of falling victim to cyber attacks and protect your online presence. Remember to stay vigilant, stay informed, and stay protected!",llama3,136.0815908908844,ok,,0.0007988660250076944,0.7988660250076944,0.0011197366355559,0.000747603427222,0.0,0.0003721332083339

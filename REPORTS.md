@@ -3,11 +3,17 @@
 ## Comparing batch reports
 
 Run `python compare_reports.py`, choose at least two folder numbers separated by
-commas, and choose a reference run. Alternatively:
-`python compare_reports.py folder_name_1 folder_name_2 --reference 1`.
+commas. The reference is chosen automatically from runs whose actual question
+sequence matches `questionbank.xlsx` sheet/row order for the selected question set.
+Include at least one such run. An explicitly recorded original-order run is
+preferred; ties use the first matching folder selected. For range runs, only the
+selected questions are checked. Missing/ambiguous workbook texts or the absence
+of an original-order run prevent comparison. Alternatively:
+`python compare_reports.py folder_name_1 folder_name_2`.
 Names are resolved under `emissions_reports`; explicit folder paths also work.
 Each comparison creates `comparison_reports/comparison_<timestamp>/comparison.pdf`
-and `aligned_comparison.csv`. PDF support uses `requirements-report.txt`.
+and `aligned_comparison.csv`. Install `requirements-report.txt` for PDF generation
+and reading the workbook used to verify the reference.
 
 Matching uses exact question text only (including whitespace, case and punctuation).
 Duplicate texts, differing question sets and mixed normal/RAG pipelines are rejected.
@@ -20,6 +26,13 @@ The aligned question comparison also reports each question's mean emissions acro
 the selected folders, with the number of recorded readings shown; missing readings
 are excluded. This is a per-question mean, not a mean of batch totals. The same mean
 and contributor counts are included in `aligned_comparison.csv`.
+The comparison PDF includes each run's recorded shuffling scheme and seed,
+side-by-side execution sequences, and an exact question-label key as its last
+section. Question labels follow the selected reference.
+Arrows and earlier/later annotations show position changes relative to that run;
+colours indicate movement rather than emissions performance. Sequence panels repeat
+the reference alongside up to two other runs. Missing scheme metadata is labelled
+explicitly rather than inferred from the execution order.
 
 ## Question selection and shuffling
 

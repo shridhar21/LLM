@@ -1,0 +1,21 @@
+{
+  "mode": "question_types",
+  "description": "Shuffle question types; keep questions within each question type in original order",
+  "seed": 182766017,
+  "questions": [
+    {
+      "Question ID": "Customer Operations:18",
+      "topic_sheet": "Customer Operations",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 1
+    },
+    {
+      "Question ID": "Customer Operations:19",
+      "topic_sheet": "Customer Operations",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 2
+    }
+  ]
+}

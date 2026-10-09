@@ -1,0 +1,21 @@
+{
+  "mode": "original",
+  "description": "Keep original order",
+  "seed": null,
+  "questions": [
+    {
+      "Question ID": "Customer Operations:18",
+      "topic_sheet": "Customer Operations",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 1
+    },
+    {
+      "Question ID": "Customer Operations:19",
+      "topic_sheet": "Customer Operations",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 2
+    }
+  ]
+}

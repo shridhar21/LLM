@@ -10,6 +10,21 @@ from xml.sax.saxutils import escape
 
 from generate_report import ANSWER_FILES, ROOT, answers_file, fmt, number
 
+# Recorded mode -> readable description and the levels it moves.
+SHUFFLE_SCHEMES = {
+    'original': ('Keep original order', 'Original order', 'Original order', 'Original order', 'Workbook grouping retained'),
+    'questions': ('Shuffle questions within each question type', 'Original order', 'Original order', 'Shuffled within each question type', 'Groups stay together'),
+    'question_types': ('Shuffle question types; keep their questions in order', 'Original order', 'Shuffled within each topic', 'Original order within each question type', 'Groups stay together'),
+    'question_types_questions': ('Shuffle question types and their questions', 'Original order', 'Shuffled within each topic', 'Shuffled within each question type', 'Groups stay together'),
+    'topics': ('Shuffle topic sheets only', 'Shuffled', 'Original order', 'Original order', 'Workbook grouping retained'),
+    'topics_questions': ('Shuffle topic sheets and questions within each question type', 'Shuffled', 'Original order', 'Shuffled within each question type', 'Groups stay together'),
+    'topics_question_types': ('Shuffle topic sheets and question types', 'Shuffled', 'Shuffled within each topic', 'Original order within each question type', 'Groups stay together'),
+    'all_levels': ('Shuffle topic sheets, question types, and their questions', 'Shuffled', 'Shuffled within each topic', 'Shuffled within each question type', 'Groups stay together'),
+    'within_topics': ('Freely shuffle questions within each topic sheet', 'Original order', 'Can mix within each topic', 'Freely shuffled within each topic', 'Topic sheets stay together; question type groups can mix'),
+    'topics_within_topics': ('Shuffle topic sheets and freely shuffle their questions', 'Shuffled', 'Can mix within each topic', 'Freely shuffled within each topic', 'Topic sheets stay together; question type groups can mix'),
+    'global': ('Freely shuffle all selected questions', 'Can mix across topics', 'Can mix across question types', 'Freely shuffled across all selected questions', 'Topic sheets and question type groups can mix'),
+}
+
 
 def read_json(path):
     if not path.exists():
@@ -88,7 +103,10 @@ def load_run(folder):
     for key in ('codecarbon_version', 'os', 'effective_scope', 'measure_power_secs', 'pue', 'country_iso_code',
                 'config_profile', 'configured_settings', 'hardware', 'backends', 'hardware_evidence'):
         metadata[key] = '; '.join(sorted({json.dumps(s[key], sort_keys=True) for s in sessions if key in s})) or 'Not recorded'
-    return {'folder': folder, 'questions': indexed, 'metadata': metadata, 'summary': summary}
+    recorded_modes = {row['ordering_mode'] for row in rows if row.get('ordering_mode')}
+    mode = order.get('mode') or (next(iter(recorded_modes)) if len(recorded_modes) == 1 else None)
+    ordering = {'mode': mode, 'description': order.get('description'), 'seed': metadata['Seed']}
+    return {'folder': folder, 'questions': indexed, 'metadata': metadata, 'summary': summary, 'ordering': ordering}
 
 
 def validate(runs):
@@ -103,6 +121,30 @@ def validate(runs):
         actual = set(run['questions'])
         if actual != expected:
             raise ValueError(f"{run['folder'].name}: exact question texts differ ({len(expected-actual)} missing, {len(actual-expected)} extra/changed). Case, punctuation and whitespace must match.")
+
+
+def workbook_question_sequence():
+    """Read the real workbook's sheet order and question row order."""
+    from question_order import load_bank
+    return load_bank()['Question'].tolist()
+
+
+def original_reference(runs):
+    """Choose a selected run whose actual sequence matches the workbook subset."""
+    selected = set(runs[0]['questions'])
+    workbook = workbook_question_sequence()
+    expected = [question for question in workbook if question in selected]
+    missing = selected-set(expected)
+    if missing:
+        raise ValueError(f'{len(missing)} selected question texts are missing from questionbank.xlsx; original order cannot be verified')
+    if len(expected) != len(selected):
+        raise ValueError('Selected question texts occur more than once in questionbank.xlsx; original order is ambiguous')
+    matches = [i for i,run in enumerate(runs) if list(run['questions']) == expected]
+    if not matches:
+        raise ValueError('Include a run that executed these questions in the original questionbank.xlsx sheet/row order')
+    # Prefer an explicitly recorded original-order run; otherwise accept a verified
+    # historical run. Break ties by the order in which the folders were selected.
+    return next((i for i in matches if runs[i].get('ordering', {}).get('mode') == 'original'), matches[0])
 
 
 def delta(value, baseline):
@@ -136,6 +178,42 @@ def aligned_rows(runs, reference):
                             'emissions_delta_g': delta(current['emissions_g'], baseline['emissions_g']),
                             'emissions_change_percent': percentage(current['emissions_g'], baseline['emissions_g'])})
     return records
+
+
+def shuffle_scheme(run):
+    """Describe recorded ordering rules without inferring them from the sequence."""
+    ordering = run.get('ordering', {})
+    mode = ordering.get('mode')
+    spec = SHUFFLE_SCHEMES.get(mode)
+    if spec:
+        description, topics, question_types, questions, groups = spec
+    else:
+        description = f'Unrecognized recorded scheme: {mode}' if mode else 'Scheme not recorded'
+        topics = question_types = questions = groups = 'Not recorded'
+    seed = ordering.get('seed') or 'Not recorded'
+    if mode == 'original' and seed == 'Not recorded':
+        seed = 'Not applicable'
+    return {'description': ordering.get('description') or description, 'seed': seed,
+            'topics': topics, 'question_types': question_types, 'questions': questions, 'groups': groups}
+
+
+def execution_sequences(runs, reference):
+    """Align actual CSV execution sequences with reference-defined question labels."""
+    baseline = {question: i for i, question in enumerate(runs[reference]['questions'], 1)}
+    sequences = []
+    for i, run in enumerate(runs):
+        cells = []
+        for position, question in enumerate(run['questions'], 1):
+            shift = position - baseline[question]
+            movement = f'Earlier by {-shift}' if shift < 0 else f'Later by {shift}' if shift > 0 else 'Same position'
+            cells.append({'question_key': f'Q{baseline[question]}', 'position': position,
+                          'shift': shift, 'movement': movement})
+        moved = sum(cell['shift'] != 0 for cell in cells)
+        sequences.append({'run': f'R{i+1}', 'scheme': shuffle_scheme(run), 'cells': cells,
+                          'moved': moved, 'unchanged': len(cells)-moved,
+                          'largest_shift': max(abs(cell['shift']) for cell in cells),
+                          'sequence': 'Different sequence' if moved else 'Identical sequence'})
+    return sequences
 
 
 def observations(runs, reference):
@@ -177,7 +255,7 @@ def write_pdf(runs, reference, records, output):
     from reportlab.lib import colors
     from reportlab.lib.styles import getSampleStyleSheet
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-    from reportlab.graphics.shapes import Drawing, Rect, Line, Circle, String
+    from reportlab.graphics.shapes import Drawing, Rect, Line, Circle, String, Polygon
     from report_charts import breakdown
     styles = getSampleStyleSheet()
     styles['BodyText'].fontSize = 9
@@ -189,20 +267,67 @@ def write_pdf(runs, reference, records, output):
         if story:
             story.append(PageBreak())
         p(title,'Title')
-    def table(rows, widths):
-        wrapped = [[Paragraph(escape(str(c)),styles['BodyText']) for c in row] for row in rows]
-        t = Table(wrapped,colWidths=widths,repeatRows=1,hAlign='LEFT')
+    def table(rows, widths, commands=(), split_rows=False):
+        wrapped = [[c if isinstance(c, (Paragraph, Drawing)) else Paragraph(escape(str(c)),styles['BodyText']) for c in row] for row in rows]
+        t = Table(wrapped,colWidths=widths,repeatRows=1,hAlign='LEFT',splitInRow=split_rows)
         t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor('#dce9ef')),('VALIGN',(0,0),(-1,-1),'TOP'),('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.whitesmoke,colors.white]),('TOPPADDING',(0,0),(-1,-1),5),('BOTTOMPADDING',(0,0),(-1,-1),5)]))
+        if commands:
+            t.setStyle(TableStyle(list(commands)))
         story.extend([t,Spacer(1,10)])
     def total_label(run,key):
         value,n,expected=total(run,key)
         return f'{fmt(value)}'+(' (partial)' if n<expected else '')+f' [{n}/{expected}]'
     page('Execution-order comparison')
     p(f"Pipeline: {runs[0]['metadata']['Pipeline']} | {len(runs)} runs | {len(runs[0]['questions'])} identical question texts | Reference: R{reference+1}")
+    p('Reference selected automatically: its actual execution sequence matches the selected questions in questionbank.xlsx sheet/row order.')
     table([['Run','Folder / model']]+[[f'R{i+1}',f"{r['folder'].name}\n{r['metadata']['Model(s)']}"] for i,r in enumerate(runs)],[40,455])
     p('Main observations','Heading2')
     for note in observations(runs,reference):
         p(note)
+    questions = list(runs[reference]['questions'])
+    sequences = execution_sequences(runs, reference)
+    page('Recorded shuffling schemes')
+    p('These rules and seeds come from saved ordering metadata, with CSV metadata used when available. Missing rules are not inferred from the observed sequence. A shuffled scheme can sometimes produce the same sequence.')
+    table([['Run', 'Recorded scheme', 'Seed']] +
+          [[s['run']+(' (reference)' if i == reference else ''), s['scheme']['description'], s['scheme']['seed']]
+           for i,s in enumerate(sequences)], [65,355,75])
+
+    # Each panel repeats the reference and shows two other runs at most.
+    others = [i for i in range(len(runs)) if i != reference]
+    for start in range(0,len(others),2):
+        selected = [reference]+others[start:start+2]
+        widths = [45]+[450/len(selected)]*len(selected)
+        for offset in range(0,len(questions),12):
+            page('Execution sequence comparison')
+            p(f'Positions {offset+1}-{min(offset+12,len(questions))}. Reference: R{reference+1}. Read down a column to follow that run. Read across a row to compare what ran at the same position.')
+            p('Up arrow / blue: Earlier by N. Down arrow / amber: Later by N. Equals / grey: Same position. N counts positions relative to the reference. Colours show movement only.')
+            headers = ['Position']
+            for i in selected:
+                s = sequences[i]
+                heading = f'<b>{s["run"]}'+(' - Reference' if i == reference else '')+'</b><br/>'
+                heading += escape(str(s['scheme']['description']))+'<br/>Seed: '+escape(str(s['scheme']['seed']))
+                headers.append(Paragraph(heading, styles['BodyText']))
+            rows, commands = [headers], []
+            for position in range(offset,min(offset+12,len(questions))):
+                row = [str(position+1)]
+                for column,i in enumerate(selected,1):
+                    cell = sequences[i]['cells'][position]
+                    shift = cell['shift']
+                    colour = colors.HexColor('#e4f0fb' if shift < 0 else '#fff0d5' if shift > 0 else '#f0f3f5')
+                    commands.append(('BACKGROUND',(column,len(rows)),(column,len(rows)),colour))
+                    drawing = Drawing(widths[column]-12,28)
+                    drawing.add(String(18,17,cell['question_key'],fontName='Helvetica-Bold',fontSize=10))
+                    drawing.add(String(18,4,'Reference' if i == reference else cell['movement'],fontSize=8))
+                    if shift:
+                        ink = colors.HexColor('#245e99' if shift < 0 else '#8b5200')
+                        drawing.add(Line(6,9,6,22,strokeColor=ink,strokeWidth=1.5))
+                        tip, base = (24,18) if shift < 0 else (7,13)
+                        drawing.add(Polygon([2,base,10,base,6,tip],fillColor=ink,strokeColor=None))
+                    else:
+                        drawing.add(String(2,14,'=',fontSize=12))
+                    row.append(drawing)
+                rows.append(row)
+            table(rows,widths,commands)
     page('Run cost and coverage')
     p('Observed sums include failed requests. Coverage is valid readings / all questions. Partial sums cannot be treated as complete batch costs.')
     table([['Run','Emissions (g)','Energy (Wh)','Request time (s)','Failures / unknown']]+[[f'R{i+1}',total_label(r,'emissions_g'),total_label(r,'energy_wh'),total_label(r,'latency_s'),sum(v['status']!='ok' for v in r['questions'].values())] for i,r in enumerate(runs)],[35,115,115,115,115])
@@ -219,7 +344,6 @@ def write_pdf(runs, reference, records, output):
             varies=len({r['metadata'][key] for r in runs})>1
             data.append([key+(' *' if varies else '')]+[r['metadata'][key] for r in subset])
         table(data,[105]+[390/len(subset)]*len(subset))
-    questions=list(runs[reference]['questions'])
     # Heatmap panels bound label density for large comparisons.
     for run_start in range(0,len(runs),6):
         subset=runs[run_start:run_start+6]
@@ -307,6 +431,9 @@ def write_pdf(runs, reference, records, output):
                          fmt(record['energy_wh']),fmt(record['latency_s']),fmt(record['emissions_delta_g']),
                          fmt(record['emissions_change_percent'])])
         table(data,[30,48,48,55,80,45,55,62,62])
+    page('Question label key')
+    p(f'Q labels follow the execution order in R{reference+1}. The same exact question text has the same label in every run and throughout this PDF.')
+    table([['Label','Exact question text']]+[[f'Q{i}',q] for i,q in enumerate(questions,1)], [45,450], split_rows=True)
     def footer(canvas,doc):
         canvas.setFont('Helvetica',8)
         canvas.drawString(50,22,'Local comparison | exact question-text alignment')
@@ -314,11 +441,10 @@ def write_pdf(runs, reference, records, output):
     SimpleDocTemplate(str(output),pagesize=(595,842),leftMargin=50,rightMargin=50,topMargin=40,bottomMargin=40).build(story,onFirstPage=footer,onLaterPages=footer)
 
 
-def compare(folders, reference=0, output_root=None):
+def compare(folders, output_root=None):
     runs=[load_run(f) for f in folders]
     validate(runs)
-    if not 0<=reference<len(runs):
-        raise ValueError('Reference run is outside the selected list')
+    reference=original_reference(runs)
     records=aligned_rows(runs,reference)
     root=Path(output_root) if output_root else ROOT.parent/'comparison_reports'
     directory=root/datetime.now().strftime('comparison_%Y-%m-%d_%H-%M-%S_%f')
@@ -334,7 +460,6 @@ def compare(folders, reference=0, output_root=None):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('folders',nargs='*',help='Batch folders (or names within emissions_reports)')
-    parser.add_argument('--reference',type=int,help='Reference position in selected runs, starting at 1')
     args=parser.parse_args()
     try:
         if args.folders:
@@ -355,14 +480,11 @@ def main():
             folders=[available[i-1] for i in indexes]
         runs=[load_run(f) for f in folders]
         validate(runs)
-        default=next((i for i,r in enumerate(runs) if r['metadata']['Ordering'] in ('original','Keep original order')),0)
         for i,r in enumerate(runs,1):
             print(f'R{i}: {r["folder"].name} ({r["metadata"]["Model(s)"]})')
-        ref=args.reference
-        if ref is None:
-            response=input(f'Reference run number [default {default+1}]: ').strip()
-            ref=int(response) if response else default+1
-        print('Saved comparison to:',compare(folders,ref-1))
+        reference=original_reference(runs)
+        print(f'Automatic original-order reference: R{reference+1} ({runs[reference]["folder"].name})')
+        print('Saved comparison to:',compare(folders))
     except (OSError,ValueError,ImportError) as exc:
         print('Comparison not generated:',exc)
         raise SystemExit(1)
