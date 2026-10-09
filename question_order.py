@@ -21,6 +21,13 @@ MODES = [
     ('topics_within_topics', 'Shuffle topic sheets; freely shuffle all questions within each topic sheet', True, False, False, True),
     ('global', 'Freely shuffle all questions across all topic sheets', False, False, False, False),
 ]
+RANGE_LABELS = {
+    'original': 'Keep original order',
+    'questions': 'Shuffle questions within each question type; keep question types in original order',
+    'question_types': 'Shuffle question types; keep questions within each question type in original order',
+    'question_types_questions': 'Shuffle question types and the questions within each question type',
+    'within_topics': 'Freely shuffle all selected questions regardless of question type',
+}
 
 
 def load_bank(path=BANK):
@@ -115,26 +122,9 @@ def choose_integer(prompt, allowed):
         print('Please enter one of the displayed valid numbers.')
 
 
-def select_questions(choice):
-    frame = load_bank()
-    if choice in ('1', '3'):
-        topics = list(dict.fromkeys(frame['topic_sheet']))
-        print('\nChoose a topic sheet:')
-        for i, topic in enumerate(topics, 1):
-            print(f'{i}. {topic}')
-        topic = topics[choose_integer('Topic sheet number: ', range(1, len(topics)+1))-1]
-        frame = frame[frame['topic_sheet'] == topic].copy()
-        print('\nSerial number | Question type')
-        for _, row in frame.iterrows():
-            print(f"{row['question_number']:>13} | {row['question_type']}")
-        numbers = set(frame['question_number'])
-        start = choose_integer('Starting serial number: ' if choice == '3' else 'Question serial number: ', numbers)
-        end = choose_integer('Ending serial number (inclusive): ', {n for n in numbers if n >= start}) if choice == '3' else start
-        frame = frame[frame['question_number'].between(start, end)].copy()
-    if choice == '1':
-        return arrange(frame)
-    options = MODES
-    if choice == '3':
+def range_options(frame):
+    """Offer distinct ordering operations for the selected questions."""
+    if frame['topic_sheet'].nunique() == 1:
         groups = grouped(frame.reset_index(drop=True))
         many_types = len(groups) > 1
         many_questions = any(len(g) > 1 for g in groups)
@@ -143,30 +133,102 @@ def select_questions(choice):
             if many_types and many_questions:
                 options += [MODES[1], MODES[2], MODES[3], MODES[8]]
             elif many_types:
-                options += [MODES[2]]  # Singleton groups: free shuffle is equivalent.
+                options += [MODES[2]]
             else:
-                options += [MODES[8]]  # One group: within-group/free shuffle are equivalent.
+                options += [MODES[8]]
+        return [(spec[0], RANGE_LABELS[spec[0]], *spec[2:]) for spec in options]
+
+    # Describe movable blocks, rather than comparing random outcomes for one seed.
+    # Singleton blocks and adjacent fixed blocks have no independent ordering effect.
+    def block(children, shuffled=False):
+        children = list(children)
+        if not shuffled:
+            children = [item for child in children
+                        for item in (child[1] if child[0] == 'fixed' else [child])]
+        if len(children) == 1:
+            return children[0]
+        return ('shuffle', tuple(sorted(children, key=repr))) if shuffled else ('fixed', tuple(children))
+
+    frame = frame.reset_index(drop=True)
+    leaves = {i: ('question', i) for i in frame.index}
+    options, seen = [], set()
+    for spec in MODES:
+        mode, _, shuffle_topics, shuffle_types, shuffle_questions, freely = spec
+        topics = []
+        for topic in dict.fromkeys(frame['topic_sheet']):
+            subset = frame[frame['topic_sheet'] == topic]
+            if freely or mode in ('original', 'topics'):
+                topics.append(block((leaves[i] for i in subset.index), freely))
+            else:
+                groups = [block((leaves[i] for i in group), shuffle_questions)
+                          for group in grouped(subset)]
+                topics.append(block(groups, shuffle_types))
+        signature = block(leaves.values(), True) if mode == 'global' else block(topics, shuffle_topics)
+        if signature not in seen:
+            seen.add(signature)
+            options.append(spec)
+    return options
+
+
+def select_questions(choice):
+    frame = load_bank()
+    selection = None
+    if choice in ('1', '3'):
+        topics = list(dict.fromkeys(frame['topic_sheet']))
+        print('\nChoose a topic sheet:')
+        for i, topic in enumerate(topics, 1):
+            print(f'{i}. {topic}')
+        if choice == '3':
+            print(f'{len(topics)+1}. Free range across topic sheets')
+        picked = choose_integer('Topic sheet number: ', range(1, len(topics)+(2 if choice == '3' else 1)))
+        if picked == len(topics)+1:
+            frame['workbook_position'] = range(1, len(frame)+1)
+            print('\nWorkbook serial | Topic sheet | Sheet serial | Question type')
+            for _, row in frame.iterrows():
+                print(f"{row['workbook_position']:>15} | {row['topic_sheet']} | {row['question_number']} | {row['question_type']}")
+            print('Workbook serials follow sheet order and question row order. Both endpoints are included.')
+            numbers = set(frame['workbook_position'])
+            start = choose_integer('Starting workbook serial number: ', numbers)
+            end = choose_integer('Ending workbook serial number (inclusive): ', {n for n in numbers if n >= start})
+            frame = frame[frame['workbook_position'].between(start, end)].copy()
+            selection = {'kind': 'free_range', 'start': start, 'end': end, 'numbering': 'workbook_position'}
+        else:
+            topic = topics[picked-1]
+            frame = frame[frame['topic_sheet'] == topic].copy()
+            print('\nSerial number | Question type')
+            for _, row in frame.iterrows():
+                print(f"{row['question_number']:>13} | {row['question_type']}")
+            numbers = set(frame['question_number'])
+            start = choose_integer('Starting serial number: ' if choice == '3' else 'Question serial number: ', numbers)
+            end = choose_integer('Ending serial number (inclusive): ', {n for n in numbers if n >= start}) if choice == '3' else start
+            frame = frame[frame['question_number'].between(start, end)].copy()
+    if choice == '1':
+        return arrange(frame)
+    options = range_options(frame) if choice == '3' else MODES
     print('\nChoose question execution order:')
     print('Follow-Up 1-5 form one question type group. Within-group shuffling can reorder follow-ups.')
     for i, spec in enumerate(options, 1):
-        label = spec[1]
-        if choice == '3' and spec[0] == 'within_topics':
-            label = 'Freely shuffle all selected questions regardless of question type'
-        print(f'{i}. {label}')
+        print(f'{i}. {spec[1]}')
     selected = options[choose_integer(f'Enter your choice (1-{len(options)}): ', range(1,len(options)+1))-1]
     result = arrange(frame, selected[0])
+    result.attrs['ordering']['description'] = selected[1]
+    if selection:
+        result.attrs['ordering']['selection'] = selection
     print(f"Selected {len(result)} questions. Shuffle seed: {result.attrs['ordering']['seed']}")
     return result
 
 
 def identity(row, position):
-    return {key: row.get(key, default) for key, default in
+    result = {key: row.get(key, default) for key, default in
             [('topic_sheet', ''), ('question_number', ''), ('question_type', ''), ('domain', ''),
              ('execution_position', position), ('ordering_mode', 'original'), ('shuffle_seed', None)]}
+    if 'workbook_position' in row:
+        result['workbook_position'] = row['workbook_position']
+    return result
 
 
 def save_order(frame, folder):
-    columns = [c for c in ('Question ID', 'topic_sheet', 'question_number', 'question_type', 'execution_position') if c in frame]
+    columns = [c for c in ('Question ID', 'topic_sheet', 'question_number', 'question_type', 'execution_position', 'workbook_position') if c in frame]
     metadata = dict(frame.attrs.get('ordering', {'mode': 'original', 'seed': None}))
     metadata['questions'] = frame[columns].to_dict(orient='records')
     (Path(folder) / 'question_order.json').write_text(json.dumps(metadata, indent=2, default=str), encoding='utf-8')

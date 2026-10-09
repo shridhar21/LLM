@@ -1,0 +1,77 @@
+{
+  "mode": "original",
+  "description": "Keep original order",
+  "seed": null,
+  "questions": [
+    {
+      "Question ID": "Customer Operations:10",
+      "topic_sheet": "Customer Operations",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 1
+    },
+    {
+      "Question ID": "Customer Operations:11",
+      "topic_sheet": "Customer Operations",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 2
+    },
+    {
+      "Question ID": "Customer Operations:12",
+      "topic_sheet": "Customer Operations",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 3
+    },
+    {
+      "Question ID": "Customer Operations:13",
+      "topic_sheet": "Customer Operations",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 4
+    },
+    {
+      "Question ID": "Customer Operations:14",
+      "topic_sheet": "Customer Operations",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 5
+    },
+    {
+      "Question ID": "Customer Operations:15",
+      "topic_sheet": "Customer Operations",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 6
+    },
+    {
+      "Question ID": "Customer Operations:16",
+      "topic_sheet": "Customer Operations",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 7
+    },
+    {
+      "Question ID": "Customer Operations:17",
+      "topic_sheet": "Customer Operations",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 8
+    },
+    {
+      "Question ID": "Customer Operations:18",
+      "topic_sheet": "Customer Operations",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 9
+    },
+    {
+      "Question ID": "Customer Operations:19",
+      "topic_sheet": "Customer Operations",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 10
+    }
+  ]
+}

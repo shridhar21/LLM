@@ -10,7 +10,7 @@ import faiss
 import pandas as pd
 import requests
 from sentence_transformers import SentenceTransformer
-from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker
+from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 
 # Paths
@@ -190,7 +190,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
         ret_latency_s = time.time() - t_ret_start
         ret_emissions_kg = stop_tracker(tracker_ret, run_dir)
         
-        row_ret = latest_row_for_run(emissions_csv, known_run_ids, getattr(tracker_ret, '_run_id', None))
+        row_ret = latest_row_for_run(emissions_csv, known_run_ids, tracker_run_id(tracker_ret))
         if row_ret and "run_id" in row_ret:
             known_run_ids.add(str(row_ret["run_id"]))
 
@@ -214,7 +214,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
         gen_latency_s = time.time() - t_gen_start
         gen_emissions_kg = stop_tracker(tracker_gen, run_dir)
         
-        row_gen = latest_row_for_run(emissions_csv, known_run_ids, getattr(tracker_gen, '_run_id', None))
+        row_gen = latest_row_for_run(emissions_csv, known_run_ids, tracker_run_id(tracker_gen))
         if row_gen and "run_id" in row_gen:
             known_run_ids.add(str(row_gen["run_id"]))
             

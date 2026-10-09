@@ -30,6 +30,13 @@ two free within-topic combinations, and global free shuffle.
 Range batches first select a topic, display serial-number/question-type mapping,
 and select an inclusive serial range. Their ordering menu shows only distinct,
 effective options. Single-question runs also select a topic and serial number.
+The range topic menu also offers **Free range across topic sheets**. Its combined
+mapping uses workbook-wide serials in sheet/row order and shows each question's
+topic, original sheet serial, and question type. Choose inclusive start/end
+workbook serials, then an execution order. Multi-topic ranges support all 11
+ordering schemes, with equivalent or ineffective choices removed; ranges within
+one topic use the single-topic menu. Results retain original question identities
+and add `workbook_position`; `question_order.json` also records the selected bounds.
 
 Hierarchical shuffles group by topic sheet and question type. Follow-Up 1-5 form
 one group; their order changes only when questions within that group are shuffled.

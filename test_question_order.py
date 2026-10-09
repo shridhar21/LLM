@@ -1,7 +1,10 @@
 import unittest
+import json
+import tempfile
+from pathlib import Path
 from unittest.mock import patch
 import pandas as pd
-from question_order import MODES, arrange, grouped, load_bank, select_questions
+from question_order import MODES, arrange, grouped, load_bank, select_questions, range_options, save_order, identity
 
 
 class OrderingTests(unittest.TestCase):
@@ -51,6 +54,47 @@ class OrderingTests(unittest.TestCase):
             result = select_questions('3')
         self.assertEqual(len(result), 1)
         self.assertFalse(any('2. Shuffle' in str(call) for call in output.call_args_list))
+
+    def test_free_range_all_modes_preserve_selection_and_order(self):
+        free_choice = str(self.bank['topic_sheet'].nunique()+1)
+        selected = self.bank.iloc[:40]
+        self.assertEqual([m[0] for m in range_options(selected)], [m[0] for m in MODES])
+        for number, spec in enumerate(MODES, 1):
+            with patch('builtins.input', side_effect=[free_choice,'1','40',str(number)]), \
+                    patch('builtins.print'), patch('question_order.secrets.randbits', return_value=42):
+                result = select_questions('3')
+            self.assertEqual(result['Question ID'].tolist(), arrange(selected,spec[0],42)['Question ID'].tolist())
+            self.assertEqual(set(result['workbook_position']),set(range(1,41)))
+            self.assertEqual(result.attrs['ordering']['selection']['kind'],'free_range')
+
+    def test_free_range_boundary_validation_and_saved_identity(self):
+        free_choice = str(self.bank['topic_sheet'].nunique()+1)
+        with patch('builtins.input', side_effect=[free_choice,'0','20','19','21','1']), patch('builtins.print'):
+            result = select_questions('3')
+        self.assertEqual(result['Question ID'].tolist(),self.bank.iloc[19:21]['Question ID'].tolist())
+        self.assertEqual(result['topic_sheet'].nunique(),2)
+        self.assertEqual(identity(result.iloc[0],1)['workbook_position'],20)
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as temp:
+            save_order(result,Path(temp))
+            recorded=json.loads((Path(temp)/'question_order.json').read_text())
+        self.assertEqual(recorded['selection'],{'kind':'free_range','start':20,'end':21,'numbering':'workbook_position'})
+        self.assertEqual([q['workbook_position'] for q in recorded['questions']],[20,21])
+
+    def test_free_range_within_one_sheet_uses_single_topic_labels(self):
+        free_choice = str(self.bank['topic_sheet'].nunique()+1)
+        with patch('builtins.input',side_effect=[free_choice,'2','6','1']),patch('builtins.print') as output:
+            result=select_questions('3')
+        lines=[str(call.args[0]) for call in output.call_args_list if call.args]
+        menu=lines[lines.index('\nChoose question execution order:')+1:]
+        self.assertFalse(any('topic sheet' in line.lower() for line in menu))
+        self.assertEqual(result['workbook_position'].tolist(),[2,3,4,5,6])
+
+    def test_multi_topic_range_hides_equivalent_operations(self):
+        frame=pd.DataFrame({'topic_sheet':['A','B'],'question_type':['Direct','Direct']})
+        self.assertEqual([spec[0] for spec in range_options(frame)],['original','topics'])
+        frame=pd.DataFrame({'topic_sheet':['A','A','B','B'],'question_type':['Direct']*4})
+        self.assertEqual([spec[0] for spec in range_options(frame)],
+                         ['original','questions','topics','topics_questions','global'])
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 import requests
-from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker
+from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 
 # Base paths
@@ -160,7 +160,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str 
         emissions_kg = stop_tracker(tracker, run_dir)
         latency_s = time.time() - t0
         
-        row = latest_row_for_run(emissions_csv, known_run_ids, getattr(tracker, '_run_id', None))
+        row = latest_row_for_run(emissions_csv, known_run_ids, tracker_run_id(tracker))
         if row and "run_id" in row:
             known_run_ids.add(str(row["run_id"]))
             

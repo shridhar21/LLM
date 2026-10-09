@@ -63,6 +63,17 @@ def coverage(values):
             'observed_sum': sum(valid) if valid else None}
 
 
+def tracker_run_id(tracker):
+    """Get the current CodeCarbon ID, with compatibility for older tracker versions."""
+    for attribute in ('run_id', '_run_id'):
+        value = getattr(tracker, attribute, None)
+        if value is not None:
+            value = str(value).strip()
+            if value and value.lower() not in ('unknown', 'none', 'nan'):
+                return value
+    return None
+
+
 def stop_tracker(tracker, directory):
     """Preserve failure as missing and save evidence from the actual tracker instance."""
     error = None
@@ -92,7 +103,7 @@ def stop_tracker(tracker, directory):
         session = {
             'recorded_at': datetime.now(timezone.utc).isoformat(),
             'project_name': str(getattr(tracker, '_project_name', 'unknown')),
-            'run_id': str(getattr(tracker, '_run_id', 'unknown')),
+            'run_id': tracker_run_id(tracker) or 'unknown',
             'config_file': str(getattr(tracker, '_app_config_path', CODECARBON_CONFIG_PATH)),
             'config_profile': str(getattr(tracker, '_app_config_profile', 'unknown')),
             'configured_settings': getattr(tracker, '_app_config_settings', {}),
