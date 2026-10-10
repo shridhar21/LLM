@@ -94,7 +94,7 @@ class ConversationTests(unittest.TestCase):
             save_order(output, temp)
             saved = json.loads((Path(temp) / 'question_order.json').read_text())
             self.assertIn('allow_interleaving', saved['conversation_order_policy'])
-            self.assertIn('other questions may run between', saved['description'])
+            self.assertIn('allowing other questions between turns', saved['description'])
             self.assertEqual([q['Question ID'] for q in saved['questions']], output['Question ID'].tolist())
 
     def test_single_followup_requires_explicit_prerequisite_choice(self):

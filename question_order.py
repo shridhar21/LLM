@@ -11,23 +11,23 @@ from conversation import annotate_chains, execution_units
 BANK = Path(__file__).resolve().parent / 'questionbank.xlsx'
 MODES = [
     ('original', 'Keep original order', False, False, False, False),
-    ('questions', 'Shuffle questions within each question type; keep topic sheets and question types in original order', False, False, True, False),
-    ('question_types', 'Shuffle question types within each topic sheet; keep topic sheet order and question order within each question type', False, True, False, False),
-    ('question_types_questions', 'Shuffle question types and questions within each question type; keep topic sheet order', False, True, True, False),
-    ('topics', 'Shuffle topic sheets only', True, False, False, False),
-    ('topics_questions', 'Shuffle topic sheets and questions within each question type; keep question type order', True, False, True, False),
-    ('topics_question_types', 'Shuffle topic sheets and question types; keep question order within each question type', True, True, False, False),
-    ('all_levels', 'Shuffle topic sheets, question types, and questions within each question type', True, True, True, False),
-    ('within_topics', 'Keep topic sheet order; freely shuffle all questions within each topic sheet', False, False, False, True),
-    ('topics_within_topics', 'Shuffle topic sheets; freely shuffle all questions within each topic sheet', True, False, False, True),
-    ('global', 'Freely shuffle all questions across all topic sheets', False, False, False, False),
+    ('questions', 'Shuffle questions within each question type except follow-ups; keep topic sheets, question type groups and follow-up questions in original order', False, False, True, False),
+    ('question_types', 'Shuffle question type groups within each topic sheet; keep topic sheets and questions within each group in original order', False, True, False, False),
+    ('question_types_questions', 'Shuffle question type groups within each topic sheet and questions within each group except follow-ups; keep topic sheets and follow-up questions in original order', False, True, True, False),
+    ('topics', 'Shuffle topic sheets only; keep all questions within each topic sheet in original order', True, False, False, False),
+    ('topics_questions', 'Shuffle topic sheets and questions within each question type except follow-ups; keep question type groups and follow-up questions within each topic sheet in original order', True, False, True, False),
+    ('topics_question_types', 'Shuffle topic sheets and question type groups within each topic sheet; keep questions within each group in original order', True, True, False, False),
+    ('all_levels', 'Shuffle topic sheets, question type groups within each topic sheet and questions within each group except follow-ups; keep follow-up questions within each group in original order', True, True, True, False),
+    ('within_topics', 'Randomly mix questions across question types within each topic sheet; keep topic sheets in original order and each follow-up chain in turn order, allowing other questions between turns', False, False, False, True),
+    ('topics_within_topics', 'Shuffle topic sheets and randomly mix questions across question types within each topic sheet; keep each follow-up chain in turn order, allowing other questions between turns', True, False, False, True),
+    ('global', 'Randomly mix questions across all selected topic sheets and question types; keep each follow-up chain in turn order, allowing other questions between turns', False, False, False, False),
 ]
 RANGE_LABELS = {
     'original': 'Keep original order',
-    'questions': 'Shuffle questions within each question type; keep question types in original order',
-    'question_types': 'Shuffle question types; keep questions within each question type in original order',
-    'question_types_questions': 'Shuffle question types and the questions within each question type',
-    'within_topics': 'Freely shuffle all selected questions regardless of question type',
+    'questions': 'Shuffle selected questions within each question type except follow-ups; keep question type groups and follow-up questions in original order',
+    'question_types': 'Shuffle question type groups; keep selected questions within each group in original order',
+    'question_types_questions': 'Shuffle question type groups and selected questions within each group except follow-ups; keep follow-up questions in original order',
+    'within_topics': 'Randomly mix selected questions across question types; keep each follow-up chain in turn order, allowing other questions between turns',
 }
 
 
@@ -95,12 +95,6 @@ def followup_policy(mode):
     return 'preserve_followup_question_type_order; no_internal_shuffle'
 
 
-def followup_note(mode):
-    if mode in ('within_topics', 'topics_within_topics', 'global'):
-        return 'follow-up turns stay ordered; other questions may run between them'
-    return 'follow-up questions keep their original order within their question type'
-
-
 def arrange(frame, mode='original', seed=None):
     frame = frame.reset_index(drop=True).copy()
     spec = next((m for m in MODES if m[0] == mode), None)
@@ -141,7 +135,6 @@ def arrange(frame, mode='original', seed=None):
     result.attrs['ordering'] = {'mode': mode, 'description': description, 'seed': seed if mode != 'original' else None}
     if any(frame.get('conversation_chain', [])):
         result.attrs['ordering']['conversation_order_policy'] = followup_policy(mode)
-        result.attrs['ordering']['description'] += ' (' + followup_note(mode) + ')'
     return result
 
 
@@ -279,8 +272,6 @@ def select_questions(choice):
     selected = options[choose_integer(f'Enter your choice (1-{len(options)}): ', range(1,len(options)+1))-1]
     result = arrange(frame, selected[0])
     result.attrs['ordering']['description'] = selected[1]
-    if any(frame.get('conversation_chain', [])):
-        result.attrs['ordering']['description'] += ' (' + followup_note(selected[0]) + ')'
     if selection:
         result.attrs['ordering']['selection'] = selection
     print(f"Selected {len(result)} questions. Shuffle seed: {result.attrs['ordering']['seed']}")
