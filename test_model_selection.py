@@ -86,7 +86,7 @@ class ModelSelectionTests(unittest.TestCase):
                 selector = Mock(return_value='qwen3:4b')
                 namespace = {'pd': pd, 'select_model': selector,
                              'select_questions': Mock(return_value=selected_questions),
-                             'process_queries': process, 'load_rag_index': Mock(return_value=('index', ['chunk'])),
+                             'process_queries': process, 'load_rag_index': Mock(return_value='index'),
                              'SentenceTransformer': Mock(return_value='embedder')}
                 main = script_function(filename, 'main', namespace)
                 inputs = [choice] + (['Custom?'] if choice == '4' else []) + ['5']
@@ -107,7 +107,7 @@ class ModelSelectionTests(unittest.TestCase):
         for filename in ('normal_llm.py', 'run.py'):
             namespace = {'select_model': Mock(side_effect=ValueError('No models installed')),
                          'select_questions': Mock(), 'process_queries': Mock(),
-                         'load_rag_index': Mock(return_value=('index', [])), 'SentenceTransformer': Mock()}
+                         'load_rag_index': Mock(return_value='index'), 'SentenceTransformer': Mock()}
             main = script_function(filename, 'main', namespace)
             with patch('builtins.input', side_effect=['2', '5']), contextlib.redirect_stdout(io.StringIO()):
                 main()
@@ -156,7 +156,7 @@ class ModelSelectionTests(unittest.TestCase):
                         index.settings = {}
                         index.generation = None
                         index.search.return_value = ([[.5]], [[0]])
-                        kwargs.update(index=index, chunks=['Context'], embedder=embedder)
+                        kwargs.update(index=index, embedder=embedder)
                     with contextlib.redirect_stdout(io.StringIO()):
                         process(questions, batch_mode=True, **kwargs)
                     self.assertEqual(query.call_count, 3)

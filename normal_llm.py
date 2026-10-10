@@ -1,13 +1,11 @@
 import os
 import time
 import uuid
-import sys
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-import requests
-from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
+from measurement import reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 from model_selection import select_model
 from cancellation import (cancellable_run, configure_run, begin_question,

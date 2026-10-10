@@ -137,7 +137,7 @@ class RagReportingTests(unittest.TestCase):
             @cancellation.cancellable_run
             def build():
                 index_corpus(corpus, base / 'index', output, {'.txt'}, lambda p, c: p.read_text(),
-                             Mock, lambda name: Embedder(), factory, lambda path: {})
+                             Mock, lambda name: Embedder(), factory)
             build()
             self.assertEqual(len(trackers), 2)
             self.assertTrue(all(t.stops == 1 for t in trackers))

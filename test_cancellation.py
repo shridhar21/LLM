@@ -92,7 +92,7 @@ class CancellationTests(unittest.TestCase):
         index = SimpleNamespace(search=lambda emb, k: (np.array([[0.]]), np.array([[0]])))
         with tempfile.TemporaryDirectory(dir=ROOT) as temp, contextlib.chdir(temp), contextlib.redirect_stdout(io.StringIO()):
             if rag:
-                function(questions, not manual, index, ['context'], Embedder(), 'fixture')
+                function(questions, not manual, index, Embedder(), 'fixture')
             else:
                 function(questions, not manual, 'fixture')
             folder = next(Path('emissions_reports').iterdir())

@@ -398,7 +398,7 @@ def build_evidence_prompt(query, contexts):
 
 
 def index_corpus(corpus, folder, output, supported, extractor, converter_factory, embedder_factory,
-                 tracker_factory, telemetry_reader):
+                 tracker_factory):
     """Incremental corpus preparation and embedding/storage measured separately."""
     import faiss
     import pandas as pd

@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from compare_reports import load_run, validate, compare, aligned_rows, observations, percentage, execution_sequences, shuffle_scheme, SHUFFLE_SCHEMES, original_reference
+from compare_reports import load_run, validate, compare, aligned_rows, observations, percentage, execution_sequences, shuffle_scheme, SHUFFLE_SCHEMES, original_reference, phase_value, phase_heatmap, write_pdf
 
 
 class ComparisonTests(unittest.TestCase):
@@ -37,6 +37,83 @@ class ComparisonTests(unittest.TestCase):
                 writer.writerow(row)
         (directory/'question_order.json').write_text(json.dumps({'mode':'original' if name=='a' else 'global','seed':42,'questions':[{}]*len(questions)}))
         return directory
+
+    def add_phases(self, folder, values):
+        path = folder / 'answers.csv'
+        with path.open(newline='', encoding='utf-8') as handle:
+            reader = csv.DictReader(handle)
+            fields, rows = reader.fieldnames, list(reader)
+        fields += ['retrieval_emissions_kg', 'generation_emissions_kg']
+        for row in rows:
+            retrieval, generation = values[row['question']]
+            row.update(retrieval_emissions_kg=retrieval, generation_emissions_kg=generation)
+        with path.open('w', newline='', encoding='utf-8') as handle:
+            writer = csv.DictWriter(handle, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(rows)
+
+    def test_rag_phase_alignment_units_and_missing_are_independent_of_order(self):
+        a = self.fixture('rag_a', ['Question A?', 'Question B?', 'Question C?'], 'm', [.006]*3, rag=True)
+        b = self.fixture('rag_b', ['Question C?', 'Question A?', 'Question B?'], 'm', [.006]*3, rag=True)
+        self.add_phases(a, {'Question A?': (.001, .005), 'Question B?': (0, .006), 'Question C?': (None, .006)})
+        self.add_phases(b, {'Question A?': (.002, .004), 'Question B?': (.003, .003), 'Question C?': ('nan', .006)})
+        runs = [load_run(a), load_run(b)]
+        self.assertEqual(phase_value(runs[0], 'Question A?', 'retrieval'), 1)
+        self.assertEqual(phase_value(runs[1], 'Question A?', 'retrieval'), 2)
+        self.assertEqual(phase_value(runs[0], 'Question B?', 'retrieval'), 0)
+        self.assertIsNone(phase_value(runs[0], 'Question C?', 'retrieval'))
+        self.assertIsNone(phase_value(runs[1], 'Question C?', 'retrieval'))
+        self.assertNotIn('retrieval_emissions_g', aligned_rows(runs, 0)[0])
+        from pypdf import PdfReader
+        output = compare([b, a], output_root=self.root / 'phase_output')
+        reader = PdfReader(output / 'comparison.pdf')
+        text = '\n'.join(page.extract_text() for page in reader.pages)
+        self.assertIn('Per-question RAG phase emissions', text)
+        self.assertIn('RAG phase emissions overview', text)
+        self.assertIn('Question label key', reader.pages[-1].extract_text())
+        self.assertLess(text.index('RAG phase emissions overview'), text.index('Question label key'))
+        self.assertIn('N/A', text)
+        with (output / 'aligned_comparison.csv').open() as handle:
+            fields = csv.DictReader(handle).fieldnames
+        self.assertNotIn('retrieval_emissions_g', fields)
+
+    def test_old_rag_runs_show_missing_phases_without_inference(self):
+        folder = self.fixture('old_rag', ['Question A?', 'Question B?', 'Question C?'], 'm', [.003]*3, rag=True)
+        run = load_run(folder)
+        self.assertIsNone(phase_value(run, 'Question A?', 'retrieval'))
+        self.assertIsNone(phase_value(run, 'Question A?', 'generation'))
+        from reportlab.graphics.shapes import String
+        drawing = phase_heatmap([run], ['Question A?'], 0, 0, 0)
+        labels = [shape.text for shape in drawing.contents if isinstance(shape, String)]
+        self.assertEqual(labels.count('N/A'), 2)
+
+    def test_phase_heatmap_shared_scale_zero_and_failed_cost_markers(self):
+        from reportlab.graphics.shapes import String, Rect
+        run = {'questions': {'Q': {'status': 'error'}}, 'phase_emissions': {'Q': {'retrieval': 0, 'generation': 0}}}
+        drawing = phase_heatmap([run], ['Q'], 0, 0, 10)
+        labels = [shape.text for shape in drawing.contents if isinstance(shape, String)]
+        self.assertEqual(labels.count('0*'), 2)
+        cells = [shape for shape in drawing.contents if isinstance(shape, Rect) and shape.height == 21]
+        self.assertEqual(cells[0].fillColor, cells[1].fillColor)
+
+    def test_phase_overview_paginates_and_normal_pdf_has_no_new_sections(self):
+        from pypdf import PdfReader
+        a = self.fixture('many_rag', [f'Question {i}?' for i in range(21)], 'm', [.003]*21, rag=True)
+        self.add_phases(a, {f'Question {i}?': (.001, .002) for i in range(21)})
+        base = load_run(a)
+        runs = [dict(base, folder=self.root / f'run{i}') for i in range(5)]
+        output = self.root / 'large_phase.pdf'
+        write_pdf(runs, 0, aligned_rows(runs, 0), output)
+        pages = [p.extract_text() for p in PdfReader(output).pages]
+        overview = [p for p in pages if 'RAG phase emissions overview' in p]
+        self.assertEqual(len(overview), 4)
+        self.assertIn('Q21-Q21', '\n'.join(overview))
+        self.assertIn('R5-R5', '\n'.join(overview))
+        self.assertIn('Question label key', pages[-1])
+        normal = compare([self.a, self.b], output_root=self.root / 'normal_phase_check')
+        normal_text = '\n'.join(p.extract_text() for p in PdfReader(normal / 'comparison.pdf').pages)
+        self.assertNotIn('Per-question RAG phase emissions', normal_text)
+        self.assertNotIn('RAG phase emissions overview', normal_text)
 
     def test_text_only_alignment_and_different_models(self):
         runs=[load_run(self.a),load_run(self.b)]

@@ -42,6 +42,19 @@ embedding model remains `all-MiniLM-L6-v2`. Code calling `query_llm` or
 
 ## Comparing batch reports
 
+RAG-to-RAG PDFs also include a table for every identical question, comparing
+retrieval emissions and generation emissions across selected runs in g CO2e.
+The final overview before the Question label key contains two aligned heatmaps:
+questions down the rows, selected runs across columns, with separate retrieval
+and generation panels. All panels/pages share one absolute emissions colour scale;
+darker cells mean greater emissions. These values are not reference-run differences.
+Large comparisons split into readable question/run panels. Missing phase readings
+are N/A, true zeros remain zero, and recorded failed/unknown costs are marked *.
+Historical missing phases are never inferred from totals. Normal LLM comparisons,
+the comparison CSV schema, and existing cancelled/incomplete-run exclusion remain
+unchanged. Regenerate a comparison through the existing selector to see the additions;
+historical PDF files are not automatically rewritten.
+
 Run `python compare_reports.py`, choose at least two folder numbers separated by
 commas. The reference is chosen automatically from runs whose actual question
 sequence matches `questionbank.xlsx` sheet/row order for the selected question set.
@@ -120,6 +133,11 @@ token target and `chunk_overlap=1` means one sentence, not legacy character coun
 Use `rag_setter.legacy_main()` only for explicit legacy-index reproduction; the
 normal RAG menu requires the new advanced assets and never silently falls back to
 the old L2 pipeline.
+
+The RAG runner now receives the loaded assets directly; its unused separate
+`chunks` argument was removed. Python callers use
+`process_queries(queries_df, batch_mode, index, embedder, model_name)`.
+This does not change the `chunks` column saved in answer reports.
 
 ### Modular measurement workbook and RAG PDF details
 

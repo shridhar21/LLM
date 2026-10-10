@@ -1452,7 +1452,7 @@ def main():
     index_corpus(Path('rag_corpus'), Path('indexes/rag_faiss'),
                  Path(f'emissions_reports/rag_indexing_{timestamp}'), SUPPORTED_EXTENSIONS,
                  extract_document, MarkItDown, SentenceTransformer,
-                 make_codecarbon_tracker, latest_emissions_row)
+                 make_codecarbon_tracker)
 
 
 if __name__ == "__main__":

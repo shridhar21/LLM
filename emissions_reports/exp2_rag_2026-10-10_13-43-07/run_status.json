@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "pipeline": "rag",
+  "planned_queries": 4,
+  "attempted_queries": 4,
+  "completed_queries": 4,
+  "successful_queries": 4,
+  "failed_queries": 0,
+  "cancelled_queries": 0,
+  "unstarted_queries": 0,
+  "actual_execution": [
+    {
+      "question": "What backend policy checks must be passed before a replacement key or refund can be securely issued?",
+      "status": "ok",
+      "position": 1
+    },
+    {
+      "question": "If the system shows the key was already activated from a different IP address, how do you communicate this without accusing the customer of fraud?",
+      "status": "ok",
+      "position": 2
+    },
+    {
+      "question": "The customer responds furiously, demanding an immediate refund. What de-escalation techniques should be used here?",
+      "status": "ok",
+      "position": 3
+    },
+    {
+      "question": "Imagine a customer writes an angry complaint claiming their newly purchased software license key is showing as 'Invalid.' What is the first diagnostic step?",
+      "status": "ok",
+      "position": 4
+    }
+  ],
+  "total_runtime_s": 317.213166475296
+}

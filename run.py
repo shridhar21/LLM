@@ -1,16 +1,12 @@
 import os
 import time
 import uuid
-import sys
-import json
 from datetime import datetime
 from pathlib import Path
 
-import faiss
 import pandas as pd
-import requests
 from sentence_transformers import SentenceTransformer
-from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
+from measurement import reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 from model_selection import select_model
 from advanced_rag import load_rag_assets, retrieve_context, build_evidence_prompt
@@ -53,8 +49,7 @@ def load_questions(path: Path = QUESTIONS_FILE):
     return df
 
 def load_rag_index():
-    assets = load_rag_assets(RAG_INDEX_DIR)
-    return assets, [child['text'] for child in assets.children]
+    return load_rag_assets(RAG_INDEX_DIR)
 
 def build_augmented_prompt(query: str, contexts: list) -> str:
     return build_evidence_prompt(query, contexts)
@@ -82,7 +77,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
     return None  # Never substitute an earlier session's measurements.
 
 @cancellable_run
-def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, embedder, model_name: str):
+def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder, model_name: str):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
     if batch_mode:
@@ -271,7 +266,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
 def main():
     print("Loading RAG index and embedding model...")
     try:
-        index, chunks = load_rag_index()
+        index = load_rag_index()
         embedder = SentenceTransformer("all-MiniLM-L6-v2")
     except Exception as e:
         print(f"Failed to load index or model: {e}")
@@ -301,7 +296,7 @@ def main():
             except ValueError as exc:
                 print(exc)
                 continue
-            process_queries(df_q, batch_mode=(choice != '1'), index=index, chunks=chunks, embedder=embedder, model_name=model_name)
+            process_queries(df_q, batch_mode=(choice != '1'), index=index, embedder=embedder, model_name=model_name)
             
         elif choice == '4':
             user_query = input("\nEnter your custom prompt: ").strip()
@@ -309,7 +304,7 @@ def main():
                 print("Prompt cannot be empty.")
                 continue
             df_q = pd.DataFrame([{"Question ID": "custom", "Question": user_query}])
-            process_queries(df_q, batch_mode=False, index=index, chunks=chunks, embedder=embedder, model_name=model_name)
+            process_queries(df_q, batch_mode=False, index=index, embedder=embedder, model_name=model_name)
             
         elif choice == '5':
             print("Exiting RAG Pipeline...")

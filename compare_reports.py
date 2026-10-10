@@ -66,6 +66,7 @@ def load_run(folder):
     order = read_json(folder / 'question_order.json')
     measurement = read_json(folder / 'measurement_metadata.json')
     indexed = {}
+    phase_emissions = {}
     for position, row in enumerate(rows, 1):
         question = row['question']
         if question is None or not question.strip():
@@ -82,6 +83,11 @@ def load_run(folder):
             'energy_wh': metric(row, 'energy_kwh', 1000),
             'latency_s': metric(row, 'total_latency_s' if rag else 'latency_s'),
         }
+        if rag:
+            phase_emissions[question] = {
+                phase: metric(row, f'{phase}_emissions_kg', 1000)
+                for phase in ('retrieval', 'generation')
+            }
     planned = order.get('questions')
     if isinstance(planned, list) and len(planned) != len(rows):
         raise ValueError(f'{folder.name}: {len(rows)} result rows versus {len(planned)} planned questions; batch may be incomplete')
@@ -111,7 +117,54 @@ def load_run(folder):
     recorded_modes = {row['ordering_mode'] for row in rows if row.get('ordering_mode')}
     mode = order.get('mode') or (next(iter(recorded_modes)) if len(recorded_modes) == 1 else None)
     ordering = {'mode': mode, 'description': order.get('description'), 'seed': metadata['Seed']}
-    return {'folder': folder, 'questions': indexed, 'metadata': metadata, 'summary': summary, 'ordering': ordering}
+    result = {'folder': folder, 'questions': indexed, 'metadata': metadata, 'summary': summary, 'ordering': ordering}
+    if rag:
+        result['phase_emissions'] = phase_emissions
+    return result
+
+
+def phase_value(run, question, phase):
+    """Read a phase directly; never infer it from the total or treat missing as zero."""
+    return run.get('phase_emissions', {}).get(question, {}).get(phase)
+
+
+def phase_heatmap(runs, questions, run_start, question_start, maximum):
+    """Two aligned panels with one shared absolute emissions scale across all pages."""
+    from reportlab.lib import colors
+    from reportlab.graphics.shapes import Drawing, Rect, String
+    d = Drawing(495, 105 + 23 * len(questions))
+    cell_width = 205 / len(runs)
+    for panel, phase in enumerate(('retrieval', 'generation')):
+        left = panel * 250
+        d.add(String(left, d.height - 14, phase.title() + ' (g CO2e)', fontSize=11))
+        for column in range(len(runs)):
+            d.add(String(left + 33 + column * cell_width, d.height - 35,
+                         f'R{run_start + column + 1}', fontSize=9))
+        for row, question in enumerate(questions):
+            y = d.height - 62 - 23 * row
+            d.add(String(left, y + 6, f'Q{question_start + row + 1}', fontSize=8))
+            for column, run in enumerate(runs):
+                value = phase_value(run, question, phase)
+                ratio = value / maximum if value is not None and maximum > 0 else 0
+                fill = colors.HexColor('#e2e8f0') if value is None else colors.Color(
+                    .95 - .85 * ratio, .97 - .63 * ratio, 1 - .53 * ratio)
+                x = left + 30 + column * cell_width
+                d.add(Rect(x, y, cell_width - 2, 21, fillColor=fill, strokeColor=None))
+                label = 'N/A' if value is None else f'{value:.3g}'
+                if value is not None and run['questions'][question]['status'] != 'ok':
+                    label += '*'
+                d.add(String(x + 3, y + 6, label, fontSize=7,
+                             fillColor=colors.white if ratio > .55 and value is not None else colors.black))
+    d.add(String(0, 29, 'Shared scale:', fontSize=8))
+    for i in range(40):
+        ratio = i / 39
+        d.add(Rect(80 + i * 7, 24, 7, 10,
+                   fillColor=colors.Color(.95 - .85 * ratio, .97 - .63 * ratio, 1 - .53 * ratio), strokeColor=None))
+    d.add(String(80, 10, '0', fontSize=8))
+    d.add(String(310, 10, f'{maximum:.3g} g CO2e', fontSize=8))
+    d.add(Rect(385, 24, 10, 10, fillColor=colors.HexColor('#e2e8f0'), strokeColor=None))
+    d.add(String(400, 25, 'N/A: missing', fontSize=8))
+    return d
 
 
 def validate(runs):
@@ -436,6 +489,36 @@ def write_pdf(runs, reference, records, output):
                          fmt(record['energy_wh']),fmt(record['latency_s']),fmt(record['emissions_delta_g']),
                          fmt(record['emissions_change_percent'])])
         table(data,[30,48,48,55,80,45,55,62,62])
+    if runs[0]['metadata']['Pipeline'] == 'RAG':
+        from reportlab.platypus import KeepTogether
+        page('Per-question RAG phase emissions')
+        p('For each identical question, compare retrieval across runs and generation across runs. All values are recorded emissions in g CO2e, not reference-run differences. N/A means missing; zero remains zero. * marks recorded costs for failed or unknown requests. Cancelled/incomplete batches remain excluded by the existing comparison rules.')
+        for qi, question in enumerate(questions, 1):
+            for start in range(0, len(runs), 6):
+                block_start = len(story)
+                p(f'Q{qi}: R{start+1}-R{min(start+6,len(runs))}', 'Heading3')
+                subset = runs[start:start+6]
+                headers = ['Phase (g CO2e)'] + [Paragraph(
+                    f'R{start+i+1}<br/>Position {run["questions"][question]["position"]}<br/>'
+                    + escape(run['questions'][question]['status']), styles['BodyText'])
+                    for i, run in enumerate(subset)]
+                data = [headers]
+                for phase in ('retrieval', 'generation'):
+                    values = []
+                    for run in subset:
+                        value = phase_value(run, question, phase)
+                        values.append(fmt(value) + ('*' if value is not None and run['questions'][question]['status'] != 'ok' else ''))
+                    data.append([phase.title()] + values)
+                table(data, [130] + [365 / len(subset)] * len(subset))
+                story[block_start:] = [KeepTogether(story[block_start:])]
+        maximum = max((phase_value(run, question, phase) for run in runs for question in questions
+                       for phase in ('retrieval', 'generation') if phase_value(run, question, phase) is not None), default=0)
+        for start in range(0, len(runs), 4):
+            for qstart in range(0, len(questions), 20):
+                page('RAG phase emissions overview')
+                p(f'Q{qstart+1}-Q{min(qstart+20,len(questions))}; R{start+1}-R{min(start+4,len(runs))}. '
+                  'Darker cells mean higher absolute emissions. Retrieval and generation use the same scale across every panel and page. Cell labels use three significant digits; tables above use five. * includes failed/unknown attempt costs. N/A is not zero.')
+                story.append(phase_heatmap(runs[start:start+4], questions[qstart:qstart+20], start, qstart, maximum))
     page('Question label key')
     p(f'Q labels follow the execution order in R{reference+1}. The same exact question text has the same label in every run and throughout this PDF.')
     table([['Label','Exact question text']]+[[f'Q{i}',q] for i,q in enumerate(questions,1)], [45,450], split_rows=True)

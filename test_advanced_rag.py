@@ -199,7 +199,7 @@ class AdvancedRagTests(unittest.TestCase):
             (corpus / 'a.txt').write_text('# Solar\nSolar power produces electricity.', encoding='utf-8')
             def build(number, extractor=lambda p, converter: p.read_text(encoding='utf-8')):
                 rag.index_corpus(corpus, index, base / f'report{number}', {'.txt'}, extractor,
-                                 Mock, lambda name: Embedder(), factory, lambda path: {'energy_consumed': .003})
+                                 Mock, lambda name: Embedder(), factory)
             with contextlib.redirect_stdout(io.StringIO()):
                 build(1)
                 initial = rag.load_rag_assets(index)
@@ -242,7 +242,7 @@ class AdvancedRagTests(unittest.TestCase):
         embedder.encode.return_value = np.array([[1, 0, 0]], dtype='float32')
         with tempfile.TemporaryDirectory(dir=ROOT) as temp, contextlib.chdir(temp), contextlib.redirect_stdout(io.StringIO()):
             process(pd.DataFrame([{'Question ID': 1, 'Question': 'Solar electricity?'}]), True,
-                    assets, [c['text'] for c in assets.children], embedder, 'selected-model')
+                    assets, embedder, 'selected-model')
             folder = next(Path('emissions_reports').iterdir())
             answers = pd.read_csv(folder / 'answers.csv')
             self.assertEqual(len(trackers), 2)
@@ -279,7 +279,7 @@ class AdvancedRagTests(unittest.TestCase):
             @cancellation.cancellable_run
             def build():
                 rag.index_corpus(corpus, folder, output, {'.txt'}, lambda p, c: p.read_text(),
-                                 Mock, lambda name: embedder, lambda *a, **k: tracker, lambda path: {})
+                                 Mock, lambda name: embedder, lambda *a, **k: tracker)
             with contextlib.redirect_stdout(io.StringIO()):
                 build()
             self.assertEqual(tracker.stops, 2)
