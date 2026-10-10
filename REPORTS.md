@@ -1,5 +1,17 @@
 # Emission reports
 
+## Selecting a model for a run
+
+In both `python normal_llm.py` and `python run.py`, choosing a run option
+first displays the models installed in local Ollama. Enter a model's number,
+then select questions or enter your custom prompt as before. Select a model
+again for each new run. That exact model is used for batch warm-up and all
+queries, and is recorded through the existing answer/summary/report fields.
+There is no hardcoded generation-model fallback. Ollama must be running and
+have at least one model installed; otherwise no query run starts. The RAG
+embedding model remains `all-MiniLM-L6-v2`. Code calling `query_llm` or
+`process_queries` directly must now supply the generation model explicitly.
+
 ## Comparing batch reports
 
 Run `python compare_reports.py`, choose at least two folder numbers separated by

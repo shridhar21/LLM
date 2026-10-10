@@ -12,13 +12,13 @@ import requests
 from sentence_transformers import SentenceTransformer
 from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
+from model_selection import select_model
 
 # Paths
 QUESTIONS_FILE = BANK
 RAG_INDEX_DIR = Path("indexes/rag_faiss")
-MODEL_NAME = "llama3.1:latest"
 
-def query_llm(prompt: str, model: str = MODEL_NAME) -> str:
+def query_llm(prompt: str, model: str) -> str:
     """Send prompt to local Ollama instance and return generated response."""
     url = "http://127.0.0.1:11434/api/generate"
     payload = {
@@ -118,7 +118,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
             
     return None  # Never substitute an earlier session's measurements.
 
-def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, embedder, model_name: str = "llama3"):
+def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, embedder, model_name: str):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
     if batch_mode:
@@ -324,6 +324,12 @@ def main():
         print("="*45)
         
         choice = input("Select an option (1-5): ").strip()
+        if choice in ('1', '2', '3', '4'):
+            try:
+                model_name = select_model()
+            except ValueError as exc:
+                print(exc)
+                continue
         
         if choice in ('1', '2', '3'):
             try:
@@ -331,7 +337,7 @@ def main():
             except ValueError as exc:
                 print(exc)
                 continue
-            process_queries(df_q, batch_mode=(choice != '1'), index=index, chunks=chunks, embedder=embedder)
+            process_queries(df_q, batch_mode=(choice != '1'), index=index, chunks=chunks, embedder=embedder, model_name=model_name)
             
         elif choice == '4':
             user_query = input("\nEnter your custom prompt: ").strip()
@@ -339,7 +345,7 @@ def main():
                 print("Prompt cannot be empty.")
                 continue
             df_q = pd.DataFrame([{"Question ID": "custom", "Question": user_query}])
-            process_queries(df_q, batch_mode=False, index=index, chunks=chunks, embedder=embedder)
+            process_queries(df_q, batch_mode=False, index=index, chunks=chunks, embedder=embedder, model_name=model_name)
             
         elif choice == '5':
             print("Exiting RAG Pipeline...")

@@ -9,12 +9,12 @@ import pandas as pd
 import requests
 from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
+from model_selection import select_model
 
 # Base paths
 QUESTIONS_FILE = BANK
-MODEL_NAME = "llama3.2:3b"
 
-def query_llm(prompt: str, model: str = MODEL_NAME) -> str:
+def query_llm(prompt: str, model: str) -> str:
     """Send prompt to local Ollama instance and return generated response."""
     url = "http://127.0.0.1:11434/api/generate"
     payload = {
@@ -86,7 +86,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
             
     return None  # Never substitute an earlier session's measurements.
 
-def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str = "llama3"):
+def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str):
     # Generate a unique timestamp string for this specific run
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
@@ -244,6 +244,12 @@ def main():
         print("="*45)
         
         choice = input("Select an option (1-5): ").strip()
+        if choice in ('1', '2', '3', '4'):
+            try:
+                model_name = select_model()
+            except ValueError as exc:
+                print(exc)
+                continue
         
         if choice in ('1', '2', '3'):
             try:
@@ -251,7 +257,7 @@ def main():
             except ValueError as exc:
                 print(exc)
                 continue
-            process_queries(df_q, batch_mode=(choice != '1'))
+            process_queries(df_q, batch_mode=(choice != '1'), model_name=model_name)
             
         elif choice == '4':
             user_query = input("\nEnter your custom prompt: ").strip()
@@ -259,7 +265,7 @@ def main():
                 print("Prompt cannot be empty.")
                 continue
             df_q = pd.DataFrame([{"Question ID": "custom", "Question": user_query}])
-            process_queries(df_q, batch_mode=False)
+            process_queries(df_q, batch_mode=False, model_name=model_name)
             
         elif choice == '5':
             print("Exiting...")
