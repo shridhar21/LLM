@@ -9,6 +9,7 @@ from sentence_transformers import SentenceTransformer
 from measurement import reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 from model_selection import select_model
+from conversation import ConversationMemory, MissingHistoryError
 from advanced_rag import load_rag_assets, retrieve_context, build_evidence_prompt
 from rag_reporting import start_details
 from cancellation import (cancellable_run, configure_run, begin_question,
@@ -18,9 +19,9 @@ from cancellation import (cancellable_run, configure_run, begin_question,
 QUESTIONS_FILE = BANK
 RAG_INDEX_DIR = Path("indexes/rag_faiss")
 
-def query_llm(prompt: str, model: str) -> str:
+def query_llm(prompt: str, model: str, messages=None, options=None) -> str:
     """Send prompt to local Ollama instance and return generated response."""
-    return query_local_model(prompt, model)
+    return query_local_model(prompt, model, messages=messages, options=options)
 
 def load_questions(path: Path = QUESTIONS_FILE):
     if Path(path).name == BANK.name:
@@ -87,6 +88,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
         
     run_dir.mkdir(parents=True, exist_ok=True)
     configure_run(run_dir, len(queries_df), model_name, rag=True)
+    conversation = ConversationMemory(queries_df, run_dir, model_name)
     start_details(run_dir, getattr(index, 'settings', None) or {},
                   getattr(index, 'generation', None), export_workbook=batch_mode)
     
@@ -141,7 +143,12 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
         tracker_ret.start()
         t_ret_start = time.time()
         
-        retrieved_chunks = retrieve_context(index, embedder, q)
+        try:
+            retrieval_query = conversation.retrieval_query(row_data, q, embedder)
+        except MissingHistoryError:
+            retrieved_chunks = []
+        else:
+            retrieved_chunks = retrieve_context(index, embedder, retrieval_query)
         
         ret_latency_s = time.time() - t_ret_start
         ret_emissions_kg = stop_tracker(tracker_ret, run_dir)
@@ -159,7 +166,8 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
         augmented_prompt = build_augmented_prompt(q, retrieved_chunks)
         
         try:
-            ans = query_llm(augmented_prompt, model=model_name)
+            # generate() rejects missing chain history and records that decision.
+            ans = conversation.generate(query_llm, row_data, augmented_prompt, model_name)
             status = "ok"
             error_msg = ""
         except Exception as e:
@@ -296,7 +304,10 @@ def main():
             except ValueError as exc:
                 print(exc)
                 continue
-            process_queries(df_q, batch_mode=(choice != '1'), index=index, embedder=embedder, model_name=model_name)
+            try:
+                process_queries(df_q, batch_mode=(choice != '1'), index=index, embedder=embedder, model_name=model_name)
+            except ValueError as exc:
+                print(f'Could not execute run: {exc}')
             
         elif choice == '4':
             user_query = input("\nEnter your custom prompt: ").strip()
@@ -304,7 +315,10 @@ def main():
                 print("Prompt cannot be empty.")
                 continue
             df_q = pd.DataFrame([{"Question ID": "custom", "Question": user_query}])
-            process_queries(df_q, batch_mode=False, index=index, embedder=embedder, model_name=model_name)
+            try:
+                process_queries(df_q, batch_mode=False, index=index, embedder=embedder, model_name=model_name)
+            except ValueError as exc:
+                print(f'Could not execute run: {exc}')
             
         elif choice == '5':
             print("Exiting RAG Pipeline...")

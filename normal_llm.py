@@ -8,15 +8,16 @@ import pandas as pd
 from measurement import reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 from model_selection import select_model
+from conversation import ConversationMemory
 from cancellation import (cancellable_run, configure_run, begin_question,
                           track_phase, question_saved, query_local_model, protect_cleanup)
 
 # Base paths
 QUESTIONS_FILE = BANK
 
-def query_llm(prompt: str, model: str) -> str:
+def query_llm(prompt: str, model: str, messages=None, options=None) -> str:
     """Send prompt to local Ollama instance and return generated response."""
-    return query_local_model(prompt, model)
+    return query_local_model(prompt, model, messages=messages, options=options)
 
 def load_questions(path: Path = QUESTIONS_FILE):
     if Path(path).name == BANK.name:
@@ -83,6 +84,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         
     run_dir.mkdir(parents=True, exist_ok=True)
     configure_run(run_dir, len(queries_df), model_name, rag=False)
+    conversation = ConversationMemory(queries_df, run_dir, model_name)
     print(f"DEBUG TARGET FOLDER: {run_dir}")
     emissions_filename = "emissions.csv" if batch_mode else "temp_emissions.csv"
     emissions_csv = run_dir / emissions_filename
@@ -136,7 +138,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         tracker.start()
         
         try:
-            ans = query_llm(q, model=model_name)
+            ans = conversation.generate(query_llm, row_data, q, model_name)
             status = "ok"
             error_msg = ""
         except Exception as e:
@@ -247,7 +249,10 @@ def main():
             except ValueError as exc:
                 print(exc)
                 continue
-            process_queries(df_q, batch_mode=(choice != '1'), model_name=model_name)
+            try:
+                process_queries(df_q, batch_mode=(choice != '1'), model_name=model_name)
+            except ValueError as exc:
+                print(f'Could not execute run: {exc}')
             
         elif choice == '4':
             user_query = input("\nEnter your custom prompt: ").strip()
@@ -255,7 +260,10 @@ def main():
                 print("Prompt cannot be empty.")
                 continue
             df_q = pd.DataFrame([{"Question ID": "custom", "Question": user_query}])
-            process_queries(df_q, batch_mode=False, model_name=model_name)
+            try:
+                process_queries(df_q, batch_mode=False, model_name=model_name)
+            except ValueError as exc:
+                print(f'Could not execute run: {exc}')
             
         elif choice == '5':
             print("Exiting...")

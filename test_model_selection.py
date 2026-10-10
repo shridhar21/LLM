@@ -10,6 +10,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock, MagicMock, patch
 import cancellation
 from rag_reporting import start_details
+from conversation import ConversationMemory, MissingHistoryError
 import time
 import uuid
 
@@ -30,6 +31,8 @@ def script_function(filename, name, namespace):
                    'question_saved', 'query_local_model', 'protect_cleanup'):
         namespace.setdefault(helper, getattr(cancellation, helper))
     namespace.setdefault('start_details', start_details)
+    namespace.setdefault('ConversationMemory', ConversationMemory)
+    namespace.setdefault('MissingHistoryError', MissingHistoryError)
     function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == name)
     exec(compile(ast.Module(body=[function], type_ignores=[]), filename, 'exec'), namespace)
     return namespace[name]

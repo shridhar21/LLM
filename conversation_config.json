@@ -1,0 +1,7 @@
+{
+  "num_ctx": 32768,
+  "num_predict": 2048,
+  "template_margin_tokens": 1024,
+  "overflow_policy": "reject_without_truncation",
+  "budget_method": "conservative_utf8_bytes"
+}

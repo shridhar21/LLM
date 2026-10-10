@@ -24,6 +24,7 @@ import pandas as pd
 import cancellation
 import measurement
 from rag_reporting import start_details
+from conversation import ConversationMemory, MissingHistoryError
 from question_order import identity, save_order
 
 ROOT = Path(__file__).resolve().parent
@@ -66,6 +67,8 @@ def load_functions(filename, query, trackers):
         return tracker
     namespace['make_tracker'] = make
     namespace['start_details'] = start_details
+    namespace['ConversationMemory'] = ConversationMemory
+    namespace['MissingHistoryError'] = MissingHistoryError
     namespace['build_augmented_prompt'] = lambda query, contexts: query
     def retrieve_context(assets, embedder, query):
         embedder.encode([query], convert_to_numpy=True, normalize_embeddings=True)

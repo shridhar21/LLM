@@ -268,7 +268,7 @@ def publish_index(folder, index, chunks, embeddings, metadata, sources):
                 state['index_published'] = True
 
 
-def query_local_model(prompt, model):
+def query_local_model(prompt, model, messages=None, options=None):
     """Buffer streamed Ollama output; main thread remains responsive to Ctrl+C."""
     import requests
     finished = threading.Event()
@@ -279,8 +279,13 @@ def query_local_model(prompt, model):
         try:
             with requests.Session() as session:
                 resources['session'] = session
-                with session.post('http://127.0.0.1:11434/api/generate',
-                                  json={'model': model, 'prompt': prompt, 'stream': True, 'keep_alive': '15m'},
+                payload = {'model': model, 'stream': True, 'keep_alive': '15m'}
+                payload['prompt' if messages is None else 'messages'] = prompt if messages is None else messages
+                if options is not None:
+                    payload['options'] = options
+                endpoint = 'generate' if messages is None else 'chat'
+                with session.post(f'http://127.0.0.1:11434/api/{endpoint}',
+                                  json=payload,
                                   timeout=9000, stream=True) as response:
                     resources['response'] = response
                     response.raise_for_status()
@@ -296,6 +301,8 @@ def query_local_model(prompt, model):
                             pieces.append(last.get('response', last.get('message', {}).get('content', '')))
                     if not last.get('done'):
                         raise RuntimeError('Ollama response ended before completion; partial output is not a successful answer')
+                    if messages is not None and last.get('done_reason') == 'length':
+                        raise RuntimeError('Follow-up response reached its output/context limit; incomplete answer was not added to history.')
                     result['answer'] = ''.join(pieces).strip() if pieces else str(last)
         except Exception as exc:
             result['error'] = exc

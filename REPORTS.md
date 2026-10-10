@@ -189,13 +189,61 @@ ordering schemes, with equivalent or ineffective choices removed; ranges within
 one topic use the single-topic menu. Results retain original question identities
 and add `workbook_position`; `question_order.json` also records the selected bounds.
 
-Hierarchical shuffles group by topic sheet and question type. Follow-Up 1-5 form
-one group; their order changes only when questions within that group are shuffled.
+Hierarchical shuffles group by topic sheet and question type. Shuffling questions
+within a question type leaves the follow-up question type in its original order.
+Question-type shuffles can move that group while retaining its internal order.
+Free shuffles within topics or across the workbook randomly choose among available
+questions: only the next turn of each follow-up chain is available. Other questions
+and chains may run between its turns, but each chain retains its original turn order
+and its separate question/answer history. This is random selection among available
+questions, not a claim of uniform sampling of all valid execution permutations.
+Independent questions retain the previous rules.
 Every shuffled batch uses a recorded random seed. To reproduce its order in Python,
 use `question_order.arrange(selected_frame, mode, seed)` on the same selected data.
 `question_order.json` stores the chosen mode, seed and planned sequence. Each
 answer row stores topic, original serial, question type and execution position.
 The optional PDF includes ordering information and an execution-to-question mapping.
+
+## Follow-up conversational history
+
+Both normal LLM and RAG runners recognize contiguous `Follow-Up 1`, `Follow-Up 2`,
+etc. within a topic sheet. Follow-Up 1 opens the conversation; each subsequent turn
+receives all earlier original questions and successful generated answers from that
+chain. Other chains and independent questions receive none of that history. Every
+run starts fresh. Ambiguous labels, gaps, or a chain without its opening turn are
+rejected rather than inferred from question wording. The workbook is not modified.
+
+Follow-up generation uses streamed `/api/chat`; independent questions and warm-up
+continue using `/api/generate`. RAG adds the current turn's retrieved evidence to
+the current user message; previous evidence passages are not copied into history.
+Retrieval includes the current question, the opening subject and the latest two
+question/answer pairs without an additional LLM rewriting call. The MiniLM encoder
+has its own shorter input window. Where tokenizer information is available, its
+retrieval-only truncation and actual supplied retrieval text are recorded. Full
+generation history is never silently truncated or summarized.
+
+Partial single/range selections ask whether to include and execute missing earlier
+turns, explicitly recording their costs, or cancel. A chain with a failed prior
+answer cannot proceed: dependent attempts are marked errors without an Ollama
+generation request. Unrelated questions can still run. Cancellation preserves prior
+successful turns and partial measurements through the existing cleanup flow.
+
+`conversation_config.json` controls the requested context window (default 32,768),
+answer reserve/output limit (2,048), and template margin (1,024). The context window
+is capped at the selected model's advertised capacity, verified through `/api/show`
+before measurements begin. A conservative UTF-8-byte input budget, with additional
+per-message overhead allowance, rejects oversized prompts; it is not an actual
+token count and can reject inputs that would fit under the model tokenizer. Adjust
+these settings explicitly if needed. Outputs reported by Ollama as ending at a
+length limit are treated as errors rather than inserted as complete prior answers.
+
+`conversation_context.json` in each run folder records chain IDs, turns, supplied
+messages, preceding question IDs, context settings, failures, and encoder truncation
+when relevant. It contains the actual experiment prompts/answers, not shared memory
+for future runs. `question_order.json` records the chain-order policy and added
+prerequisites. Existing CSV columns and energy/emissions arithmetic are unchanged;
+the measured requests themselves are longer and can therefore cost more. Historical
+stateless follow-up results are not equivalent to new history-aware runs.
 
 ## Measurement reliability
 
