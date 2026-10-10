@@ -48,15 +48,22 @@ def generate(folder):
     from reportlab.graphics.shapes import Drawing, Line, Circle, String, Rect
 
     source = answers_file(folder)
-    if source is None:
+    try:
+        completion = json.loads((folder / 'run_status.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        completion = {}
+    cancelled = completion.get('status') == 'cancelled'
+    if source is None and not cancelled:
         raise ValueError("No per-question CSV found.")
-    with source.open(encoding="utf-8-sig", newline="") as handle:
-        reader = csv.DictReader(handle)
-        fields = reader.fieldnames or []
-        rows = list(reader)
-    if not rows:
+    fields, rows = [], []
+    if source:
+        with source.open(encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            fields = reader.fieldnames or []
+            rows = list(reader)
+    if not rows and not cancelled:
         raise ValueError("The answers CSV has no question rows.")
-    rag = "total_latency_s" in fields
+    rag = "total_latency_s" in fields or completion.get('pipeline') == 'rag'
     definitions = [("Latency (s)", "total_latency_s" if rag else "latency_s", 1),
                    ("Energy (Wh)", "energy_kwh", 1000),
                    ("Emissions (g CO2e)", "total_emissions_kg" if rag else "emissions_kg", 1000)]
@@ -90,15 +97,26 @@ def generate(folder):
 
     paragraph("Batch emissions report", "Title")
     paragraph(folder.name, "Heading2")
+    if cancelled:
+        paragraph('CANCELLED / INCOMPLETE RUN', 'Heading2')
+        paragraph('Recorded costs include available partial measurements for cancelled attempts. They are not the cost of completing the planned batch. Successful-request statistics exclude cancelled attempts.')
+        table([['Planned', 'Attempted', 'Completed', 'Cancelled', 'Unstarted'],
+               [str(completion.get(key, 'N/A')) for key in
+                ('planned_queries', 'attempted_queries', 'completed_queries', 'cancelled_queries', 'unstarted_queries')]])
     paragraph("Models: " + ", ".join(sorted({r.get("model_name", "Unknown") for r in rows})))
     order_path = folder / 'question_order.json'
     try:
         order = json.loads(order_path.read_text(encoding='utf-8'))
     except (OSError, ValueError):
         order = {}
-    paragraph('Question ordering: ' + str(order.get('description', rows[0].get('ordering_mode', 'Not recorded'))))
-    paragraph('Shuffle seed: ' + str(order.get('seed', rows[0].get('shuffle_seed', 'Not recorded'))))
-    paragraph(f"Pipeline: {'RAG' if rag else 'LLM only'} | Questions: {len(rows)} | Successful: {sum(success)} | Failed/unknown: {len(rows) - sum(success)}")
+    first_row = rows[0] if rows else {}
+    paragraph('Question ordering: ' + str(order.get('description', first_row.get('ordering_mode', 'Not recorded'))))
+    paragraph('Shuffle seed: ' + str(order.get('seed', first_row.get('shuffle_seed', 'Not recorded'))))
+    if cancelled:
+        cancelled_count = sum(row.get('status') == 'cancelled' for row in rows)
+        paragraph(f"Pipeline: {'RAG' if rag else 'LLM only'} | Attempted questions: {len(rows)} | Successful: {sum(success)} | Failed/unknown: {len(rows) - sum(success) - cancelled_count} | Cancelled: {cancelled_count}")
+    else:
+        paragraph(f"Pipeline: {'RAG' if rag else 'LLM only'} | Questions: {len(rows)} | Successful: {sum(success)} | Failed/unknown: {len(rows) - sum(success)}")
     summary = next((folder / name for name in ("summary.csv", "exp1_llm_only_summary_per_query.csv", "exp2_rag_summary_per_query.csv") if (folder / name).exists()), None)
     runtime = None
     if summary:
@@ -108,7 +126,7 @@ def generate(folder):
     def cost(vals):
         valid = [v for v in vals if v is not None]
         return (fmt(sum(valid)) + (" (partial)" if len(valid) < len(vals) else "")) if valid else "N/A"
-    table([["Measured cost (all requests)", "Observed sum", "Valid / all"]] +
+    table([["Observed cost (attempted requests)" if cancelled else "Measured cost (all requests)", "Observed sum", "Valid / all"]] +
           [[label, cost(vals),
             f"{sum(v is not None for v in vals)} / {len(rows)}"] for label, vals in data[1:3]], [290, 95, 110])
     paragraph("Method and data quality", "Heading2")
@@ -183,9 +201,12 @@ def generate(folder):
                             str(row.get('question_number', '')),
                             Paragraph(escape(row.get('question_type', '')), styles['BodyText'])])
         table(mapping, [50, 150, 50, 245])
+    if rag:
+        from rag_pdf import append_sections
+        append_sections(story, folder, rows, styles)
     def footer(canvas, doc):
         canvas.setFont("Helvetica", 8)
-        canvas.drawString(42, 22, "Local benchmark report | " + source.name)
+        canvas.drawString(42, 22, "Local benchmark report | " + (source.name if source else 'run_status.json'))
         canvas.drawRightString(553, 22, f"Page {doc.page}")
     output = folder / "report.pdf"
     temporary = folder / "report.pdf.tmp"
@@ -200,7 +221,8 @@ def generate(folder):
 
 def main():
     folders = {p.name: p for p in sorted(ROOT.iterdir())
-               if p.is_dir() and p.name.startswith(("exp1_llm_only_", "exp2_rag_")) and answers_file(p)} if ROOT.exists() else {}
+               if p.is_dir() and p.name.startswith(("exp1_llm_only_", "exp2_rag_"))
+               and (answers_file(p) or (p / 'run_status.json').exists())} if ROOT.exists() else {}
     if not folders:
         print("No batch reports found in", ROOT)
         return

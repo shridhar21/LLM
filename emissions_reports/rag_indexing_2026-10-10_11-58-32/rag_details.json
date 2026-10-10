@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "kind": "indexing",
+  "settings": {
+    "schema_version": 1,
+    "embedding_model": "all-MiniLM-L6-v2",
+    "index_type": "IndexFlatIP",
+    "normalize_embeddings": true,
+    "child_target_tokens": 180,
+    "paragraph_split_tokens": 240,
+    "parent_target_tokens": 900,
+    "sentence_overlap": 1,
+    "dense_candidates": 15,
+    "sparse_candidates": 15,
+    "rrf_constant": 60,
+    "selected_children": 4,
+    "mmr_lambda": 0.75,
+    "evidence_similarity_threshold": 0.3,
+    "context_characters": 12000
+  },
+  "index_generation": "56d964e846804beabae81034205e793a",
+  "export_workbook": true,
+  "status": "completed",
+  "queries": [],
+  "groups": [
+    {
+      "phase": "document_preparation",
+      "group": "Document preparation",
+      "run_id": "11c120dc-638f-4315-a698-5251cee1eca4",
+      "execution_position": null,
+      "model": "all-MiniLM-L6-v2",
+      "status": "measured",
+      "duration_s": 2.631045400048606,
+      "wall_time_s": 5.817917585372925,
+      "emissions_kg": 1.6016885607477808e-05,
+      "energy_kwh": 2.2450189444506005e-05,
+      "cpu_energy_kwh": 1.5435677222000003e-05,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 7.014512222506002e-06
+    },
+    {
+      "phase": "embedding_indexing_storage",
+      "group": "Embedding, indexing and storage",
+      "run_id": "91796a95-9edf-4a05-a212-31efc2010417",
+      "execution_position": null,
+      "model": "all-MiniLM-L6-v2",
+      "status": "measured",
+      "duration_s": 96.00449580000713,
+      "wall_time_s": 97.37462711334229,
+      "emissions_kg": 0.0006118809324574176,
+      "energy_kwh": 0.0008576475594441834,
+      "cpu_energy_kwh": 0.000591193073056,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 0.00026645448638818283
+    }
+  ]
+}

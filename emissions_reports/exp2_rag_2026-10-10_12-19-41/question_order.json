@@ -1,0 +1,35 @@
+{
+  "mode": "original",
+  "description": "Keep original order",
+  "seed": null,
+  "questions": [
+    {
+      "Question ID": "Customer Operations:13",
+      "topic_sheet": "Customer Operations",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 1
+    },
+    {
+      "Question ID": "Customer Operations:14",
+      "topic_sheet": "Customer Operations",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 2
+    },
+    {
+      "Question ID": "Customer Operations:15",
+      "topic_sheet": "Customer Operations",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 3
+    },
+    {
+      "Question ID": "Customer Operations:16",
+      "topic_sheet": "Customer Operations",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 4
+    }
+  ]
+}

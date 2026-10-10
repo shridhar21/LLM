@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "pipeline": "normal",
+  "planned_queries": 0,
+  "attempted_queries": 0,
+  "completed_queries": 0,
+  "successful_queries": 0,
+  "failed_queries": 0,
+  "cancelled_queries": 0,
+  "unstarted_queries": 0,
+  "actual_execution": [],
+  "total_runtime_s": 103.69700264930725,
+  "kind": "indexing",
+  "index_published": true
+}

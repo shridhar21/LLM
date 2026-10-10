@@ -1,0 +1,519 @@
+{
+  "schema_version": 1,
+  "kind": "queries",
+  "settings": {
+    "schema_version": 1,
+    "embedding_model": "all-MiniLM-L6-v2",
+    "index_type": "IndexFlatIP",
+    "normalize_embeddings": true,
+    "child_target_tokens": 180,
+    "paragraph_split_tokens": 240,
+    "parent_target_tokens": 900,
+    "sentence_overlap": 1,
+    "dense_candidates": 15,
+    "sparse_candidates": 15,
+    "rrf_constant": 60,
+    "selected_children": 4,
+    "mmr_lambda": 0.75,
+    "evidence_similarity_threshold": 0.3,
+    "context_characters": 12000
+  },
+  "index_generation": "56d964e846804beabae81034205e793a",
+  "export_workbook": true,
+  "status": "completed",
+  "queries": [
+    {
+      "topic_sheet": "Customer Operations",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "domain": "Customer Operations",
+      "execution_position": 1,
+      "ordering_mode": "original",
+      "shuffle_seed": null,
+      "question_id": "Customer Operations:13",
+      "question": "Imagine a customer writes an angry complaint claiming their newly purchased software license key is showing as 'Invalid.' What is the first diagnostic step?",
+      "status": "ok",
+      "retrieval": {
+        "accepted": true,
+        "reason": "retriever_agreement",
+        "fallback_used": false,
+        "response_mode": "rag",
+        "best_dense_similarity": 0.2597326636314392,
+        "selected_child_count": 4,
+        "parent_count": 4,
+        "context_characters": 9652,
+        "selected_children": [
+          {
+            "chunk_id": "095fddd4394991e779f68b07:c15",
+            "rrf_score": 0.01639344262295082,
+            "dense_rank": 1,
+            "dense_score": 0.2597326636314392
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c132",
+            "rrf_score": 0.016129032258064516,
+            "dense_rank": 2,
+            "dense_score": 0.2587169408798218
+          },
+          {
+            "chunk_id": "6ff7db3926dedf7b410b93ed:c97",
+            "rrf_score": 0.014084507042253521,
+            "dense_rank": 11,
+            "dense_score": 0.1985190212726593
+          },
+          {
+            "chunk_id": "22b5f094a1f6784a0d7270a2:c20",
+            "rrf_score": 0.02946912242686891,
+            "dense_rank": 5,
+            "dense_score": 0.21084345877170563,
+            "bm25_rank": 11,
+            "bm25_score": 20.86689384500317
+          }
+        ],
+        "sources": [
+          {
+            "chunk_id": "095fddd4394991e779f68b07:c15",
+            "rrf_score": 0.01639344262295082,
+            "dense_rank": 1,
+            "dense_score": 0.2597326636314392,
+            "parent_id": "095fddd4394991e779f68b07:p7",
+            "doc_id": "095fddd4394991e779f68b07",
+            "filename": "nlpcarbon.txt",
+            "section": "3.2 List of evaluation criteria",
+            "source_id": 1
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c132",
+            "rrf_score": 0.016129032258064516,
+            "dense_rank": 2,
+            "dense_score": 0.2587169408798218,
+            "parent_id": "96ff3c366c188d0f42728258:p42",
+            "doc_id": "96ff3c366c188d0f42728258",
+            "filename": "mindweb.txt",
+            "section": "SPRINGFIELD",
+            "source_id": 2
+          },
+          {
+            "chunk_id": "6ff7db3926dedf7b410b93ed:c97",
+            "rrf_score": 0.014084507042253521,
+            "dense_rank": 11,
+            "dense_score": 0.1985190212726593,
+            "parent_id": "6ff7db3926dedf7b410b93ed:p36",
+            "doc_id": "6ff7db3926dedf7b410b93ed",
+            "filename": "green-automated-ml.txt",
+            "section": "2022 featured parts of the checklist suggested by us in an earlier version of this manuscript",
+            "source_id": 3
+          },
+          {
+            "chunk_id": "22b5f094a1f6784a0d7270a2:c20",
+            "rrf_score": 0.02946912242686891,
+            "dense_rank": 5,
+            "dense_score": 0.21084345877170563,
+            "bm25_rank": 11,
+            "bm25_score": 20.86689384500317,
+            "parent_id": "22b5f094a1f6784a0d7270a2:p9",
+            "doc_id": "22b5f094a1f6784a0d7270a2",
+            "filename": "chasingcarbon.txt",
+            "section": "MANUFACTURERS , MOBILE - DEVICE VENDORS , AND DATA - CENTER OPERATORS .",
+            "source_id": 4
+          }
+        ],
+        "timings": {
+          "query_embedding_s": 0.17683840007521212,
+          "faiss_search_s": 0.004067900008521974,
+          "bm25_search_s": 0.0233013000106439,
+          "fusion_mmr_s": 0.0021955000702291727,
+          "evidence_parent_s": 0.0008346999529749155
+        }
+      },
+      "error": ""
+    },
+    {
+      "topic_sheet": "Customer Operations",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "domain": "Customer Operations",
+      "execution_position": 2,
+      "ordering_mode": "original",
+      "shuffle_seed": null,
+      "question_id": "Customer Operations:14",
+      "question": "If the system shows the key was already activated from a different IP address, how do you communicate this without accusing the customer of fraud?",
+      "status": "ok",
+      "retrieval": {
+        "accepted": false,
+        "reason": "insufficient_evidence",
+        "fallback_used": true,
+        "response_mode": "base_model_fallback",
+        "best_dense_similarity": 0.19620713591575623,
+        "selected_child_count": 4,
+        "parent_count": 0,
+        "context_characters": 0,
+        "selected_children": [
+          {
+            "chunk_id": "bffb4c4ffd14b9ab00dcce4a:c120",
+            "rrf_score": 0.01639344262295082,
+            "dense_rank": 1,
+            "dense_score": 0.19620713591575623
+          },
+          {
+            "chunk_id": "f6b73e5483291d1535313f83:c50",
+            "rrf_score": 0.013888888888888888,
+            "dense_rank": 12,
+            "dense_score": 0.13310566544532776
+          },
+          {
+            "chunk_id": "923be22a85ed25b8e7d80df6:c0",
+            "rrf_score": 0.015384615384615385,
+            "dense_rank": 5,
+            "dense_score": 0.15374311804771423
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c67",
+            "rrf_score": 0.015151515151515152,
+            "dense_rank": 6,
+            "dense_score": 0.1532915234565735
+          }
+        ],
+        "sources": [],
+        "timings": {
+          "query_embedding_s": 0.02408220001962036,
+          "faiss_search_s": 0.0017454000189900398,
+          "bm25_search_s": 0.02463759994134307,
+          "fusion_mmr_s": 0.0010323000606149435,
+          "evidence_parent_s": 6.9999368861317635e-06
+        }
+      },
+      "error": ""
+    },
+    {
+      "topic_sheet": "Customer Operations",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "domain": "Customer Operations",
+      "execution_position": 3,
+      "ordering_mode": "original",
+      "shuffle_seed": null,
+      "question_id": "Customer Operations:15",
+      "question": "The customer responds furiously, demanding an immediate refund. What de-escalation techniques should be used here?",
+      "status": "ok",
+      "retrieval": {
+        "accepted": true,
+        "reason": "dense_similarity",
+        "fallback_used": false,
+        "response_mode": "rag",
+        "best_dense_similarity": 0.3487253785133362,
+        "selected_child_count": 4,
+        "parent_count": 4,
+        "context_characters": 11117,
+        "selected_children": [
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c132",
+            "rrf_score": 0.03252247488101534,
+            "dense_rank": 1,
+            "dense_score": 0.3487253785133362,
+            "bm25_rank": 2,
+            "bm25_score": 23.16504141044798
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c113",
+            "rrf_score": 0.015384615384615385,
+            "dense_rank": 5,
+            "dense_score": 0.24982835352420807
+          },
+          {
+            "chunk_id": "bffb4c4ffd14b9ab00dcce4a:c152",
+            "rrf_score": 0.015873015873015872,
+            "dense_rank": 3,
+            "dense_score": 0.2556246519088745
+          },
+          {
+            "chunk_id": "71c08435c495b1f02daa37f7:c75",
+            "rrf_score": 0.013333333333333334,
+            "dense_rank": 15,
+            "dense_score": 0.21125975251197815
+          }
+        ],
+        "sources": [
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c132",
+            "rrf_score": 0.03252247488101534,
+            "dense_rank": 1,
+            "dense_score": 0.3487253785133362,
+            "bm25_rank": 2,
+            "bm25_score": 23.16504141044798,
+            "parent_id": "96ff3c366c188d0f42728258:p42",
+            "doc_id": "96ff3c366c188d0f42728258",
+            "filename": "mindweb.txt",
+            "section": "SPRINGFIELD",
+            "source_id": 1
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c113",
+            "rrf_score": 0.015384615384615385,
+            "dense_rank": 5,
+            "dense_score": 0.24982835352420807,
+            "parent_id": "96ff3c366c188d0f42728258:p38",
+            "doc_id": "96ff3c366c188d0f42728258",
+            "filename": "mindweb.txt",
+            "section": "2018 Conference on Empirical Methods in Natural Language Processing, Brussels, Belgium,",
+            "source_id": 2
+          },
+          {
+            "chunk_id": "bffb4c4ffd14b9ab00dcce4a:c152",
+            "rrf_score": 0.015873015873015872,
+            "dense_rank": 3,
+            "dense_score": 0.2556246519088745,
+            "parent_id": "bffb4c4ffd14b9ab00dcce4a:p141",
+            "doc_id": "bffb4c4ffd14b9ab00dcce4a",
+            "filename": "paris_agreement.txt",
+            "section": "34. Further decides that the Subsidiary Body for Scientific and Technological Advice and the",
+            "source_id": 3
+          },
+          {
+            "chunk_id": "71c08435c495b1f02daa37f7:c75",
+            "rrf_score": 0.013333333333333334,
+            "dense_rank": 15,
+            "dense_score": 0.21125975251197815,
+            "parent_id": "71c08435c495b1f02daa37f7:p31",
+            "doc_id": "71c08435c495b1f02daa37f7",
+            "filename": "trilemma.txt",
+            "section": "4.3 Task 2: Memory Reading, Utilization and Generation",
+            "source_id": 4
+          }
+        ],
+        "timings": {
+          "query_embedding_s": 0.014848100021481514,
+          "faiss_search_s": 0.0009487000061199069,
+          "bm25_search_s": 0.017086900072172284,
+          "fusion_mmr_s": 0.0010221999837085605,
+          "evidence_parent_s": 0.0007701000431552529
+        }
+      },
+      "error": ""
+    },
+    {
+      "topic_sheet": "Customer Operations",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "domain": "Customer Operations",
+      "execution_position": 4,
+      "ordering_mode": "original",
+      "shuffle_seed": null,
+      "question_id": "Customer Operations:16",
+      "question": "What backend policy checks must be passed before a replacement key or refund can be securely issued?",
+      "status": "ok",
+      "retrieval": {
+        "accepted": true,
+        "reason": "dense_similarity",
+        "fallback_used": false,
+        "response_mode": "rag",
+        "best_dense_similarity": 0.3098915219306946,
+        "selected_child_count": 4,
+        "parent_count": 4,
+        "context_characters": 11940,
+        "selected_children": [
+          {
+            "chunk_id": "bffb4c4ffd14b9ab00dcce4a:c92",
+            "rrf_score": 0.01639344262295082,
+            "dense_rank": 1,
+            "dense_score": 0.3098915219306946
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c67",
+            "rrf_score": 0.015151515151515152,
+            "dense_rank": 6,
+            "dense_score": 0.2666665017604828
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c115",
+            "rrf_score": 0.015625,
+            "dense_rank": 4,
+            "dense_score": 0.27571865916252136
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c132",
+            "rrf_score": 0.015384615384615385,
+            "bm25_rank": 5,
+            "bm25_score": 20.004249067262926
+          }
+        ],
+        "sources": [
+          {
+            "chunk_id": "bffb4c4ffd14b9ab00dcce4a:c92",
+            "rrf_score": 0.01639344262295082,
+            "dense_rank": 1,
+            "dense_score": 0.3098915219306946,
+            "parent_id": "bffb4c4ffd14b9ab00dcce4a:p86",
+            "doc_id": "bffb4c4ffd14b9ab00dcce4a",
+            "filename": "paris_agreement.txt",
+            "section": "4. The Conference of the Parties serving as the meeting of the Parties to this Agreement shall",
+            "source_id": 1
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c67",
+            "rrf_score": 0.015151515151515152,
+            "dense_rank": 6,
+            "dense_score": 0.2666665017604828,
+            "parent_id": "96ff3c366c188d0f42728258:p28",
+            "doc_id": "96ff3c366c188d0f42728258",
+            "filename": "mindweb.txt",
+            "section": "6 Limitations and Potential Societal Impact",
+            "source_id": 2
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c115",
+            "rrf_score": 0.015625,
+            "dense_rank": 4,
+            "dense_score": 0.27571865916252136,
+            "parent_id": "96ff3c366c188d0f42728258:p38",
+            "doc_id": "96ff3c366c188d0f42728258",
+            "filename": "mindweb.txt",
+            "section": "2018 Conference on Empirical Methods in Natural Language Processing, Brussels, Belgium,",
+            "source_id": 3
+          },
+          {
+            "chunk_id": "96ff3c366c188d0f42728258:c132",
+            "rrf_score": 0.015384615384615385,
+            "bm25_rank": 5,
+            "bm25_score": 20.004249067262926,
+            "parent_id": "96ff3c366c188d0f42728258:p42",
+            "doc_id": "96ff3c366c188d0f42728258",
+            "filename": "mindweb.txt",
+            "section": "SPRINGFIELD",
+            "source_id": 4
+          }
+        ],
+        "timings": {
+          "query_embedding_s": 0.02425270003732294,
+          "faiss_search_s": 0.001769699971191585,
+          "bm25_search_s": 0.017729099956341088,
+          "fusion_mmr_s": 0.0014965999871492386,
+          "evidence_parent_s": 0.0005487999878823757
+        }
+      },
+      "error": ""
+    }
+  ],
+  "groups": [
+    {
+      "phase": "retrieval",
+      "group": "Question embedding, search and ranking",
+      "run_id": "cb49da49-c7de-4b07-adde-8d3a2e9bf7ca",
+      "execution_position": 1,
+      "model": "granite4:3b-h",
+      "status": "measured",
+      "duration_s": 0.23264300008304417,
+      "wall_time_s": 3.8041024208068848,
+      "emissions_kg": 1.3385564186406143e-06,
+      "energy_kwh": 1.8761977775886362e-06,
+      "cpu_energy_kwh": 1.298622222e-06,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 5.775755555886362e-07
+    },
+    {
+      "phase": "generation",
+      "group": "Context augmentation and response generation",
+      "run_id": "c9f9ff3f-79ca-4352-a08c-5bca259d1474",
+      "execution_position": 1,
+      "model": "granite4:3b-h",
+      "status": "ok",
+      "duration_s": 66.0222647000337,
+      "wall_time_s": 67.43295550346375,
+      "emissions_kg": 0.00040061197197470373,
+      "energy_kwh": 0.0005615208152807363,
+      "cpu_energy_kwh": 0.0003782210111110001,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 0.0001832998041697364
+    },
+    {
+      "phase": "retrieval",
+      "group": "Question embedding, search and ranking",
+      "run_id": "a998dc74-5e4f-47e7-80b3-046511fe3c6d",
+      "execution_position": 2,
+      "model": "granite4:3b-h",
+      "status": "measured",
+      "duration_s": 0.05320890003349632,
+      "wall_time_s": 1.4710428714752197,
+      "emissions_kg": 4.1906434363141507e-07,
+      "energy_kwh": 5.873847222565216e-07,
+      "cpu_energy_kwh": 4.41911111e-07,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 1.454736112565216e-07
+    },
+    {
+      "phase": "generation",
+      "group": "Context augmentation and response generation",
+      "run_id": "4f2136fa-4371-4d02-a948-bd5b18883277",
+      "execution_position": 2,
+      "model": "granite4:3b-h",
+      "status": "ok",
+      "duration_s": 15.735980699886568,
+      "wall_time_s": 17.15443515777588,
+      "emissions_kg": 9.795919605387615e-05,
+      "energy_kwh": 0.0001373052516660469,
+      "cpu_energy_kwh": 9.363018777700003e-05,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 4.367506388904682e-05
+    },
+    {
+      "phase": "retrieval",
+      "group": "Question embedding, search and ranking",
+      "run_id": "7583c7d2-862b-42ce-86bc-12a9ba7ec747",
+      "execution_position": 3,
+      "model": "granite4:3b-h",
+      "status": "measured",
+      "duration_s": 0.03582079999614507,
+      "wall_time_s": 1.4988512992858887,
+      "emissions_kg": 6.51530178364292e-09,
+      "energy_kwh": 9.132222263148487e-09,
+      "cpu_energy_kwh": 7.2861110000000005e-09,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 1.8461112631484866e-09
+    },
+    {
+      "phase": "generation",
+      "group": "Context augmentation and response generation",
+      "run_id": "eba12bce-e57d-4683-82d0-e4660b0bc655",
+      "execution_position": 3,
+      "model": "granite4:3b-h",
+      "status": "ok",
+      "duration_s": 75.79870679997839,
+      "wall_time_s": 77.19095182418823,
+      "emissions_kg": 0.0004542518577734068,
+      "energy_kwh": 0.0006367055688885371,
+      "cpu_energy_kwh": 0.000426301278889,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 0.00021040428999953697
+    },
+    {
+      "phase": "retrieval",
+      "group": "Question embedding, search and ranking",
+      "run_id": "fb214fe6-dc75-4841-94fe-b314c5005acd",
+      "execution_position": 4,
+      "model": "granite4:3b-h",
+      "status": "measured",
+      "duration_s": 0.04687830002512783,
+      "wall_time_s": 2.0293564796447754,
+      "emissions_kg": 4.413425009795147e-09,
+      "energy_kwh": 6.186110708236767e-09,
+      "cpu_energy_kwh": 4.439444e-09,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 1.746666708236767e-09
+    },
+    {
+      "phase": "generation",
+      "group": "Context augmentation and response generation",
+      "run_id": "e3e105bc-26e1-43a0-9958-ffe9437d00eb",
+      "execution_position": 4,
+      "model": "granite4:3b-h",
+      "status": "ok",
+      "duration_s": 74.86994620005134,
+      "wall_time_s": 76.3094801902771,
+      "emissions_kg": 0.0004495033458864624,
+      "energy_kwh": 0.0006300497811121906,
+      "cpu_energy_kwh": 0.000422220378889,
+      "gpu_energy_kwh": 0.0,
+      "ram_energy_kwh": 0.00020782940222319063
+    }
+  ]
+}

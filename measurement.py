@@ -5,6 +5,7 @@ import platform
 from datetime import datetime, timezone
 from importlib.metadata import version, PackageNotFoundError
 from pathlib import Path
+from cancellation import safe_finalization
 
 CODECARBON_CONFIG_PATH = Path(__file__).resolve().with_name('codecarbon_config.json')
 
@@ -74,6 +75,7 @@ def tracker_run_id(tracker):
     return None
 
 
+@safe_finalization
 def stop_tracker(tracker, directory):
     """Preserve failure as missing and save evidence from the actual tracker instance."""
     error = None
@@ -82,6 +84,8 @@ def stop_tracker(tracker, directory):
     except Exception as exc:
         result = float('nan')
         error = f'{type(exc).__name__}: {exc}'
+    from cancellation import phase_stopped
+    phase_stopped(tracker, result)
     path = Path(directory) / 'measurement_metadata.json'
     try:
         metadata = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'schema_version': 1, 'sessions': []}

@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "sessions": [
+    {
+      "recorded_at": "2026-10-10T06:50:20.325915+00:00",
+      "project_name": "RAG_ret_qCustomer Operations:13_d6a8",
+      "run_id": "cb49da49-c7de-4b07-adde-8d3a2e9bf7ca",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:51:27.815050+00:00",
+      "project_name": "RAG_gen_qCustomer Operations:13_be9f",
+      "run_id": "c9f9ff3f-79ca-4352-a08c-5bca259d1474",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:51:29.347148+00:00",
+      "project_name": "RAG_ret_qCustomer Operations:14_f679",
+      "run_id": "a998dc74-5e4f-47e7-80b3-046511fe3c6d",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:51:46.560462+00:00",
+      "project_name": "RAG_gen_qCustomer Operations:14_2073",
+      "run_id": "4f2136fa-4371-4d02-a948-bd5b18883277",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:51:48.105517+00:00",
+      "project_name": "RAG_ret_qCustomer Operations:15_d31d",
+      "run_id": "7583c7d2-862b-42ce-86bc-12a9ba7ec747",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:53:05.366034+00:00",
+      "project_name": "RAG_gen_qCustomer Operations:15_e564",
+      "run_id": "eba12bce-e57d-4683-82d0-e4660b0bc655",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:53:07.441053+00:00",
+      "project_name": "RAG_ret_qCustomer Operations:16_0190",
+      "run_id": "fb214fe6-dc75-4841-94fe-b314c5005acd",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    },
+    {
+      "recorded_at": "2026-10-10T06:54:23.801927+00:00",
+      "project_name": "RAG_gen_qCustomer Operations:16_c1ac",
+      "run_id": "e3e105bc-26e1-43a0-9958-ffe9437d00eb",
+      "config_file": "C:\\Users\\Asus\\Desktop\\llmtest\\codecarbon_config.json",
+      "config_profile": "inference",
+      "configured_settings": {
+        "country_iso_code": "IND",
+        "tracking_mode": "machine",
+        "save_to_api": false,
+        "pue": 1.0,
+        "measure_power_secs": 1,
+        "log_level": "error",
+        "allow_multiple_runs": true
+      },
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "requested_scope": "machine",
+      "effective_scope": "machine",
+      "measure_power_secs": 1,
+      "pue": 1.0,
+      "country_iso_code": "IND",
+      "backends": {
+        "cpu": "unknown / not exposed by this version",
+        "gpu": "unknown / not exposed by this version",
+        "ram": "unknown / not exposed by this version"
+      },
+      "hardware_evidence": [
+        {
+          "class": "RAM",
+          "mode": "unknown"
+        },
+        {
+          "class": "CPU",
+          "mode": "windows_emi"
+        }
+      ],
+      "hardware": {
+        "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+        "gpu_model": "",
+        "gpu_count": 0,
+        "ram_total_size": 15.69796371459961
+      },
+      "stop_error": null,
+      "emissions_available": true
+    }
+  ],
+  "scope_note": "Machine scope includes supported CPU/GPU/RAM activity from local Ollama and other processes; it does not isolate model energy or measure wall-socket whole-system power. Unknown backends are unverified; RAM is an energy estimate, not memory usage. A local endpoint does not prove all accelerator hardware is supported."
+}

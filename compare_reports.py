@@ -45,6 +45,9 @@ def metric(row, key, scale=1):
 
 def load_run(folder):
     folder = Path(folder).resolve()
+    completion = read_json(folder / 'run_status.json')
+    if completion.get('status') == 'cancelled':
+        raise ValueError(f'{folder.name}: cancelled/incomplete runs cannot be compared as completed batches')
     source = answers_file(folder)
     if source is None:
         raise ValueError(f'{folder.name}: no per-question report found')
@@ -54,6 +57,8 @@ def load_run(folder):
         rows = list(reader)
     if not rows or 'question' not in fields:
         raise ValueError(f'{folder.name}: missing question rows/text column')
+    if any(row.get('status') == 'cancelled' for row in rows):
+        raise ValueError(f'{folder.name}: contains cancelled partial attempts; use completed runs for comparison')
     rag = 'total_emissions_kg' in fields and 'retrieval_latency_s' in fields
     normal = 'emissions_kg' in fields and 'latency_s' in fields
     if rag == normal:

@@ -13,6 +13,10 @@ from sentence_transformers import SentenceTransformer
 from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 from model_selection import select_model
+from advanced_rag import load_rag_assets, retrieve_context, build_evidence_prompt
+from rag_reporting import start_details
+from cancellation import (cancellable_run, configure_run, begin_question,
+                          track_phase, question_saved, query_local_model, protect_cleanup)
 
 # Paths
 QUESTIONS_FILE = BANK
@@ -20,23 +24,7 @@ RAG_INDEX_DIR = Path("indexes/rag_faiss")
 
 def query_llm(prompt: str, model: str) -> str:
     """Send prompt to local Ollama instance and return generated response."""
-    url = "http://127.0.0.1:11434/api/generate"
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False,
-        "keep_alive": "15m",  # Added to prevent model unloading
-    }
-    response = requests.post(url, json=payload, timeout=9000)
-    response.raise_for_status()
-    data = response.json()
-    
-    if "response" in data:
-        return data["response"].strip()
-    elif "message" in data and "content" in data["message"]:
-        return data["message"]["content"].strip()
-    else:
-        return str(data)
+    return query_local_model(prompt, model)
 
 def load_questions(path: Path = QUESTIONS_FILE):
     if Path(path).name == BANK.name:
@@ -65,36 +53,11 @@ def load_questions(path: Path = QUESTIONS_FILE):
     return df
 
 def load_rag_index():
-    index_file = RAG_INDEX_DIR / "index.faiss"
-    chunks_file = RAG_INDEX_DIR / "chunks.json"
-
-    if not index_file.exists() or not chunks_file.exists():
-        raise FileNotFoundError(f"FAISS index or chunks not found. Please run rag_setter.py first.")
-
-    index = faiss.read_index(str(index_file))
-    with open(chunks_file, "r", encoding="utf-8") as f:
-        chunks = json.load(f)
-
-    return index, chunks
+    assets = load_rag_assets(RAG_INDEX_DIR)
+    return assets, [child['text'] for child in assets.children]
 
 def build_augmented_prompt(query: str, contexts: list) -> str:
-    if not contexts:
-        return (
-            f"You are a helpful assistant.\n\n"
-            f"Question: {query}\n\n"
-            f"Answer clearly and concisely based on your general knowledge."
-        )
-
-    context_block = "\n\n".join(contexts)
-    return (
-        f"You are a helpful assistant.\n\n"
-        f"Use the following context to help answer the question:\n"
-        f"---------------------\n"
-        f"{context_block}\n"
-        f"---------------------\n\n"
-        f"Question: {query}\n\n"
-        f"Answer clearly and concisely."
-    )
+    return build_evidence_prompt(query, contexts)
 
 def make_tracker(project_name: str, output_dir: Path, output_file: str = "emissions.csv"):
     return make_codecarbon_tracker('inference', project_name, output_dir, output_file)
@@ -118,6 +81,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
             
     return None  # Never substitute an earlier session's measurements.
 
+@cancellable_run
 def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, embedder, model_name: str):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
@@ -127,6 +91,9 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
         run_dir = Path("emissions_reports/temp_manual_run")
         
     run_dir.mkdir(parents=True, exist_ok=True)
+    configure_run(run_dir, len(queries_df), model_name, rag=True)
+    start_details(run_dir, getattr(index, 'settings', None) or {},
+                  getattr(index, 'generation', None), export_workbook=batch_mode)
     
     emissions_filename = "emissions.csv" if batch_mode else "temp_emissions.csv"
     emissions_csv = run_dir / emissions_filename
@@ -155,6 +122,8 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
 
 # ---> NEW WARMUP BLOCK GOES HERE <---
     if batch_mode:
+        save_order(queries_df, run_dir)
+    if batch_mode:
         print("\nWarming up LLM into VRAM...")
         try:
             query_llm("Warmup", model=model_name)
@@ -162,30 +131,22 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
             pass
 
     rows = []
-    if batch_mode:
-        save_order(queries_df, run_dir)
     run_start = time.time()
     
     for _, row_data in queries_df.iterrows():
         qid = row_data.get("Question ID", "custom")
         q = str(row_data["Question"])
+        begin_question(identity(row_data, len(rows) + 1), qid, q)
         
         print(f"\n[RAG] Running prompt: {q[:80]}...")
         
         # --- PHASE 1: RETRIEVAL ---
         tracker_ret = make_tracker(f"RAG_ret_q{qid}_{uuid.uuid4().hex[:4]}", run_dir, emissions_filename)
+        track_phase(tracker_ret, 'retrieval')
         tracker_ret.start()
         t_ret_start = time.time()
         
-        q_emb = embedder.encode([q], convert_to_numpy=True).astype("float32")
-        distances, idxs = index.search(q_emb, k=3)
-        # Threshold for L2 distance (all-MiniLM-L6-v2)
-        # Any chunk with distance > 1.3 is considered irrelevant noise
-        DISTANCE_THRESHOLD = 1.3
-        retrieved_chunks = [
-            chunks[idx] for dist, idx in zip(distances[0], idxs[0]) 
-            if idx < len(chunks) and dist <= DISTANCE_THRESHOLD
-        ]
+        retrieved_chunks = retrieve_context(index, embedder, q)
         
         ret_latency_s = time.time() - t_ret_start
         ret_emissions_kg = stop_tracker(tracker_ret, run_dir)
@@ -196,6 +157,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
 
         # --- PHASE 2: GENERATION ---
         tracker_gen = make_tracker(f"RAG_gen_q{qid}_{uuid.uuid4().hex[:4]}", run_dir, emissions_filename)
+        track_phase(tracker_gen, 'generation')
         tracker_gen.start()
         t_gen_start = time.time()
         
@@ -264,7 +226,9 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, chunks, e
         })
         # Save each result as it completes.
         live_csv = run_dir / "answers.csv"
-        pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+        with protect_cleanup(defer_interrupt=True):
+            pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+            question_saved()
     total_runtime_s = time.time() - run_start
     answers_df = pd.DataFrame(rows)
     
@@ -354,4 +318,7 @@ def main():
             print("Invalid selection. Please try again.")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print('\nExited.')

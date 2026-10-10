@@ -1,5 +1,33 @@
 # Emission reports
 
+## Stopping a run safely
+
+Press Ctrl+C during normal LLM, RAG, or indexing execution. Completed answers
+remain saved; the active tracker is finalized and an interrupted question is
+recorded as `cancelled`, with available partial phase costs. No remaining questions
+are started. `run_status.json` records planned, attempted, completed, successful,
+failed, cancelled, and unstarted counts, plus the actual attempted sequence.
+Cancelled inference runs receive a partial `summary.csv`: observed costs are
+separate from blank full-batch totals. Cancellation during warmup records zero
+attempts. Ctrl+C during native embedding/search may be delayed until control
+returns to Python. Repeated Ctrl+C is suppressed while cancellation cleanup runs.
+
+Ollama responses are streamed internally and buffered into the same complete
+answer string; answers are not streamed to the terminal. On cancellation the
+connection is closed asynchronously, without stopping the shared Ollama server.
+Server-side termination is best-effort, not guaranteed instantaneous.
+
+Generate the PDF as usual: incomplete runs are prominently labelled and cancelled
+attempts are excluded from successful-request statistics. Comparison rejects
+cancelled runs, even if their last question was the interrupted one. Historical
+report formats remain supported.
+
+Index updates are staged before publication. Ctrl+C during the short publication
+step is deferred until all index files form a consistent update; publication
+failures roll back the previous files. An interrupted build before publication
+leaves the existing index unchanged. This protects interruption and normal write
+failures, not power loss or concurrent index writers. There is no resume feature.
+
 ## Selecting a model for a run
 
 In both `python normal_llm.py` and `python run.py`, choosing a run option
@@ -45,6 +73,86 @@ Arrows and earlier/later annotations show position changes relative to that run;
 colours indicate movement rather than emissions performance. Sequence panels repeat
 the reference alongside up to two other runs. Missing scheme metadata is labelled
 explicitly rather than inferred from the execution order.
+
+## Advanced local RAG retrieval
+
+Install the additional retrieval packages with
+`python -m pip install -r requirements-rag.txt`, then run `python rag_setter.py`
+once before using `python run.py`. The new index cannot use legacy flat chunks.
+No migration or real-corpus rebuild is performed merely by changing the code.
+
+The new assets live in immutable generations under `indexes/rag_faiss/advanced/`.
+`CURRENT.json` identifies the complete active generation. Each generation contains
+`index.faiss`, `documents.jsonl`, `parents.jsonl`, `faiss_chunk_ids.json`,
+`embeddings.npy`, `corpus_meta.csv`, and `index_config.json` (settings and checksums).
+The original five flat-index files are preserved. Prior advanced generations are
+also retained. Failed or cancelled builds do not switch the active generation.
+Later additions/modifications reuse unchanged document embeddings; absent corpus
+files are retained, matching the existing no-implicit-deletion behavior.
+
+Heading-aware sections become parent passages (approximately 900 regex-estimated
+tokens) and child passages (180-token target, 240-token oversized-paragraph splitting,
+one-sentence overlap where it fits). These are not model-tokenizer counts. Child
+records retain document, filename, heading, parent and child identities. Parents
+are not embedded. Corpus extraction still uses the existing MarkItDown converter.
+
+Normalized MiniLM vectors use FAISS `IndexFlatIP` for cosine similarity. LangChain
+`Document` and `BM25Retriever` provide the sparse integration; BM25 is rebuilt
+from saved children on load. Dense and positive-scoring sparse candidates (up to
+15 each) are fused using RRF with constant 60. MMR selects up to four children
+using .75 query relevance and .25 redundancy, not the numerical RRF scores.
+Evidence passes if there is a selection and the best dense similarity is at least
+.30, or the leading fused candidate has both dense and sparse support. This is
+a heuristic, not proof of answer correctness. Unique selected parents supply at
+most 12,000 characters of evidence text (excluding prompt instructions and labels).
+
+Evidence prompts include `[SOURCE N]`, filename and heading, and request citations
+and evidence-only answers. If evidence is rejected or no parent text is usable,
+the original question is sent to the same selected Ollama model without context.
+The existing `chunks` column stores the labelled parent context; `retrieved_k`
+counts those supplied parent sources, not the number of selected child candidates.
+Existing CSV column names and comparison calculations remain unchanged. Retrieval
+stays inside the retrieval tracker; prompt construction stays inside generation.
+Corpus indexing now uses two non-overlapping measured groups: document preparation,
+then embedding/indexing/storage including publication and saved-asset validation.
+The indexing summary sums both groups. In indexing summaries, `chunk_size=180` means an approximate
+token target and `chunk_overlap=1` means one sentence, not legacy character counts.
+Use `rag_setter.legacy_main()` only for explicit legacy-index reproduction; the
+normal RAG menu requires the new advanced assets and never silently falls back to
+the old L2 pipeline.
+
+### Modular measurement workbook and RAG PDF details
+
+New RAG batches automatically save `modular_emissions.xlsx` inside their emission
+folder when the run completes or is cancelled. Its sheets are **Group measurements**
+(two measured rows per attempted question), **Step timings**, **Evidence**, and
+**Configuration**. Group rows include exact question text, identity, execution
+position, selected model, statuses, CodeCarbon session ID, raw tracker duration,
+wall time, emissions in kg CO2e, and total/CPU/GPU/RAM energy in kWh. Numeric
+precision is retained, real zeros stay zero, and missing readings stay blank.
+Duration and wall time are different: wall time includes tracker lifecycle and
+bookkeeping. Hardware coverage limitations still apply.
+
+Indexing runs with actual corpus changes save a separate workbook containing the
+two corpus groups plus configuration. Corpus costs are not copied into every
+question's totals. Unchanged-corpus checks do not create measured group rows.
+
+`rag_details.json` preserves decisions, timings, source identities and group records
+incrementally, so completed/partial evidence survives cancellation and Excel export
+failures. The workbook is written after measurements stop. If Excel holds the output
+file open, close it and retry with `python rag_reporting.py <run-folder>`; this exports
+the saved readings without rerunning models. Normal LLM runs do not use this feature.
+Manual RAG queries retain JSON details but do not automatically export the batch workbook.
+
+Generate RAG PDFs through the existing `python generate_report.py` selector. New
+sections show evidence-backed/fallback/unrecorded counts and fallback reasons,
+per-question retrieval/generation emissions stacks, embedding/FAISS/BM25/fusion-MMR
+and gate/parent-expansion timing stacks, an evidence-selection table, successful
+RAG-versus-fallback mean costs with valid counts, and the saved retrieval configuration
+and index-generation ID. Timings do not imply separately measured step emissions.
+Failed/cancelled costs remain visible, but mode-average costs use successful readings
+only. Historical missing decisions are marked unrecorded, never inferred from chunks.
+Normal LLM PDFs remain unchanged. PDFs are still generated only on request.
 
 ## Question selection and shuffling
 

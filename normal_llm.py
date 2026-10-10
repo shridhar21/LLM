@@ -10,29 +10,15 @@ import requests
 from measurement import finite, reading, complete_sum, coverage, stop_tracker, make_codecarbon_tracker, tracker_run_id
 from question_order import BANK, load_bank, select_questions, identity, save_order
 from model_selection import select_model
+from cancellation import (cancellable_run, configure_run, begin_question,
+                          track_phase, question_saved, query_local_model, protect_cleanup)
 
 # Base paths
 QUESTIONS_FILE = BANK
 
 def query_llm(prompt: str, model: str) -> str:
     """Send prompt to local Ollama instance and return generated response."""
-    url = "http://127.0.0.1:11434/api/generate"
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False,
-        "keep_alive": "15m",  # Added to prevent model unloading
-    }
-    response = requests.post(url, json=payload, timeout=9000)
-    response.raise_for_status()
-    data = response.json()
-    
-    if "response" in data:
-        return data["response"].strip()
-    elif "message" in data and "content" in data["message"]:
-        return data["message"]["content"].strip()
-    else:
-        return str(data)
+    return query_local_model(prompt, model)
 
 def load_questions(path: Path = QUESTIONS_FILE):
     if Path(path).name == BANK.name:
@@ -86,6 +72,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
             
     return None  # Never substitute an earlier session's measurements.
 
+@cancellable_run
 def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str):
     # Generate a unique timestamp string for this specific run
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -97,6 +84,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         run_dir = Path("emissions_reports/temp_manual_run")
         
     run_dir.mkdir(parents=True, exist_ok=True)
+    configure_run(run_dir, len(queries_df), model_name, rag=False)
     print(f"DEBUG TARGET FOLDER: {run_dir}")
     emissions_filename = "emissions.csv" if batch_mode else "temp_emissions.csv"
     emissions_csv = run_dir / emissions_filename
@@ -125,6 +113,8 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
 
 # ---> NEW WARMUP BLOCK GOES HERE <---
     if batch_mode:
+        save_order(queries_df, run_dir)
+    if batch_mode:
         print("\nWarming up LLM into VRAM...")
         try:
             query_llm("Warmup", model=model_name)
@@ -132,19 +122,19 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
             pass
 
     rows = []
-    if batch_mode:
-        save_order(queries_df, run_dir)
     run_start = time.time()
     
     for _, row_data in queries_df.iterrows():
         qid = row_data.get("Question ID", "custom")
         q = str(row_data["Question"])
+        begin_question(identity(row_data, len(rows) + 1), qid, q)
         
         print(f"\n[LLM] Running prompt: {q[:80]}...")
         tracker_name = f"LLM_only_q{qid}_{uuid.uuid4().hex[:8]}"
         tracker = make_tracker(tracker_name, run_dir, output_file=emissions_filename)
         
         t0 = time.time()
+        track_phase(tracker, 'generation')
         tracker.start()
         
         try:
@@ -191,7 +181,9 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         })
         # Save each result as it completes.
         live_csv = run_dir / "answers.csv"
-        pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+        with protect_cleanup(defer_interrupt=True):
+            pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+            question_saved()
         
     total_runtime_s = time.time() - run_start
     answers_df = pd.DataFrame(rows)
@@ -274,7 +266,10 @@ def main():
             print("Invalid selection. Please try again.")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print('\nExited.')
 
 
 

@@ -11,7 +11,8 @@ import pandas as pd
 import faiss
 from sentence_transformers import SentenceTransformer
 from markitdown import MarkItDown
-from measurement import make_codecarbon_tracker
+from measurement import make_codecarbon_tracker, stop_tracker
+from cancellation import cancellable_run, configure_run, track_phase, publish_index
 
 
 # ============================================================
@@ -419,7 +420,8 @@ def latest_emissions_row(
 # MAIN
 # ============================================================
 
-def main():
+@cancellable_run
+def legacy_main():
 
     timestamp = datetime.now().strftime(
         "%Y-%m-%d_%H-%M-%S"
@@ -441,6 +443,7 @@ def main():
         f"emissions_reports/"
         f"rag_indexing_{timestamp}"
     )
+    configure_run(OUTDIR, 0, EMBEDDING_MODEL, indexing=True)
 
     CORPUS_DIR.mkdir(
         parents=True,
@@ -642,6 +645,7 @@ def main():
 
     start_time = time.time()
 
+    track_phase(tracker, 'indexing')
     tracker.start()
 
     # ========================================================
@@ -729,7 +733,7 @@ def main():
 
         if not new_texts:
 
-            tracker.stop()
+            stop_tracker(tracker, OUTDIR)
 
             print(
                 "\nNo documents could be extracted."
@@ -1059,7 +1063,7 @@ def main():
 
         if not modified_texts:
 
-            tracker.stop()
+            stop_tracker(tracker, OUTDIR)
 
             print(
                 "\nModified documents "
@@ -1175,7 +1179,7 @@ def main():
 
     else:
 
-        tracker.stop()
+        stop_tracker(tracker, OUTDIR)
 
         print(
             "\nUnexpected indexing state."
@@ -1188,7 +1192,7 @@ def main():
     # ========================================================
 
     emissions_kg = (
-        tracker.stop()
+        stop_tracker(tracker, OUTDIR)
         or 0.0
     )
 
@@ -1253,57 +1257,8 @@ def main():
     # FAISS
     # --------------------------------------------------------
 
-    faiss.write_index(
-        index,
-        str(index_path)
-    )
-
-    # --------------------------------------------------------
-    # CHUNKS
-    # --------------------------------------------------------
-
-    with open(
-        chunks_path,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            all_chunks,
-            f,
-            ensure_ascii=False,
-            indent=2
-        )
-
-    # --------------------------------------------------------
-    # EMBEDDINGS
-    #
-    # This file is essential for the optimized modified-file
-    # workflow.
-    # --------------------------------------------------------
-
-    np.save(
-        embeddings_path,
-        all_embeddings
-    )
-
-    # --------------------------------------------------------
-    # DOCUMENT METADATA
-    # --------------------------------------------------------
-
-    combined_meta.to_csv(
-        meta_path,
-        index=False
-    )
-
-    # --------------------------------------------------------
-    # CHUNK SOURCES
-    # --------------------------------------------------------
-
-    combined_sources.to_csv(
-        sources_path,
-        index=False
-    )
+    publish_index(RAG_INDEX_DIR, index, all_chunks, all_embeddings,
+                  combined_meta, combined_sources)
 
     # ========================================================
     # SUMMARY
@@ -1489,5 +1444,19 @@ def main():
     )
 
 
+@cancellable_run
+def main():
+    """Build the advanced index without replacing the legacy flat-chunk assets."""
+    from advanced_rag import index_corpus
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    index_corpus(Path('rag_corpus'), Path('indexes/rag_faiss'),
+                 Path(f'emissions_reports/rag_indexing_{timestamp}'), SUPPORTED_EXTENSIONS,
+                 extract_document, MarkItDown, SentenceTransformer,
+                 make_codecarbon_tracker, latest_emissions_row)
+
+
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (ValueError, OSError, RuntimeError) as exc:
+        print(f'Advanced RAG indexing failed: {exc}')

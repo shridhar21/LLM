@@ -7,7 +7,9 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock, patch
+import cancellation
+from rag_reporting import start_details
 import time
 import uuid
 
@@ -24,6 +26,10 @@ ROOT = Path(__file__).resolve().parent
 def script_function(filename, name, namespace):
     """Test pipeline functions without loading the RAG embedding model or index."""
     tree = ast.parse((ROOT / filename).read_text(encoding='utf-8'))
+    for helper in ('cancellable_run', 'configure_run', 'begin_question', 'track_phase',
+                   'question_saved', 'query_local_model', 'protect_cleanup'):
+        namespace.setdefault(helper, getattr(cancellation, helper))
+    namespace.setdefault('start_details', start_details)
     function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == name)
     exec(compile(ast.Module(body=[function], type_ignores=[]), filename, 'exec'), namespace)
     return namespace[name]
@@ -110,10 +116,16 @@ class ModelSelectionTests(unittest.TestCase):
 
     def test_selected_model_reaches_ollama_payload(self):
         for filename in ('normal_llm.py', 'run.py'):
-            post = Mock(return_value=Mock())
-            post.return_value.json.return_value = {'response': ' Answer '}
-            query = script_function(filename, 'query_llm', {'requests': SimpleNamespace(post=post)})
-            self.assertEqual(query('Question?', 'qwen3:4b'), 'Answer')
+            response = MagicMock()
+            response.__enter__.return_value = response
+            response.iter_lines.return_value = iter([b'{"response":" Answer ","done":true}'])
+            session = MagicMock()
+            session.__enter__.return_value = session
+            session.post.return_value = response
+            post = session.post
+            query = script_function(filename, 'query_llm', {})
+            with patch('requests.Session', return_value=session):
+                self.assertEqual(query('Question?', 'qwen3:4b'), 'Answer')
             self.assertEqual(post.call_args.kwargs['json']['model'], 'qwen3:4b')
             with self.assertRaises(TypeError):
                 query('Question?')
@@ -129,6 +141,7 @@ class ModelSelectionTests(unittest.TestCase):
                          'latest_row_for_run': Mock(return_value=telemetry), 'reading': reading,
                          'complete_sum': complete_sum, 'coverage': coverage, 'save_order': Mock(),
                          'identity': lambda row, position: {'execution_position': position},
+                         'retrieve_context': lambda assets, embedder, question: ['Context'],
                          'build_augmented_prompt': lambda question, chunks: question}
             process = script_function(filename, 'process_queries', namespace)
             original_directory = Path.cwd()
@@ -140,6 +153,8 @@ class ModelSelectionTests(unittest.TestCase):
                         embedder = Mock()
                         embedder.encode.return_value.astype.return_value = 'vector'
                         index = Mock()
+                        index.settings = {}
+                        index.generation = None
                         index.search.return_value = ([[.5]], [[0]])
                         kwargs.update(index=index, chunks=['Context'], embedder=embedder)
                     with contextlib.redirect_stdout(io.StringIO()):

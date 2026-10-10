@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "schema_version": 1,
+    "embedding_model": "all-MiniLM-L6-v2",
+    "index_type": "IndexFlatIP",
+    "normalize_embeddings": true,
+    "child_target_tokens": 180,
+    "paragraph_split_tokens": 240,
+    "parent_target_tokens": 900,
+    "sentence_overlap": 1,
+    "dense_candidates": 15,
+    "sparse_candidates": 15,
+    "rrf_constant": 60,
+    "selected_children": 4,
+    "mmr_lambda": 0.75,
+    "evidence_similarity_threshold": 0.3,
+    "context_characters": 12000
+  },
+  "checksums": {
+    "index.faiss": "5e724552066b2ca617df8726c0469c7e088a737b0b3419f17185cbe65ea2d0b8",
+    "documents.jsonl": "197cd9b0f833560e33264021236b143d2c107ee32e1653568b3ce8415ea6dca4",
+    "parents.jsonl": "13776bb0738b32840a15d2b8494bcc4f54635ffbc38d44e0f0cc37994d9eab75",
+    "faiss_chunk_ids.json": "493fd0aa90bd220d6667127c44a91df8aea8c65a48a6b65d65cfc8f610b51910",
+    "embeddings.npy": "63e18c09f451ffee0f8f7bfe9aca69154cf084337efe022be01614f71c1f80d3",
+    "corpus_meta.csv": "f8b60424488d49cb699b33b744e8d6d60d1d071cbdb930d76e0c649463e9a1e7"
+  }
+}
