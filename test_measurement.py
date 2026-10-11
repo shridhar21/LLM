@@ -62,7 +62,7 @@ class MeasurementTests(unittest.TestCase):
         self.assertFalse(inference['save_to_api'])
         self.assertEqual(inference['measure_power_secs'], 1)
         self.assertEqual(indexing['measure_power_secs'], 1)
-        self.assertNotIn('tracking_mode', indexing)
+        self.assertEqual(indexing['tracking_mode'], 'machine')
         self.assertNotIn('save_to_api', indexing)
 
     def test_tracker_uses_named_config_profile(self):

@@ -252,8 +252,8 @@ hardware activity includes the separate Ollama process. This includes background
 activity and is not a wall-socket measurement or isolated model measurement.
 `codecarbon_config.json` is the source of the tracker settings: normal LLM and RAG
 inference use the `inference` profile; RAG indexing uses `rag_indexing`. The indexing
-profile intentionally leaves `tracking_mode` and `save_to_api` to CodeCarbon's
-installed-version defaults. Each inference session also records the config profile
+profile explicitly sets `tracking_mode` to `machine` and leaves `save_to_api` to
+CodeCarbon's installed-version default. Each inference session also records the config profile
 and settings snapshot in its metadata; per-batch PDFs and comparison metadata tables
 display the recorded profile and settings.
 `measurement_metadata.json` records each session's effective scope, tracker version,

@@ -11,6 +11,7 @@
   },
   "rag_indexing": {
     "country_iso_code": "IND",
+    "tracking_mode": "machine",
     "pue": 1.0,
     "measure_power_secs": 1,
     "log_level": "error",
@@ -18,6 +19,6 @@
   },
   "notes": {
     "inference": "Shared by normal LLM and RAG inference.",
-    "rag_indexing": "tracking_mode and save_to_api are intentionally omitted to preserve CodeCarbon's installed-version defaults."
+    "rag_indexing": "Uses explicit machine-level tracking. save_to_api is intentionally omitted to preserve CodeCarbon's installed-version default."
   }
 }
