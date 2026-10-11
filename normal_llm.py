@@ -129,7 +129,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         q = str(row_data["Question"])
         begin_question(identity(row_data, len(rows) + 1), qid, q)
         
-        print(f"\n[LLM] Running prompt: {q[:80]}...")
+        print(f"\n[LLM | Query {len(rows) + 1}/{len(queries_df)} | Question ID: {qid}] Running prompt: {q[:80]}...")
         tracker_name = f"LLM_only_q{qid}_{uuid.uuid4().hex[:8]}"
         tracker = make_tracker(tracker_name, run_dir, output_file=emissions_filename)
         

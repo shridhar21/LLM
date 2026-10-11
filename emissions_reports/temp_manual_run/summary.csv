@@ -1,0 +1,2 @@
+status,pipeline,planned_queries,attempted_queries,completed_queries,successful_queries,failed_queries,cancelled_queries,unstarted_queries,total_runtime_s,model_name,num_queries,total_emissions_kg,total_energy_kwh,observed_emissions_kg,observed_energy_kwh
+cancelled,normal,2,2,1,1,0,1,0,220.36651849746704,qwen3:8b,2,,,0.0013350902231482951,0.0018713393583327444

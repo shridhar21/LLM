@@ -135,7 +135,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
         q = str(row_data["Question"])
         begin_question(identity(row_data, len(rows) + 1), qid, q)
         
-        print(f"\n[RAG] Running prompt: {q[:80]}...")
+        print(f"\n[RAG | Query {len(rows) + 1}/{len(queries_df)} | Question ID: {qid}] Running prompt: {q[:80]}...")
         
         # --- PHASE 1: RETRIEVAL ---
         tracker_ret = make_tracker(f"RAG_ret_q{qid}_{uuid.uuid4().hex[:4]}", run_dir, emissions_filename)

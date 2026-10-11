@@ -1,0 +1,16 @@
+topic_sheet,question_number,question_type,domain,execution_position,ordering_mode,shuffle_seed,question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+Customer Operations,13,Follow-Up 1,Customer Operations,1,original,,Customer Operations:13,Imagine a customer writes an angry complaint claiming their newly purchased software license key is showing as 'Invalid.' What is the first diagnostic step?,"The first diagnostic step when a customer reports an invalid license key is to **verify the key's entry and check for typos or formatting errors**. Here's how to approach this:
+
+1. **Confirm the Key Was Entered Correctly**:  
+   - Ensure the license key was copied and pasted accurately, including case sensitivity (e.g., uppercase letters).  
+   - Check for extra spaces, special characters, or missing characters (e.g., hyphens, dashes, or letters).  
+
+2. **Recheck the Key's Validity**:  
+   - Compare the key against the original purchase confirmation or email to ensure it matches exactly.  
+   - Confirm the key is for the correct software version (e.g., not a key for an older or newer version).  
+
+3. **Test the Key in the Software**:  
+   - If the software allows, try re-entering the key to see if the issue persists.  
+
+If the key is correct and the problem persists, proceed to additional steps (e.g., checking activation requirements, software updates, or contacting support). This initial step addresses the most common and straightforward causes of invalid keys.",qwen3:8b,189.05983185768127,ok,,0.0011645973617304766,1.1645973617304766,0.0016323667433333,0.0011161051049999,0.0,0.0005162616383333
+Customer Operations,14,Follow-Up 2,Customer Operations,2,original,,Customer Operations:14,"If the system shows the key was already activated from a different IP address, how do you communicate this without accusing the customer of fraud?",,qwen3:8b,30.513051748275757,cancelled,Interrupted by Ctrl+C; measurements are partial,0.00017049286141781865,0.17049286141781864,0.00023897261499944444,0.00015933655805500002,0.0,7.963605694444438e-05
