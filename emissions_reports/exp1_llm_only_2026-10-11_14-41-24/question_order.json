@@ -1,0 +1,40 @@
+{
+  "mode": "original",
+  "description": "Keep original order",
+  "seed": null,
+  "conversation_order_policy": "preserve_followup_question_type_order; no_internal_shuffle",
+  "selection": {
+    "prerequisites_added": [
+      "Customer Operations:13"
+    ]
+  },
+  "questions": [
+    {
+      "Question ID": "Customer Operations:13",
+      "topic_sheet": "Customer Operations",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 1,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "Customer Operations:14",
+      "topic_sheet": "Customer Operations",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 2,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Customer Operations:15",
+      "topic_sheet": "Customer Operations",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 3,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 3
+    }
+  ]
+}

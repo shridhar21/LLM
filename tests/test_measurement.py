@@ -17,7 +17,7 @@ class MeasurementTests(unittest.TestCase):
         import ast
         import pandas as pd
         for filename in ('normal_llm.py', 'run.py'):
-            tree = ast.parse(Path(filename).read_text(encoding='utf-8'))
+            tree = ast.parse((Path(__file__).resolve().parent.parent / filename).read_text(encoding='utf-8'))
             function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'latest_row_for_run')
             namespace = {'pd': pd, 'Path': Path}
             exec(compile(ast.Module(body=[function], type_ignores=[]), filename, 'exec'), namespace)

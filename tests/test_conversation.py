@@ -11,10 +11,10 @@ import pandas as pd
 
 from conversation import annotate_chains, ConversationMemory, MissingHistoryError, validate_execution
 from question_order import arrange, MODES, select_questions, load_bank, range_options, save_order
-from test_cancellation import load_functions
+from tests.test_cancellation import load_functions
 from cancellation import query_local_model
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 
 def chain_frame():

@@ -16,9 +16,9 @@ import pandas as pd
 
 import advanced_rag as rag
 import cancellation
-from test_cancellation import load_functions, Tracker
+from tests.test_cancellation import load_functions, Tracker
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 
 def assets_fixture():

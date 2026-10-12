@@ -10,7 +10,7 @@ from compare_reports import load_run, validate, compare, aligned_rows, observati
 
 class ComparisonTests(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent)
+        self.temp = tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent.parent)
         self.root = Path(self.temp.name)
         self.a = self.fixture('a', ['Question A?', 'Question B?', 'Question C?'], 'model-a', [0, .002, .004])
         self.b = self.fixture('b', ['Question C?', 'Question A?', 'Question B?'], 'model-b', [.005, .001, .001])

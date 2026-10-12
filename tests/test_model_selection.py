@@ -21,7 +21,7 @@ from measurement import reading, complete_sum, coverage
 from model_selection import select_model
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 
 def script_function(filename, name, namespace):

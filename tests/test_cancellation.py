@@ -27,7 +27,7 @@ from rag_reporting import start_details
 from conversation import ConversationMemory, MissingHistoryError
 from question_order import identity, save_order
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 
 class Tracker:

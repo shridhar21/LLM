@@ -13,9 +13,9 @@ import cancellation
 from advanced_rag import CONFIG, index_corpus
 from rag_reporting import (start_details, read_details, write_details, export_workbook,
                            workbook_tables, finalize_details, numeric)
-from test_cancellation import Tracker
+from tests.test_cancellation import Tracker
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 
 def make_fixture(folder):

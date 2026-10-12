@@ -74,7 +74,7 @@ class OrderingTests(unittest.TestCase):
         self.assertEqual(result['Question ID'].tolist(),self.bank.iloc[19:21]['Question ID'].tolist())
         self.assertEqual(result['topic_sheet'].nunique(),2)
         self.assertEqual(identity(result.iloc[0],1)['workbook_position'],20)
-        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as temp:
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent.parent) as temp:
             save_order(result,Path(temp))
             recorded=json.loads((Path(temp)/'question_order.json').read_text())
         self.assertEqual(recorded['selection'],{'kind':'free_range','start':20,'end':21,'numbering':'workbook_position'})
