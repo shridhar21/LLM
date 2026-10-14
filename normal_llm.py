@@ -78,7 +78,8 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
     
     # Route to a permanent timestamped folder for batches, or a temp folder for manual tests
     if batch_mode:
-        run_dir = Path(f"emissions_reports/exp1_llm_only_{timestamp}")
+        from question_order import batch_folder_name
+        run_dir = Path('emissions_reports') / batch_folder_name('exp1_llm_only', timestamp, model_name, queries_df)
     else:
         run_dir = Path("emissions_reports/temp_manual_run")
         

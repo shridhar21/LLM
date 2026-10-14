@@ -82,7 +82,8 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
     if batch_mode:
-        run_dir = Path(f"emissions_reports/exp2_rag_{timestamp}")
+        from question_order import batch_folder_name
+        run_dir = Path('emissions_reports') / batch_folder_name('exp2_rag', timestamp, model_name, queries_df)
     else:
         run_dir = Path("emissions_reports/temp_manual_run")
         

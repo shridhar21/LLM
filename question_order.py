@@ -9,6 +9,38 @@ import pandas as pd
 from conversation import annotate_chains, execution_units
 
 BANK = Path(__file__).resolve().parent / 'questionbank.xlsx'
+FOLDER_SCHEMES = {
+    'original': 'original',
+    'questions': 'shuffle_questions-keep_topics_types',
+    'question_types': 'shuffle_types-keep_topics_questions',
+    'question_types_questions': 'shuffle_types_questions-keep_topics',
+    'topics': 'shuffle_topics-keep_types_questions',
+    'topics_questions': 'shuffle_topics_questions-keep_types',
+    'topics_question_types': 'shuffle_topics_types-keep_questions',
+    'all_levels': 'shuffle_topics_types_questions',
+    'within_topics': 'mix_questions-keep_topics',
+    'topics_within_topics': 'shuffle_topics-mix_questions',
+    'global': 'mix_all',
+}
+
+
+def batch_folder_name(prefix, timestamp, model_name, frame):
+    """Describe a new batch using filesystem-safe model and ordering names."""
+    mode = frame.attrs.get('ordering', {}).get('mode')
+    if mode is None and 'ordering_mode' in frame and len(frame):
+        modes = frame['ordering_mode'].dropna().unique()
+        if len(modes) != 1:
+            raise ValueError('Cannot name a batch with inconsistent ordering modes')
+        mode = modes[0]
+    mode = mode or 'original'
+    if mode not in FOLDER_SCHEMES:
+        raise ValueError(f'Unknown batch ordering mode: {mode}')
+    model = re.sub(r'[^A-Za-z0-9._-]+', '_', str(model_name)).strip('._-')
+    if not model:
+        raise ValueError('Model name cannot be empty in a batch folder name')
+    return f'{prefix}_{timestamp}-{model}-{FOLDER_SCHEMES[mode]}'
+
+
 MODES = [
     ('original', 'Keep original order', False, False, False, False),
     ('questions', 'Shuffle questions within each question type except follow-ups; keep topic sheets, question type groups and follow-up questions in original order', False, False, True, False),
