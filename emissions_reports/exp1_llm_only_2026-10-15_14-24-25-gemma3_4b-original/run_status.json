@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "cancelled",
+  "pipeline": "normal",
+  "planned_queries": 160,
+  "attempted_queries": 0,
+  "completed_queries": 0,
+  "successful_queries": 0,
+  "failed_queries": 0,
+  "cancelled_queries": 0,
+  "unstarted_queries": 160,
+  "actual_execution": [],
+  "total_runtime_s": 16.557121753692627
+}

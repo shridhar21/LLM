@@ -38,7 +38,12 @@ def batch_folder_name(prefix, timestamp, model_name, frame):
     model = re.sub(r'[^A-Za-z0-9._-]+', '_', str(model_name)).strip('._-')
     if not model:
         raise ValueError('Model name cannot be empty in a batch folder name')
-    return f'{prefix}_{timestamp}-{model}-{FOLDER_SCHEMES[mode]}'
+    base = f'{prefix}_{timestamp}-{model}-{FOLDER_SCHEMES[mode]}'
+    name, duplicate = base, 2
+    while (Path('emissions_reports') / name).exists():
+        name = f'{base}-run{duplicate}'
+        duplicate += 1
+    return name
 
 
 MODES = [
@@ -246,7 +251,7 @@ def range_options(frame):
     return options
 
 
-def select_questions(choice):
+def select_questions(choice, allow_multiple=False):
     frame = load_bank()
     bank = frame.copy()
     selection = None
@@ -297,17 +302,36 @@ def select_questions(choice):
             result.attrs['ordering']['selection'] = selection
         return result
     options = range_options(frame) if choice == '3' else MODES
+    multiple = False
+    if allow_multiple:
+        print('\n1. One shuffle run')
+        print('2. Multiple shuffle runs')
+        multiple = choose_integer('Choose (1-2): ', (1, 2)) == 2
     print('\nChoose question execution order:')
     print('Follow-up questions keep their original turn order. Free shuffles may place other questions between turns; within-question-type shuffles leave follow-ups in order.')
     for i, spec in enumerate(options, 1):
         print(f'{i}. {spec[1]}')
-    selected = options[choose_integer(f'Enter your choice (1-{len(options)}): ', range(1,len(options)+1))-1]
-    result = arrange(frame, selected[0])
-    result.attrs['ordering']['description'] = selected[1]
-    if selection:
-        result.attrs['ordering']['selection'] = selection
-    print(f"Selected {len(result)} questions. Shuffle seed: {result.attrs['ordering']['seed']}")
-    return result
+    if multiple:
+        while True:
+            try:
+                numbers = [int(value.strip()) for value in input('Shuffle option numbers, separated by commas: ').split(',')]
+                if not numbers or any(n < 1 or n > len(options) for n in numbers):
+                    raise ValueError
+                break
+            except ValueError:
+                print(f'Enter comma-separated option numbers from 1 to {len(options)}.')
+        selected_options = [options[n-1] for n in numbers]
+    else:
+        selected_options = [options[choose_integer(f'Enter your choice (1-{len(options)}): ', range(1,len(options)+1))-1]]
+    results = []
+    for selected in selected_options:
+        result = arrange(frame, selected[0])
+        result.attrs['ordering']['description'] = selected[1]
+        if selection:
+            result.attrs['ordering']['selection'] = dict(selection)
+        print(f"Selected {len(result)} questions. Shuffle seed: {result.attrs['ordering']['seed']}")
+        results.append(result)
+    return results if multiple else results[0]
 
 
 def identity(row, position):

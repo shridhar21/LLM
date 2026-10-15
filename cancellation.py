@@ -203,6 +203,7 @@ def _save_cancelled(state):
 def cancellable_run(function):
     @functools.wraps(function)
     def wrapped(*args, **kwargs):
+        propagate_cancel = kwargs.pop('_propagate_cancel', False)
         state = {'started': time.time(), 'phases': {}}
         token = _current.set(state)
         try:
@@ -216,6 +217,8 @@ def cancellable_run(function):
                 _save_cancelled(state)
             print('Run cancelled. Completed results and available partial costs were preserved.')
             print('Ollama connection closure was requested; server-side generation may stop asynchronously.')
+            if propagate_cancel:
+                raise
         finally:
             try:
                 if state.get('folder') and (state.get('rag') or state.get('indexing')):

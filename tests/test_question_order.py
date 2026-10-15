@@ -8,6 +8,43 @@ from question_order import MODES, arrange, grouped, load_bank, select_questions,
 
 
 class OrderingTests(unittest.TestCase):
+    def test_repeated_same_mode_does_not_reuse_existing_folder(self):
+        from question_order import batch_folder_name
+        frame=arrange(self.bank,'original',42)
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent.parent) as temp:
+            import contextlib
+            with contextlib.chdir(temp):
+                first=batch_folder_name('exp1_llm_only','fixed','model:3b',frame)
+                (Path('emissions_reports')/first).mkdir(parents=True)
+                second=batch_folder_name('exp1_llm_only','fixed','model:3b',frame)
+                self.assertNotEqual(first,second)
+                self.assertTrue(second.endswith('-run2'))
+
+    def test_multiple_orders_keep_selection_and_use_independent_seeds(self):
+        with patch('builtins.input', side_effect=['2', '0,2', '11,1,11']), \
+                patch('builtins.print'), patch('question_order.secrets.randbits', side_effect=[10,20,30]):
+            runs = select_questions('2', allow_multiple=True)
+        self.assertEqual([r.attrs['ordering']['mode'] for r in runs], ['global','original','global'])
+        self.assertEqual([r.attrs['ordering']['seed'] for r in runs], [10,None,30])
+        for r, mode, seed in zip(runs, ['global','original','global'], [10,20,30]):
+            self.assertEqual(r['Question ID'].tolist(), arrange(self.bank,mode,seed)['Question ID'].tolist())
+        runs[0].iloc[0, runs[0].columns.get_loc('Question')] = 'changed'
+        self.assertNotIn('changed',runs[2]['Question'].tolist())
+
+    def test_range_multiple_uses_only_available_options_and_retains_selection(self):
+        with patch('builtins.input',side_effect=['1','1','6','2','11','1,2']),patch('builtins.print'):
+            runs=select_questions('3',allow_multiple=True)
+        expected=self.bank.iloc[:6]
+        for run in runs:
+            self.assertEqual(set(run['Question ID']),set(expected['Question ID']))
+        self.assertEqual([r.attrs['ordering']['mode'] for r in runs],['original','questions'])
+
+    def test_opt_in_single_run_keeps_dataframe_return(self):
+        with patch('builtins.input',side_effect=['1','4']),patch('builtins.print'):
+            run=select_questions('2',allow_multiple=True)
+        self.assertIsInstance(run,pd.DataFrame)
+        self.assertEqual(run.attrs['ordering']['mode'],'question_types_questions')
+
     @classmethod
     def setUpClass(cls):
         cls.bank = load_bank()

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "status": "cancelled",
+  "pipeline": "normal",
+  "planned_queries": 160,
+  "attempted_queries": 2,
+  "completed_queries": 1,
+  "successful_queries": 1,
+  "failed_queries": 0,
+  "cancelled_queries": 1,
+  "unstarted_queries": 158,
+  "actual_execution": [
+    {
+      "question": "What is the difference between Scope 1, Scope 2, and Scope 3 emissions?",
+      "status": "ok",
+      "position": 1
+    },
+    {
+      "question": "What is the CDP framework used for, and which companies are required to report under it?",
+      "status": "cancelled",
+      "position": 2
+    }
+  ],
+  "total_runtime_s": 203.9873297214508
+}

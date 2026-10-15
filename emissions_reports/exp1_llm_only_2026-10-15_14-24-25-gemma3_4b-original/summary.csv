@@ -1,0 +1,2 @@
+status,pipeline,planned_queries,attempted_queries,completed_queries,successful_queries,failed_queries,cancelled_queries,unstarted_queries,total_runtime_s,model_name,num_queries,total_emissions_kg,total_energy_kwh,observed_emissions_kg,observed_energy_kwh
+cancelled,normal,160,0,0,0,0,0,160,16.557121753692627,gemma3:4b,0,,,,

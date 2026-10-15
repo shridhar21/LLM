@@ -301,12 +301,17 @@ def main():
         
         if choice in ('1', '2', '3'):
             try:
-                df_q = select_questions(choice)
+                df_q = select_questions(choice, allow_multiple=True) if choice in ('2', '3') else select_questions(choice)
             except ValueError as exc:
                 print(exc)
                 continue
             try:
-                process_queries(df_q, batch_mode=(choice != '1'), index=index, embedder=embedder, model_name=model_name)
+                batches = df_q if isinstance(df_q, list) else [df_q]
+                for batch_number, batch in enumerate(batches, 1):
+                    if len(batches) > 1:
+                        print(f'\nBatch {batch_number}/{len(batches)}: {batch.attrs["ordering"]["description"]}')
+                    process_queries(batch, batch_mode=(choice != '1'), index=index, embedder=embedder,
+                                    model_name=model_name, _propagate_cancel=(len(batches) > 1))
             except ValueError as exc:
                 print(f'Could not execute run: {exc}')
             

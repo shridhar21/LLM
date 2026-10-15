@@ -1,0 +1,65 @@
+topic_sheet,question_number,question_type,domain,execution_position,ordering_mode,shuffle_seed,question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+Sustainability,1,Simple/Direct,"Sustainability, Enterprise Social Governance(ESG) and Compliance",1,questions,3975455344,Sustainability:1,"What is the difference between Scope 1, Scope 2, and Scope 3 emissions?","Okay, let's break down the differences between Scope 1, Scope 2, and Scope 3 emissions – it's a crucial concept in understanding carbon accounting and corporate sustainability. They represent different categories of greenhouse gas (GHG) emissions a company is responsible for.
+
+**1. Scope 1 Emissions: Direct Emissions**
+
+* **What they are:** These are emissions that come directly from sources owned or controlled by your organization. They're the most easily quantifiable and usually the first to be addressed.
+* **Examples:**
+    * **Burning fuel in company vehicles:** Gasoline, diesel, propane, etc.
+    * **On-site combustion:** Burning natural gas for heating, boilers, or industrial processes.
+    * **Process emissions:** Emissions released as a byproduct of manufacturing (e.g., chemical reactions, cement production).
+    * **Refrigerant leaks** (from equipment like AC units)
+* **Control:** The company directly controls these emissions.
+
+
+
+**2. Scope 2 Emissions: Indirect Emissions – Electricity Consumption**
+
+* **What they are:** These emissions result from the generation of electricity, heat, or steam *that your organization purchases*.  It's about the emissions associated with the energy you consume, even if you don't directly burn fuel.
+* **How it works:**  Electricity is typically generated at a power plant.  Those plants burn fossil fuels (coal, natural gas) or use nuclear energy.  The emissions from *that* generation process are what you’re accounting for as Scope 2.
+* **Examples:**  Electricity used in an office building, a factory, or a data center.
+* **Control:** The company doesn’t directly emit the greenhouse gases, but they’re responsible for the emissions associated with the electricity they use. (Note: There's increasing pressure to purchase renewable electricity to offset Scope 2 emissions.)
+
+
+**3. Scope 3 Emissions: All Other Indirect Emissions**
+
+* **What they are:** This is the *largest and most complex* category. Scope 3 emissions encompass *all other* indirect GHG emissions that occur in your organization’s value chain – essentially, everything *outside* of Scope 1 and Scope 2. These are emissions that happen because of your activities, but aren’t directly owned or controlled.
+* **How it’s calculated:**  It’s often estimated based on spending patterns and industry averages, as measuring these emissions accurately can be very difficult.
+* **Examples (very broad categories):**
+    * **Upstream:**
+        * **Raw Materials:** Emissions from extracting and processing the materials used to make your products (e.g., mining, agriculture).
+        * **Transportation:** Emissions from shipping raw materials, components, and finished goods – by truck, ship, plane, etc.
+        * **Waste disposal:** Emissions from the disposal of products or waste generated during production.
+    * **Downstream:**
+        * **Use of Products:** Emissions from the use of your products (e.g., burning fuel in a car, using electricity in a home appliance).
+        * **End-of-Life Treatment:** Emissions from the disposal or recycling of your products at the end of their life.
+* **Control:** The company has little direct control over these emissions, but they have responsibility to assess and manage them through supply chain engagement and product design.
+
+**Here's a table summarizing the key differences:**
+
+| Scope | Type of Emission | Source of Emission | Control | Complexity |
+|-------|------------------|--------------------|----------|-------------|
+| 1     | Direct           | Owned/Controlled     | High     | Low         |
+| 2     | Indirect (Energy) | Purchased Electricity| Medium   | Medium      |
+| 3     | Indirect (Value Chain) | Entire Supply Chain   | Low      | High        |
+
+
+
+**Why does this matter?**
+
+* **Comprehensive Carbon Accounting:** Understanding all three scopes is essential for accurately measuring a company’s total carbon footprint.
+* **Setting Targets & Reporting:** Most sustainability reporting frameworks (like the Greenhouse Gas Protocol) require companies to report on all three scopes.
+* **Driving Change:**  Identifying and addressing emissions across all scopes is crucial for businesses to reduce their environmental impact and contribute to climate change mitigation.
+
+
+**Resources for Further Learning:**
+
+* **Greenhouse Gas Protocol:** [https://ghgprotocol.org/](https://ghgprotocol.org/) – The most widely used GHG accounting standard.
+* **EPA’s Scope 1, 2, and 3 Calculator:** [https://www.epa.gov/ghgemissions/calculators-toolbox](https://www.epa.gov/ghgemissions/calculators-toolbox)
+
+Do you want me to delve deeper into a specific aspect, such as:
+
+*   Calculating Scope 3 emissions in more detail?
+*   Specific examples of Scope 3 categories?
+*   How companies are addressing these scopes?",gemma3:4b,101.76121854782104,ok,,0.0005870815988413673,0.5870815988413672,0.0008228873849994,0.000550811835555,0.0,0.0002720755494444
+Sustainability,3,Simple/Direct,"Sustainability, Enterprise Social Governance(ESG) and Compliance",2,questions,3975455344,Sustainability:3,"What is the CDP framework used for, and which companies are required to report under it?",,gemma3:4b,44.77342438697815,cancelled,Interrupted by Ctrl+C; measurements are partial,0.0002550880397974307,0.2550880397974307,0.0003575460897221083,0.00024060546861099998,0.0,0.00011694062111110828

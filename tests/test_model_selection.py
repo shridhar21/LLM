@@ -39,6 +39,41 @@ def script_function(filename, name, namespace):
 
 
 class ModelSelectionTests(unittest.TestCase):
+    def test_multiple_batches_execute_in_order_with_same_model_and_cancel_stops_queue(self):
+        batches=[pd.DataFrame([{'Question ID':i,'Question':'Test?'}]) for i in range(3)]
+        for i,batch in enumerate(batches):
+            batch.attrs['ordering']={'description':str(i)}
+        for filename in ('normal_llm.py','run.py'):
+            for cancel in (False,True):
+                calls=[]
+                def process(frame,**kwargs):
+                    calls.append((frame,kwargs))
+                    if cancel:
+                        raise KeyboardInterrupt
+                namespace={'pd':pd,'select_model':Mock(return_value='qwen3:4b'),
+                           'select_questions':Mock(return_value=batches),'process_queries':process,
+                           'load_rag_index':Mock(return_value='index'),'SentenceTransformer':Mock(return_value='embedder')}
+                main=script_function(filename,'main',namespace)
+                with patch('builtins.input',side_effect=['2','5']),contextlib.redirect_stdout(io.StringIO()):
+                    if cancel:
+                        with self.assertRaises(KeyboardInterrupt): main()
+                    else: main()
+                self.assertEqual(len(calls),1 if cancel else 3)
+                for i,(frame,kwargs) in enumerate(calls):
+                    self.assertIs(frame,batches[i])
+                    self.assertEqual(kwargs['model_name'],'qwen3:4b')
+                    self.assertTrue(kwargs['batch_mode'])
+                    self.assertTrue(kwargs['_propagate_cancel'])
+
+    def test_cancel_propagates_only_when_requested_by_series(self):
+        @cancellation.cancellable_run
+        def interrupted():
+            raise KeyboardInterrupt
+        with patch('cancellation._save_cancelled'),patch('builtins.print'):
+            self.assertIsNone(interrupted())
+            with self.assertRaises(KeyboardInterrupt):
+                interrupted(_propagate_cancel=True)
+
     def test_exact_names_and_invalid_choices(self):
         response = Mock()
         response.json.return_value = {'models': [{'name': 'llama3.2:3b'}, {'name': 'qwen3:4b'}]}
@@ -102,7 +137,10 @@ class ModelSelectionTests(unittest.TestCase):
                 self.assertEqual(process.call_args.kwargs['batch_mode'], choice in ('2', '3'))
                 if choice != '4':
                     self.assertIs(process.call_args.args[0], selected_questions)
-                    namespace['select_questions'].assert_called_once_with(choice)
+                    if choice in ('2', '3'):
+                        namespace['select_questions'].assert_called_once_with(choice, allow_multiple=True)
+                    else:
+                        namespace['select_questions'].assert_called_once_with(choice)
                 if filename == 'run.py':
                     namespace['SentenceTransformer'].assert_called_once_with('all-MiniLM-L6-v2')
 

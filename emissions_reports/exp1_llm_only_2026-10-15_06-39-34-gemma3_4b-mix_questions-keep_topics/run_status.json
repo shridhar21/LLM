@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "status": "cancelled",
+  "pipeline": "normal",
+  "planned_queries": 160,
+  "attempted_queries": 79,
+  "completed_queries": 78,
+  "successful_queries": 78,
+  "failed_queries": 0,
+  "cancelled_queries": 1,
+  "unstarted_queries": 81,
+  "actual_execution": [
+    {
+      "question": "Which reporting standard does the GRI framework primarily address?",
+      "status": "ok",
+      "position": 1
+    },
+    {
+      "question": "Detail the step-by-step logical reconciliation process required to align a company's carbon footprint reported under the EU's CSRD with the figures reported in its standard US SEC 10-K filing.",
+      "status": "ok",
+      "position": 2
+    },
+    {
+      "question": "There is no universally agreed methodology for attributing Scope 3 emissions across multi-tier supply chains \u2014 propose an evaluation approach for how an LLM should handle this ambiguity when generating corporate guidance.",
+      "status": "ok",
+      "position": 3
+    },
+    {
+      "question": "When evaluating an LLM tasked with parsing massive corporate ESG reports, how do you weigh the operational energy cost of the inference process against the potential accuracy gains of using a larger model?",
+      "status": "ok",
+      "position": 4
+    },
+    {
+      "question": "Imagine a logistics company sets a baseline of 500,000 metric tons of Scope 1 emissions for FY2025. What specific operational factors could drive that number?",
+      "status": "ok",
+      "position": 5
+    },
+    {
+      "question": "Construct a hypothetical comparative sustainability scorecard between an EV manufacturer and a traditional internal combustion engine (ICE) manufacturer, justifying the weights given to Scope 3 supply chain vs. product use-phase emissions.",
+      "status": "ok",
+      "position": 6
+    },
+    {
+      "question": "Synthesize the top three physical climate risks a coastal real estate developer must disclose under the TCFD framework, providing a hypothetical mitigation strategy for each.",
+      "status": "ok",
+      "position": 7
+    },
+    {
+      "question": "Explain the difference between 'explainable' ESG QA and standard ESG QA, referencing ESGBench's design goals.",
+      "status": "ok",
+      "position": 8
+    },
+    {
+      "question": "Assume a multinational tech company operates a massive global server network powered entirely by leased renewable energy. Detail the specific GHG Protocol accounting rules for how it should report its Scope 2 market-based versus location-based emissions.",
+      "status": "ok",
+      "position": 9
+    },
+    {
+      "question": "What is the difference between Scope 1, Scope 2, and Scope 3 emissions?",
+      "status": "ok",
+      "position": 10
+    },
+    {
+      "question": "Construct a comprehensive checklist of biodiversity-related disclosures a mining company must provide to comply with the latest GRI biodiversity indicators.",
+      "status": "ok",
+      "position": 11
+    },
+    {
+      "question": "Since the 2024 update to the GHG Protocol mandates that Scope 4 (avoided emissions) must be subtracted from Scope 1 totals, how does a company calculate its net direct emissions?",
+      "status": "ok",
+      "position": 12
+    },
+    {
+      "question": "What is the CDP framework used for, and which companies are required to report under it?",
+      "status": "ok",
+      "position": 13
+    },
+    {
+      "question": "If they transition 20% of their fleet to electric vehicles by FY2026, what is the expected directional shift in their Scope 1 versus Scope 2 emissions?",
+      "status": "ok",
+      "position": 14
+    },
+    {
+      "question": "According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?",
+      "status": "ok",
+      "position": 15
+    },
+    {
+      "question": "Summarize how ESGBench evaluates factual consistency and traceability in ESG question answering.",
+      "status": "ok",
+      "position": 16
+    },
+    {
+      "question": "What exact accounting initiatives and certifications would they need to claim those reductions legitimately?",
+      "status": "ok",
+      "position": 17
+    },
+    {
+      "question": "Outline a rigorous methodology an ESG auditor would use to compare the emissions intensity year-over-year for two competing aviation firms, detailing the specific normalization metrics they must use.",
+      "status": "ok",
+      "position": 18
+    },
+    {
+      "question": "Are those specific certifications typically verified by a financial auditor or an environmental engineering firm?",
+      "status": "ok",
+      "position": 19
+    },
+    {
+      "question": "Based on this hypothetical transition trend, how would you evaluate their operational carbon efficiency?",
+      "status": "ok",
+      "position": 20
+    },
+    {
+      "question": "Explain the differences between deep copy and shallow copy in Python, providing a clear example of when a shallow copy leads to unexpected behavior.",
+      "status": "ok",
+      "position": 21
+    },
+    {
+      "question": "Write a Python function that returns the factorial of a number using recursion, including type hints and a docstring.",
+      "status": "ok",
+      "position": 22
+    },
+    {
+      "question": "Explain what 'pass@k' measures in a code generation benchmark and how it differs from strict single-pass (pass@1) accuracy.",
+      "status": "ok",
+      "position": 23
+    },
+    {
+      "question": "Identify the common causes of memory leaks in long-running Python server applications and provide one code example of how to avoid them.",
+      "status": "ok",
+      "position": 24
+    },
+    {
+      "question": "Write a function in Python that sorts a list of dictionaries based on a specific key value.",
+      "status": "ok",
+      "position": 25
+    },
+    {
+      "question": "Assume you have a Python unit test failing with a KeyError in a dictionary parsing module. Generate a robust function that safely parses nested JSON dictionaries with deep fallbacks and explain why it resolves the error.",
+      "status": "ok",
+      "position": 26
+    },
+    {
+      "question": "What edge cases does your sorting function fail to handle?",
+      "status": "ok",
+      "position": 27
+    },
+    {
+      "question": "Outline a theoretical measurement protocol for estimating the runtime energy and computational overhead of LLM-generated Python code across different hardware layers.",
+      "status": "ok",
+      "position": 28
+    },
+    {
+      "question": "Rewrite the function to safely handle missing keys and null values.",
+      "status": "ok",
+      "position": 29
+    },
+    {
+      "question": "Write a code snippet utilizing the requests library in Python to handle HTTP timeouts and retry logic cleanly, mimicking a production-grade external API call.",
+      "status": "ok",
+      "position": 30
+    },
+    {
+      "question": "Describe a comprehensive refactoring strategy for a legacy monolith application to reduce its overall computational cost during peak load, including algorithmic optimizations.",
+      "status": "ok",
+      "position": 31
+    },
+    {
+      "question": "Explain what a 'self-invoking code generation task' means in the context of coding benchmarks.",
+      "status": "ok",
+      "position": 32
+    },
+    {
+      "question": "What is the Big-O time and space complexity of your new version?",
+      "status": "ok",
+      "position": 33
+    },
+    {
+      "question": "How should code-review LLMs be evaluated when 'correctness' is subjective (e.g., stylistic or architectural disagreements) rather than objectively testable?",
+      "status": "ok",
+      "position": 34
+    },
+    {
+      "question": "When using Python's Global Interpreter Lock (GIL) to execute multiple CPU-bound threads simultaneously in parallel on different CPU cores, what is the best strategy to share memory?",
+      "status": "ok",
+      "position": 35
+    },
+    {
+      "question": "Generate a structured SQL schema for a basic e-commerce platform (Users, Orders, Products), and write a query to find the top 5 users by total spending in the last 30 days.",
+      "status": "ok",
+      "position": 36
+    },
+    {
+      "question": "Simulate diagnosing a failing CI/CD pipeline where the error log indicates a missing shared object file (.so) during a Docker build. Detail the specific Dockerfile additions and package manager commands needed to resolve it.",
+      "status": "ok",
+      "position": 37
+    },
+    {
+      "question": "Can the function be made more computationally efficient for extremely large datasets using a different library?",
+      "status": "ok",
+      "position": 38
+    },
+    {
+      "question": "Outline a step-by-step code review framework aligned with structured evaluation approaches, detailing how you would review a pull request that changes a synchronous database call to an asynchronous one.",
+      "status": "ok",
+      "position": 39
+    },
+    {
+      "question": "What does the acronym 'SWRBench' stand for and what exactly does it benchmark in the context of LLM code review?",
+      "status": "ok",
+      "position": 40
+    },
+    {
+      "question": "Generate a hypothetical table showing segment-level revenue data across two fiscal years for a cloud computing company, and explicitly calculate the year-over-year growth rate for each segment.",
+      "status": "ok",
+      "position": 41
+    },
+    {
+      "question": "Synthesize the standard risk-factor disclosures typically found in a global semiconductor manufacturing firm's annual report regarding supply chain vulnerabilities.",
+      "status": "ok",
+      "position": 42
+    },
+    {
+      "question": "Explain why closed-book LLMs historically performed poorly on complex financial benchmarks compared to oracle configurations.",
+      "status": "ok",
+      "position": 43
+    },
+    {
+      "question": "Define what constitutes total recognized revenue in a typical SaaS company's quarterly earnings report.",
+      "status": "ok",
+      "position": 44
+    },
+    {
+      "question": "How should financial LLM benchmarks account for forward-looking, non-verifiable statements (e.g., guidance, outlook) where there is no 'ground truth' evidence string?",
+      "status": "ok",
+      "position": 45
+    },
+    {
+      "question": "What is the difference between a 10-K and a 10-Q filing for publicly traded US companies?",
+      "status": "ok",
+      "position": 46
+    },
+    {
+      "question": "Construct a logical reasoning sequence detailing how to analyze a company whose net income is rising while its free cash flow is severely declining over three consecutive fiscal years.",
+      "status": "ok",
+      "position": 47
+    },
+    {
+      "question": "What evaluation metrics are commonly used for assessing financial QA accuracy in LLMs?",
+      "status": "ok",
+      "position": 48
+    },
+    {
+      "question": "Detail a step-by-step comparative margin analysis framework for evaluating two peer retail companies, identifying which exact financial ratios and statements are required for a definitive investment recommendation.",
+      "status": "ok",
+      "position": 49
+    },
+    {
+      "question": "Under strict IFRS guidelines, how must a company recognize revenue from a multi-year software contract entirely upfront at the time of signing?",
+      "status": "ok",
+      "position": 50
+    },
+    {
+      "question": "What does EBITDA stand for, and how is it typically calculated on an income statement?",
+      "status": "ok",
+      "position": 51
+    },
+    {
+      "question": "Propose a systematic accounting reconciliation method for a scenario where a company reports a high 'Adjusted EBITDA' in a press release but a massive net loss in its official filing. What exact line items bridge this gap?",
+      "status": "ok",
+      "position": 52
+    },
+    {
+      "question": "What is the fundamental difference between US GAAP and IFRS in terms of inventory valuation?",
+      "status": "ok",
+      "position": 53
+    },
+    {
+      "question": "What costs are normally deducted from that revenue to calculate gross margin?",
+      "status": "ok",
+      "position": 54
+    },
+    {
+      "question": "If gross margin increases but net income drops in the same quarter, what specific expense lines could explain that divergence?",
+      "status": "ok",
+      "position": 55
+    },
+    {
+      "question": "If a financial institution deploys a local LLM to continuously analyze live stock feeds, detail the tradeoff between the energy required for constant real-time inference versus the energy cost of maintaining a massive long-term memory context window.",
+      "status": "ok",
+      "position": 56
+    },
+    {
+      "question": "What does the term 'hallucination rate' mean specifically in the context of financial evaluation results?",
+      "status": "ok",
+      "position": 57
+    },
+    {
+      "question": "What operational factors might management typically cite during an earnings call to justify that margin divergence?",
+      "status": "ok",
+      "position": 58
+    },
+    {
+      "question": "Based on this pattern of rising gross margins but falling net income, is the company's core earnings quality inherently improving or deteriorating? Justify your stance.",
+      "status": "ok",
+      "position": 59
+    },
+    {
+      "question": "Describe the core structural components of a standard Cash Flow Statement and explain how Depreciation & Amortization are treated in the Cash from Operations section.",
+      "status": "ok",
+      "position": 60
+    },
+    {
+      "question": "In a customer support setting, how should a business weigh the tradeoff between utilizing a heavy multi-agent LLM workflow that yields higher resolution accuracy, versus the reduced operational compute load of a smaller, less accurate standalone model?",
+      "status": "ok",
+      "position": 61
+    },
+    {
+      "question": "Define intent classification in the context of an automated customer support routing system.",
+      "status": "ok",
+      "position": 62
+    },
+    {
+      "question": "Imagine a customer writes an angry complaint claiming their newly purchased software license key is showing as 'Invalid.' What is the first diagnostic step?",
+      "status": "ok",
+      "position": 63
+    },
+    {
+      "question": "Create a simulated multi-turn support ticket log regarding a missing delivery, ending with the exact criteria an agent must verify before officially escalating the issue to a Tier-2 logistics team.",
+      "status": "ok",
+      "position": 64
+    },
+    {
+      "question": "If the system shows the key was already activated from a different IP address, how do you communicate this without accusing the customer of fraud?",
+      "status": "ok",
+      "position": 65
+    },
+    {
+      "question": "What do ablation studies reveal regarding the effect of 'angry' versus 'calm' customer personas on LLM agent performance?",
+      "status": "ok",
+      "position": 66
+    },
+    {
+      "question": "Draft a comprehensive, empathetic customer-facing response to a user requesting a refund for a product that is two days past the standard 30-day return policy window, outlining a hypothetical store credit compromise.",
+      "status": "ok",
+      "position": 67
+    },
+    {
+      "question": "What is the standard first-response protocol an AI agent should follow for a 'cancel order' request?",
+      "status": "ok",
+      "position": 68
+    },
+    {
+      "question": "What is the difference in operational scope and authority between a Tier-1 support agent and a Tier-2 technical support escalation?",
+      "status": "ok",
+      "position": 69
+    },
+    {
+      "question": "Formulate a resolution framework for a scenario where two regional shipping policies contradict each other regarding international customs fees. How does a global support agent determine which policy overrides the other?",
+      "status": "ok",
+      "position": 70
+    },
+    {
+      "question": "Repeated trials of the same operational task can cause agent pass rates to drop \u2014 propose a consistency-improvement approach appropriate for a local, resource-constrained LLM agent operating without external APIs.",
+      "status": "ok",
+      "position": 71
+    },
+    {
+      "question": "Draft a formal standard operating procedure (SOP) for customer support agents on how to handle reports of suspected data breaches or account hacks.",
+      "status": "ok",
+      "position": 72
+    },
+    {
+      "question": "Explain the typical operational tasks measured in persona-driven customer support evaluations.",
+      "status": "ok",
+      "position": 73
+    },
+    {
+      "question": "According to standard PCI-DSS compliance, what is the required protocol for a customer service agent to read a customer's full CVV security code back to them over the phone for verification?",
+      "status": "ok",
+      "position": 74
+    },
+    {
+      "question": "Outline a step-by-step diagnostic workflow to resolve a multimodal product complaint (e.g., a customer claiming they received a damaged item, with a text description and an image description).",
+      "status": "ok",
+      "position": 75
+    },
+    {
+      "question": "What metrics are typically used to measure multi-turn issue resolution in customer support benchmarks?",
+      "status": "ok",
+      "position": 76
+    },
+    {
+      "question": "The customer responds furiously, demanding an immediate refund. What de-escalation techniques should be used here?",
+      "status": "ok",
+      "position": 77
+    },
+    {
+      "question": "Propose a systematic strategy for reviewing a backlog of 500 support tickets to identify a recurring hardware defect, and explain how you would format that data into an actionable product engineering report.",
+      "status": "ok",
+      "position": 78
+    },
+    {
+      "question": "What backend policy checks must be passed before a replacement key or refund can be securely issued?",
+      "status": "cancelled",
+      "position": 79
+    }
+  ],
+  "total_runtime_s": 26310.025486946106
+}

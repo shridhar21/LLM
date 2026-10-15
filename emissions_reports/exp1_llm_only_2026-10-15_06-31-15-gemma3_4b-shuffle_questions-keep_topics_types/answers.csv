@@ -1,0 +1,85 @@
+topic_sheet,question_number,question_type,domain,execution_position,ordering_mode,shuffle_seed,question_id,question,answer,model_name,latency_s,status,error,emissions_kg,emissions_g,energy_kwh,cpu_energy_kwh,gpu_energy_kwh,ram_energy_kwh
+Sustainability,3,Simple/Direct,"Sustainability, Enterprise Social Governance(ESG) and Compliance",1,questions,2613090355,Sustainability:3,"What is the CDP framework used for, and which companies are required to report under it?","Okay, let's break down the CDP (Carbon Disclosure Project) framework. It’s a leading global non-profit that drives corporate action on climate change. Here's a comprehensive overview:
+
+**What is the CDP Framework Used For?**
+
+CDP's primary purpose is to:
+
+* **Collect Corporate Climate Data:** It’s essentially a global standardized questionnaire that companies voluntarily complete regarding their greenhouse gas (GHG) emissions, climate risks, and climate opportunities. This is the core of the framework.
+* **Drive Transparency:**  The data collected is made publicly available – usually through a secure online platform – to investors, policymakers, cities, and consumers. This transparency holds companies accountable and fosters informed decision-making.
+* **Encourage Climate Action:**  By rating companies based on their responses, CDP motivates businesses to set ambitious climate targets, improve their emissions reduction strategies, and invest in climate resilience.
+* **Inform Investment Decisions:** Investors use the data to assess companies' climate-related risks and opportunities, influencing where they allocate their capital.
+* **Shape Policy:** CDP data provides vital evidence for governments and international organizations developing climate policies and regulations.
+
+
+**How the CDP Framework Works – Key Components:**
+
+1. **Questionnaire:** The core of the framework is a detailed questionnaire.  It's divided into three main areas:
+   * **Climate Change (formerly Climate Change):** This is the most comprehensive area, focusing on Scope 1, 2, and 3 emissions, climate risk assessments (physical and transition), and adaptation strategies.
+   * **Water Security:**  Companies report on their water use, risks related to water scarcity, and water management strategies.
+   * **Forests:** Companies disclose information about their supply chains and any potential impacts related to deforestation and forest degradation.
+
+2. **Scores & Ratings:** Companies receive scores (from A to D-) based on the quality, completeness, and ambition of their responses.  The rating system is designed to encourage continuous improvement.
+   * **A Ranking:** This is the highest level, indicating leadership in climate action – ambitious targets, robust strategies, and a proactive approach.
+   * **B Ranking:** Shows significant progress and commitment.
+   * **C Ranking:** Demonstrates some activity but needs further improvement.
+   * **D- Ranking:** Indicates limited action and a need for significant changes.
+
+3. **Supply Chain Engagement:** CDP extends beyond direct corporate emissions by engaging with suppliers and engaging them to also disclose their climate data.
+
+**Which Companies Are Required to Report Under CDP?**
+
+**Currently, reporting is voluntary for most companies, but it's becoming increasingly important.**  Here's a breakdown of who is participating:
+
+* **Large Publicly Listed Companies:** This is the biggest driver. Major companies across all sectors – including:
+    * **Automotive:** Volkswagen, Toyota, Stellantis, Ford
+    * **Energy:** BP, Shell, TotalEnergies, Equinor
+    * **Technology:** Microsoft, Apple, Google, Amazon, Intel
+    * **Financial Services:** Goldman Sachs, JPMorgan Chase, BlackRock
+    * **Consumer Goods:** Unilever, Nestle, L’Oréal, Procter & Gamble
+    * **Materials:**  BASF, Dow, Rio Tinto, BHP
+* **Investors:** A huge number of institutional investors use CDP data to assess portfolio companies.
+* **Cities and Regions:** Many cities and regions are participating to assess their own climate risks and resilience.
+* **Specific Sector Focus:** CDP has expanded into specific sectors like agriculture, mining, and insurance.
+
+**Key Changes and Trends:**
+
+* **Expanded Scope 3 Emissions:** CDP is heavily focused on improving the collection and reporting of Scope 3 emissions (indirect emissions throughout a company’s value chain) – these are now a core part of the questionnaire.
+* **Climate Resilience:** Increased emphasis on how companies are preparing for the impacts of climate change (e.g., extreme weather events).
+* **Policy Engagement:** CDP is working with governments to incorporate its data and insights into climate legislation.
+* **Growing Mandatory Reporting:**  There's a significant push for mandatory climate reporting requirements. The EU's Corporate Sustainability Reporting Directive (CSRD) is a major step in this direction, requiring many companies to report under CDP standards (or similar frameworks) starting in 2024.
+
+
+
+**Resources for More Information:**
+
+* **CDP Website:** [https://www.cdp.net/](https://www.cdp.net/)
+* **CDP Scores:** [https://www.cdp.net/scores](https://www.cdp.net/scores)
+* **CSRD (EU):** [https://resourcehub.cdp.net/csrds](https://resourcehub.cdp.net/csrds)
+
+Do you want me to delve deeper into a specific aspect of the CDP framework, such as:
+
+*   The scoring methodology?
+*   Scope 3 emissions reporting?
+*   How CDP is used by investors?",gemma3:4b,100.71691250801086,ok,,0.0005866012243514527,0.5866012243514528,0.0008222140644446,0.000554195285278,0.0,0.0002680187791666
+Sustainability,2,Simple/Direct,"Sustainability, Enterprise Social Governance(ESG) and Compliance",2,questions,2613090355,Sustainability:2,Which reporting standard does the GRI framework primarily address?,"The GRI (Global Reporting Initiative) framework primarily addresses **sustainability reporting**. 
+
+Here's a breakdown of how it relates to reporting standards:
+
+* **Not a Formal Standard:** The GRI framework isn't a formal, legally binding reporting standard like IFRS (International Financial Reporting Standards) or US GAAP (Generally Accepted Accounting Principles). 
+* **A Guidance Framework:** Instead, it's a *guidance framework* and a set of standards that provide a common language and structure for organizations to report on their environmental, social, and governance (ESG) performance. 
+* **Focus on Stakeholder Needs:** The core of the GRI framework is to help organizations understand and respond to the needs of their stakeholders – investors, customers, employees, communities, and the environment. 
+* **G3 & G4 Editions:** The framework has evolved through several editions (G3, G3.1, G4), with G4 being the most current. Each edition builds upon the previous one and includes more detailed requirements and best practices. 
+
+**In short, the GRI framework guides organizations in creating sustainability reports, aiming to communicate their impact on people and the planet.**
+
+
+**Here's a comparison to other standards:**
+
+* **SASB (Sustainability Accounting Standards Board):**  SASB focuses on financially material sustainability information, aiming to align sustainability reporting with investor needs.
+* **TCFD (Task Force on Climate-related Financial Disclosures):** TCFD concentrates on climate-related risks and opportunities for financial disclosure.
+* **CSRD (Corporate Sustainability Reporting Directive - EU):** This is a regulatory standard requiring reporting based on the European Sustainability Reporting Standards (ESRS), which draw heavily on the GRI framework.
+
+
+Do you want me to elaborate on any specific aspect, such as the different GRI standards (Core vs. Expanded), or how the GRI framework relates to CSRD?",gemma3:4b,37.07447338104248,ok,,0.00020914422399058034,0.20914422399058036,0.0002931485911106,0.000197582219444,0.0,9.556637166666e-05
+Sustainability,1,Simple/Direct,"Sustainability, Enterprise Social Governance(ESG) and Compliance",3,questions,2613090355,Sustainability:1,"What is the difference between Scope 1, Scope 2, and Scope 3 emissions?",,gemma3:4b,69.27435612678528,cancelled,Interrupted by Ctrl+C; measurements are partial,0.00040216549193033247,0.40216549193033246,0.0005636983183337268,0.000377247281667,0.0,0.00018645103666672689

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "model": "gemma3:4b",
+  "settings": {
+    "num_ctx": 32768,
+    "num_predict": 2048,
+    "template_margin_tokens": 1024,
+    "overflow_policy": "reject_without_truncation",
+    "budget_method": "conservative_utf8_bytes"
+  },
+  "effective_options": {
+    "num_ctx": 32768,
+    "num_predict": 2048
+  },
+  "history_policy": "successful_turns_within_chain; no summarization or truncation",
+  "requests": []
+}

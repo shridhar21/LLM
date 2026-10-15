@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "cancelled",
+  "pipeline": "normal",
+  "planned_queries": 160,
+  "attempted_queries": 3,
+  "completed_queries": 2,
+  "successful_queries": 2,
+  "failed_queries": 0,
+  "cancelled_queries": 1,
+  "unstarted_queries": 157,
+  "actual_execution": [
+    {
+      "question": "What is the CDP framework used for, and which companies are required to report under it?",
+      "status": "ok",
+      "position": 1
+    },
+    {
+      "question": "Which reporting standard does the GRI framework primarily address?",
+      "status": "ok",
+      "position": 2
+    },
+    {
+      "question": "What is the difference between Scope 1, Scope 2, and Scope 3 emissions?",
+      "status": "cancelled",
+      "position": 3
+    }
+  ],
+  "total_runtime_s": 257.50067377090454
+}
