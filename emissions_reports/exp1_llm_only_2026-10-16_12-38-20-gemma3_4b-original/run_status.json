@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "status": "cancelled",
+  "pipeline": "normal",
+  "planned_queries": 160,
+  "attempted_queries": 26,
+  "completed_queries": 25,
+  "successful_queries": 25,
+  "failed_queries": 0,
+  "cancelled_queries": 1,
+  "unstarted_queries": 134,
+  "actual_execution": [
+    {
+      "question": "What is the difference between Scope 1, Scope 2, and Scope 3 emissions?",
+      "status": "ok",
+      "position": 1
+    },
+    {
+      "question": "Which reporting standard does the GRI framework primarily address?",
+      "status": "ok",
+      "position": 2
+    },
+    {
+      "question": "What is the CDP framework used for, and which companies are required to report under it?",
+      "status": "ok",
+      "position": 3
+    },
+    {
+      "question": "According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?",
+      "status": "ok",
+      "position": 4
+    },
+    {
+      "question": "Summarize how ESGBench evaluates factual consistency and traceability in ESG question answering.",
+      "status": "ok",
+      "position": 5
+    },
+    {
+      "question": "Explain the difference between 'explainable' ESG QA and standard ESG QA, referencing ESGBench's design goals.",
+      "status": "ok",
+      "position": 6
+    },
+    {
+      "question": "Assume a multinational tech company operates a massive global server network powered entirely by leased renewable energy. Detail the specific GHG Protocol accounting rules for how it should report its Scope 2 market-based versus location-based emissions.",
+      "status": "ok",
+      "position": 7
+    },
+    {
+      "question": "Synthesize the top three physical climate risks a coastal real estate developer must disclose under the TCFD framework, providing a hypothetical mitigation strategy for each.",
+      "status": "ok",
+      "position": 8
+    },
+    {
+      "question": "Construct a comprehensive checklist of biodiversity-related disclosures a mining company must provide to comply with the latest GRI biodiversity indicators.",
+      "status": "ok",
+      "position": 9
+    },
+    {
+      "question": "Outline a rigorous methodology an ESG auditor would use to compare the emissions intensity year-over-year for two competing aviation firms, detailing the specific normalization metrics they must use.",
+      "status": "ok",
+      "position": 10
+    },
+    {
+      "question": "Construct a hypothetical comparative sustainability scorecard between an EV manufacturer and a traditional internal combustion engine (ICE) manufacturer, justifying the weights given to Scope 3 supply chain vs. product use-phase emissions.",
+      "status": "ok",
+      "position": 11
+    },
+    {
+      "question": "Detail the step-by-step logical reconciliation process required to align a company's carbon footprint reported under the EU's CSRD with the figures reported in its standard US SEC 10-K filing.",
+      "status": "ok",
+      "position": 12
+    },
+    {
+      "question": "Imagine a logistics company sets a baseline of 500,000 metric tons of Scope 1 emissions for FY2025. What specific operational factors could drive that number?",
+      "status": "ok",
+      "position": 13
+    },
+    {
+      "question": "If they transition 20% of their fleet to electric vehicles by FY2026, what is the expected directional shift in their Scope 1 versus Scope 2 emissions?",
+      "status": "ok",
+      "position": 14
+    },
+    {
+      "question": "What exact accounting initiatives and certifications would they need to claim those reductions legitimately?",
+      "status": "ok",
+      "position": 15
+    },
+    {
+      "question": "Are those specific certifications typically verified by a financial auditor or an environmental engineering firm?",
+      "status": "ok",
+      "position": 16
+    },
+    {
+      "question": "Based on this hypothetical transition trend, how would you evaluate their operational carbon efficiency?",
+      "status": "ok",
+      "position": 17
+    },
+    {
+      "question": "There is no universally agreed methodology for attributing Scope 3 emissions across multi-tier supply chains \u2014 propose an evaluation approach for how an LLM should handle this ambiguity when generating corporate guidance.",
+      "status": "ok",
+      "position": 18
+    },
+    {
+      "question": "When evaluating an LLM tasked with parsing massive corporate ESG reports, how do you weigh the operational energy cost of the inference process against the potential accuracy gains of using a larger model?",
+      "status": "ok",
+      "position": 19
+    },
+    {
+      "question": "Since the 2024 update to the GHG Protocol mandates that Scope 4 (avoided emissions) must be subtracted from Scope 1 totals, how does a company calculate its net direct emissions?",
+      "status": "ok",
+      "position": 20
+    },
+    {
+      "question": "Write a Python function that returns the factorial of a number using recursion, including type hints and a docstring.",
+      "status": "ok",
+      "position": 21
+    },
+    {
+      "question": "Identify the common causes of memory leaks in long-running Python server applications and provide one code example of how to avoid them.",
+      "status": "ok",
+      "position": 22
+    },
+    {
+      "question": "Explain the differences between deep copy and shallow copy in Python, providing a clear example of when a shallow copy leads to unexpected behavior.",
+      "status": "ok",
+      "position": 23
+    },
+    {
+      "question": "What does the acronym 'SWRBench' stand for and what exactly does it benchmark in the context of LLM code review?",
+      "status": "ok",
+      "position": 24
+    },
+    {
+      "question": "Explain what a 'self-invoking code generation task' means in the context of coding benchmarks.",
+      "status": "ok",
+      "position": 25
+    },
+    {
+      "question": "Explain what 'pass@k' measures in a code generation benchmark and how it differs from strict single-pass (pass@1) accuracy.",
+      "status": "cancelled",
+      "position": 26
+    }
+  ],
+  "total_runtime_s": 2913.427474498749
+}

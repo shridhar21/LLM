@@ -166,9 +166,18 @@ def order_analysis(data, reports):
     return displacement, details, summary
 
 
-def generate(input_path, output, reports=ROOT / 'emissions_reports'):
-    data = load_data(input_path)
-    _, chain_details, _ = order_analysis(data, reports)
+def generate(input_path, output, reports=ROOT / 'emissions_reports', *, prepared=None,
+             run_labels=None, page_filter=None, shared_maximum=None):
+    if prepared is None:
+        data = load_data(input_path)
+        _, chain_details, _ = order_analysis(data, reports)
+    else:
+        data, chain_details = prepared
+    runs = list(run_labels or RUNS)
+    count = len(data['labels'])
+    serials = data.get('serials', np.arange(1, count+1))
+    run_colors = data.get('run_colors') or ([plt.get_cmap('tab20')(i % 20) for i in range(len(runs))]
+                                          if len(runs) > 5 else RUN_COLORS[:len(runs)])
     output = Path(output)
     if output.exists():
         raise FileExistsError(f'Choose a new output directory; already exists: {output}')
@@ -181,6 +190,9 @@ def generate(input_path, output, reports=ROOT / 'emissions_reports'):
     pdf_path = output / 'run_comparison_graphs.pdf'
     with PdfPages(pdf_path) as pdf:
         def save(fig, name, title, note=''):
+            if page_filter is not None and name not in page_filter:
+                plt.close(fig)
+                return
             fig.suptitle(title, x=.08, y=.985, ha='left', fontsize=17, weight='bold')
             if note:
                 fig.text(.08, .025, note, fontsize=9, color='#555555', va='bottom')
@@ -190,11 +202,11 @@ def generate(input_path, output, reports=ROOT / 'emissions_reports'):
             plt.close(fig)
 
         topics = list(dict.fromkeys(data['topics']))
-        topic_colors = dict(zip(topics, TOPIC_COLORS))
+        topic_colors = data.get('topic_palette') or dict(zip(topics, TOPIC_COLORS))
         if len(topics) > len(TOPIC_COLORS):
             raise ValueError('More topics than the supported eight topic colours')
-        maximum = max(float(data['emissions_g'].max()) * 1.08, 1e-12)
-        for k, run in enumerate(RUNS):
+        maximum = shared_maximum or max(float(data['emissions_g'].max()) * 1.08, 1e-12)
+        for k, run in enumerate(runs):
             fig, ax = plt.subplots(figsize=(22, 9))
             fig.subplots_adjust(left=.055, right=.985, top=.82, bottom=.18)
             order = np.argsort(data['position'][:, k])
@@ -210,32 +222,32 @@ def generate(input_path, output, reports=ROOT / 'emissions_reports'):
             ax.add_collection(LineCollection(segments, colors=segment_colors, linewidths=1.5))
             ax.scatter(x, y, c=colors, s=10, linewidths=0, zorder=3)
             clean(ax, 'y')
-            ax.set_xlim(.5, 160.5)
+            ax.set_xlim(.5, count+.5)
             ax.set_ylim(0, maximum)
-            ax.set_xticks(x, [str(i+1) for i in order], rotation=90, fontsize=7.5)
+            ax.set_xticks(x, [str(serials[i]) for i in order], rotation=90, fontsize=7.5)
             ax.set_xlabel('Original question number, arranged in actual execution order', labelpad=12)
             ax.set_ylabel('Emissions per question (g CO2eq)')
             fig.legend([Line2D([], [], color=topic_colors[t], linewidth=2) for t in topics],
                        topics, loc='upper center', bbox_to_anchor=(.52,.925), ncol=4, frameon=False)
             save(fig, f'01_emissions_{run}', f'{run}: question emissions in execution order',
-                 'Labels are original questionbank serials (1-160). Colours identify topic sheets; colour changes halfway between neighbouring questions.')
-        headers = ['e1 original\nposition'] + [f'{r}\n{label}' for r in RUNS[1:]
-                   for label in ['Position', 'Gap']] + [f'{r} emissions\n(g CO2eq)' for r in RUNS]
+                 'Labels are original questionbank serials. Colours identify topic sheets; colour changes halfway between neighbouring questions.')
+        headers = ['Original\nposition'] + [f'{r}\n{label}' for r in (runs if prepared is not None else runs[1:])
+                   for label in ['Position', 'Gap']] + [f'{r} emissions\n(g CO2eq)' for r in runs]
         by_chain = [{c['chain']: c for c in chains} for chains in chain_details]
         for start in range(0, len(chain_details[0]), 2):
-            fig, axes = plt.subplots(2, 1, figsize=(15, 9))
+            fig, axes = plt.subplots(2, 1, figsize=(max(15, len(runs)*2.8), 9))
             fig.subplots_adjust(left=.035, right=.97, top=.88, bottom=.12, hspace=.45)
             for ax, base in zip(axes, chain_details[0][start:start+2]):
                 ax.axis('off')
                 ax.set_title(f'{base["topic"]} - follow-up set starting at Q{base["first_question"]}', loc='left', pad=12)
                 chains = [run[base['chain']] for run in by_chain]
                 rows = []
-                for turn, original in enumerate(base['positions']):
-                    rows.append([original, *[v for c in chains[1:] for v in
+                for turn, original in enumerate(base.get('original_positions', base['positions'])):
+                    rows.append([original, *[v for c in (chains if prepared is not None else chains[1:]) for v in
                                 [c['positions'][turn], c['gaps'][turn-1] if turn else 'N/A']],
                                 *[f'{c["turn_emissions_g"][turn]:.8g}' for c in chains]])
                 table = ax.table(cellText=rows, colLabels=headers, cellLoc='center',
-                                 colWidths=[.065]*9+[.083]*5, bbox=[0,0,1,1])
+                                 colWidths=None if prepared is not None else [.065]*9+[.083]*5, bbox=[0,0,1,1])
                 table.auto_set_font_size(False); table.set_fontsize(9)
                 for (row, col), cell in table.get_celld().items():
                     cell.set_facecolor('white'); cell.set_edgecolor('#D7D7D7'); cell.set_linewidth(.35)
@@ -246,19 +258,19 @@ def generate(input_path, output, reports=ROOT / 'emissions_reports'):
                  'Gap = questions outside this chain between the previous turn and this turn, including turns from other chains.\n'
                  'N/A = first turn, with no preceding turn. Emissions are for the individual question, taken from original run records.')
         # Final section: compare the same question across all five runs.
-        for start in range(0, 160, 32):
-            stop = min(start + 32, 160)
+        for start in range(0, count, 32):
+            stop = min(start + 32, count)
             values = data['emissions_g'][start:stop]
             row_positions = np.arange(stop-start)
             fig, ax = plt.subplots(figsize=(16, 10))
             fig.subplots_adjust(left=.23, right=.97, top=.86, bottom=.11)
             ax.hlines(row_positions, values.min(axis=1), values.max(axis=1),
                       color='#B4BBC1', linewidth=1.6, zorder=2)
-            for k, (run, color) in enumerate(zip(RUNS, RUN_COLORS)):
-                ax.scatter(values[:,k], row_positions+(k-2)*.10,
+            for k, (run, color) in enumerate(zip(runs, run_colors)):
+                ax.scatter(values[:,k], row_positions+(k-(len(runs)-1)/2)*min(.10,.6/len(runs)),
                            color=color, label=run, s=24, linewidths=0, zorder=3)
             ax.set_yticks(row_positions,
-                          [f'Q{i+1}  {data["topics"][i]}' for i in range(start,stop)], fontsize=9)
+                          [f'Q{serials[i]}  {data["topics"][i]}' for i in range(start,stop)], fontsize=9)
             ax.set_ylim(stop-start-.5, -.5)
             ax.set_xlim(0, maximum)
             ax.xaxis.set_major_locator(MultipleLocator(.025))
@@ -266,19 +278,19 @@ def generate(input_path, output, reports=ROOT / 'emissions_reports'):
             ax.tick_params(axis='x', labelsize=8)
             ax.set_xlabel('Emissions per question (g CO2eq)')
             clean(ax)
-            fig.legend([Line2D([], [], marker='o', linestyle='', color=c) for c in RUN_COLORS],
-                       RUNS, loc='upper center', bbox_to_anchor=(.6,.94), ncol=5, frameon=False)
+            fig.legend([Line2D([], [], marker='o', linestyle='', color=c) for c in run_colors],
+                       runs, loc='upper center', bbox_to_anchor=(.6,.94), ncol=5, frameon=False)
             save(fig, f'10_question_emissions_{start//32+1:02}',
-                 f'Per-question emissions across runs: Q{start+1}-Q{stop}',
+                 f'Per-question emissions across runs: Q{serials[start]}-Q{serials[stop-1]}',
                  'Original questionbank order. Each dot is one run; grey lines span minimum to maximum.\n'
                  'Small vertical offsets separate overlapping dots. All five pages use the same emissions scale.')
-        # Last page: arithmetic mean for each matched question across e1-e5.
-        x = np.arange(1, 161)
+        # Last page: arithmetic mean for each matched question across selected runs.
+        x = np.arange(1, count+1)
         average = data['emissions_g'].mean(axis=1)
         colors = [topic_colors[t] for t in data['topics']]
         points = np.column_stack([x, average])
         segments, segment_colors = [], []
-        for i in range(159):
+        for i in range(count-1):
             middle = (points[i] + points[i+1]) / 2
             segments.extend([[points[i], middle], [middle, points[i+1]]])
             segment_colors.extend([colors[i], colors[i+1]])
@@ -287,23 +299,23 @@ def generate(input_path, output, reports=ROOT / 'emissions_reports'):
         ax.add_collection(LineCollection(segments, colors=segment_colors, linewidths=1.5))
         ax.scatter(x, average, c=colors, s=10, linewidths=0, zorder=3)
         clean(ax, 'y')
-        ax.set_xlim(.5, 160.5)
-        ax.set_ylim(0, max(float(average.max())*1.08, 1e-12))
-        ax.set_xticks(x, [str(i) for i in x], rotation=90, fontsize=7.5)
-        ax.set_xlabel('Original questionbank number (1-160)', labelpad=12)
+        ax.set_xlim(.5, count+.5)
+        ax.set_ylim(0, shared_maximum or max(float(average.max())*1.08, 1e-12))
+        ax.set_xticks(x, [str(i) for i in serials], rotation=90, fontsize=7.5)
+        ax.set_xlabel('Original questionbank number', labelpad=12)
         ax.set_ylabel('Mean emissions per question (g CO2eq)')
         fig.legend([Line2D([], [], color=topic_colors[t], linewidth=2) for t in topics],
                    topics, loc='upper center', bbox_to_anchor=(.52,.925), ncol=4, frameon=False)
-        save(fig, '11_average_question_emissions', 'Average question emissions across e1-e5',
-             'Each point is the arithmetic mean of the same question\'s recorded emissions across all five runs. Original questionbank order.')
+        save(fig, '11_average_question_emissions', 'Average question emissions across selected runs',
+             'Each point is the arithmetic mean of the same question\'s recorded emissions across the selected runs. Original questionbank order.')
     (output / 'README.txt').write_text(
         f'Source workbook: {Path(input_path).resolve()}\n'
-        'All 160 question rows and five runs are validated against the comprehensive sheet.\n'
-        'Five separate landscape emissions line graphs follow actual execution order, one per run.\n'
+        'Question identities and recorded measurements are validated before plotting.\n'
+        f'{len(runs)} separate landscape emissions line graphs follow actual execution order, one per run.\n'
         'Every x-axis label is an original question serial. Line/point colours identify topic sheets consistently across runs.\n'
-        'Eight follow-up tables compare turn positions, chain gaps and per-question emissions.\n'
-        'Final section: five landscape dot-and-range pages cover Q1-Q160 in original questionbank order.\n'
-        'Last page: per-question arithmetic mean emissions across e1-e5, in original questionbank order.\n'
+        'Separate follow-up tables compare turn positions, chain gaps and per-question emissions.\n'
+        'Per-question dot-and-range pages cover the selected questions in original questionbank order.\n'
+        'Last page: per-question arithmetic mean emissions across selected runs, in original questionbank order.\n'
         'Emissions are read from original answers.csv: emissions_kg x 1000 = g CO2eq.\n'
         'Source workbook and original run files are never modified.\n'
         'No intermediate rounding; table display labels use eight significant digits.\n', encoding='utf-8')
