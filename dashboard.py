@@ -1,4 +1,4 @@
-"""Local three-machine report explorer. Launch: python dashboard.py"""
+"""Local report explorer for one to three machines. Launch: python dashboard.py"""
 import argparse
 import csv
 import hashlib
@@ -16,6 +16,7 @@ from flask import Flask, abort, jsonify, request, send_file
 import compare_reports as comparison
 import generate_report as individual
 import plot_run_tables as plots
+import dashboard_analysis as analysis
 from question_order import load_bank, MODES
 
 ROOT = Path(__file__).resolve().parent
@@ -23,6 +24,7 @@ app = Flask(__name__)
 app.json.sort_keys = False
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 CATALOGUES = {}
+MACHINE_SETS = {}
 ARTIFACTS = {}
 RENDER_LOCK = threading.RLock()
 OUTPUT = ROOT / 'dashboard_outputs'
@@ -37,11 +39,12 @@ def identify(path):
 
 
 def discover(roots):
-    if len(roots) != 3:
-        raise ValueError('Choose three machine folders')
+    roots = [r for r in roots if str(r.get('path', '')).strip()]
+    if not 1 <= len(roots) <= 3:
+        raise ValueError('Choose one, two, or three machine folders')
     resolved = [Path(r['path']).expanduser().resolve() for r in roots]
-    if len(set(resolved)) != 3:
-        raise ValueError('Choose three different machine folders')
+    if len(set(resolved)) != len(resolved):
+        raise ValueError('Choose different machine folders')
     catalogue = {}
     machines = []
     for index, (spec, root) in enumerate(zip(roots, resolved)):
@@ -78,7 +81,7 @@ def discover(roots):
 def selected(payload):
     catalogue = CATALOGUES.get(payload.get('dataset'))
     if catalogue is None:
-        raise ValueError('Load the three machine folders first')
+        raise ValueError('Load the machine folders first')
     ids = payload.get('ids', [])
     if not ids or len(ids) != len(set(ids)) or any(i not in catalogue for i in ids):
         raise ValueError('Select at least one valid distinct run')
@@ -195,11 +198,17 @@ def tables(items, bank):
                 row[label+' emissions_g']=item['run']['questions'][q['Question']]['emissions_g']
             followups.append(row)
     averages=[]
-    for _, q in bank.iterrows():
-        vals=[i['run']['questions'][q['Question']]['emissions_g'] for i in items]
-        averages.append(dict(original_question=int(q['original_serial']),question=q['Question'],
-                             mean_emissions_g=sum(vals)/len(vals) if all(v is not None for v in vals) else None,
-                             valid=sum(v is not None for v in vals),expected=len(vals)))
+    for machine,model in sorted({(i['entry']['machine'],r['model']) for i in items for r in i['run']['questions'].values()}):
+        for _, q in bank.iterrows():
+            group=[i for i in items if i['entry']['machine']==machine and i['run']['questions'][q['Question']]['model']==model]
+            if not group:continue
+            schemes={i['entry']['scheme'] for i in group}
+            vals=[i['run']['questions'][q['Question']]['emissions_g'] for i in group]
+            means=[analysis.complete_mean([i['run']['questions'][q['Question']]['emissions_g'] for i in group if i['entry']['scheme']==s]) for s in schemes]
+            averages.append(dict(machine=group[0]['entry']['machine_name'],model=model,
+                                 original_question=int(q['original_serial']),question=q['Question'],
+                                 mean_emissions_g=analysis.complete_mean(means),
+                                 valid=sum(v is not None for v in vals),expected=len(vals)))
     return {'overview':summary,'questions':rows,'metadata':metadata,'followups':followups,'averages':averages}
 
 
@@ -244,6 +253,15 @@ def home():
     return send_file(ROOT/'dashboard_ui'/'index.html')
 
 
+@app.get('/ui/<name>')
+def ui_asset(name):
+    if name == 'plotly.min.js':
+        import plotly
+        return send_file(Path(plotly.__file__).parent/'package_data'/'plotly.min.js')
+    if name not in ('app.js','charts.js','styles.css'):abort(404)
+    return send_file(ROOT/'dashboard_ui'/name)
+
+
 @app.post('/api/browse')
 def browse():
     import tkinter as tk
@@ -260,9 +278,48 @@ def browse():
 @app.post('/api/load')
 def load():
     catalogue,machines=discover(request.get_json()['machines'])
+    questions=analysis.question_records(load_bank())
+    analysis.add_coverage(machines,catalogue,questions)
     token=uuid.uuid4().hex
     CATALOGUES[token]=catalogue
-    return jsonify(dataset=token,machines=machines)
+    MACHINE_SETS[token]=machines
+    return jsonify(dataset=token,machines=machines,questions=questions,
+                   scheme_labels={m[0]:m[1] for m in MODES})
+
+
+def explore_data(payload):
+    token=payload.get('dataset')
+    return analysis.analyse_selection(payload,CATALOGUES.get(token),MACHINE_SETS.get(token,[]),load_bank())
+
+
+@app.post('/api/explore')
+def explore():
+    return jsonify(explore_data(request.get_json()))
+
+
+@app.post('/api/explore/export')
+def explore_export():
+    payload=request.get_json();data=explore_data(payload)
+    available={key:data[key] for key in ('rows','raw','averages','followups','metadata','statistics')}
+    folder=new_folder()
+    if payload.get('format')=='csv':
+        table=payload.get('table','rows')
+        if table not in available:raise ValueError('Unknown table')
+        path=folder/(table+'.csv');path.write_text(csv_text(available[table]),encoding='utf-8-sig')
+    elif payload.get('format')=='xlsx':
+        from openpyxl import Workbook
+        workbook=Workbook();workbook.remove(workbook.active)
+        for name,rows in available.items():
+            sheet=workbook.create_sheet(name)
+            if rows:
+                sheet.append(list(rows[0]))
+                for row in rows:sheet.append(list(row.values()))
+                for cells in sheet:
+                    for cell in cells:
+                        if isinstance(cell.value,str):cell.data_type='s'
+        path=folder/'selected_analysis.xlsx';workbook.save(path)
+    else:raise ValueError('Choose CSV or Excel')
+    return jsonify(url=artifact(path),name=path.name)
 
 
 @app.post('/api/analyse')
@@ -317,10 +374,13 @@ def make_graphs(payload):
     maximum=max(all_values,default=0)*1.08 or 1
     panels=[]
     with RENDER_LOCK:
-        for machine in range(3):
+        for spec in MACHINE_SETS[payload['dataset']]:
+            machine=spec['index']
             group=[i for i in items if i['entry']['machine']==machine]
             if not group:
-                panels.append({'machine':machine,'missing':'No matching run selected'});continue
+                panels.append({'machine':machine,'label':spec['name'],'missing':'No matching run selected'});continue
+            if kind=='average' and len({r['model'] for i in group for r in i['run']['questions'].values()})>1:
+                raise ValueError('Use the interactive explorer for separate model averages; models cannot be pooled')
             folder=new_folder()
             if kind.startswith('report_'):
                 if kind=='report_individual':
@@ -416,9 +476,11 @@ def export():
         elif kind=='custom':
             from pypdf import PdfReader,PdfWriter
             writer=PdfWriter()
-            for machine in range(3):
+            for machine in sorted({i['entry']['machine'] for i in items}):
                 group=[i for i in items if i['entry']['machine']==machine]
                 if not group:continue
+                if len({r['model'] for i in group for r in i['run']['questions'].values()})>1:
+                    raise ValueError('Custom full-run PDFs require one model per machine; use interactive graphs to show models separately')
                 # A compact key makes the R labels and machine ownership explicit in the PDF.
                 from reportlab.pdfgen import canvas
                 from reportlab.lib.utils import simpleSplit
@@ -449,11 +511,14 @@ def export():
             from reportlab.lib.utils import ImageReader
             panels=make_graphs({**payload,'kind':payload.get('graph_kind','execution')})
             if any(p.get('pdf') for p in panels):
-                raise ValueError('Download full PDFs from the report panels; three-machine image export is for graph views')
-            path=folder/'three_machines.pdf'
-            pdf=canvas.Canvas(str(path),pagesize=(3*1584,780))
-            for panel in panels:
-                x=panel['machine']*1584
+                raise ValueError('Download full PDFs from the report panels; machine-view image export is for graph views')
+            layout=payload.get('layout','vertical')
+            if layout not in ('vertical','horizontal'):
+                raise ValueError('Unknown comparison layout')
+            path=folder/'machine_comparison.pdf'
+            pdf=canvas.Canvas(str(path),pagesize=((len(panels) if layout=='horizontal' else 1)*1584,780))
+            for index,panel in enumerate(panels):
+                x=index*1584 if layout=='horizontal' else 0
                 pdf.setFont('Helvetica-Bold',20)
                 pdf.drawString(x+30,745,panel.get('label',f'Machine {panel["machine"]+1}'))
                 if 'url' in panel:
@@ -461,6 +526,7 @@ def export():
                     pdf.drawImage(ImageReader(str(image)),x+15,20,width=1554,height=700,preserveAspectRatio=True,anchor='c')
                 else:
                     pdf.setFont('Helvetica',16);pdf.drawString(x+30,700,panel['missing'])
+                if layout=='vertical':pdf.showPage()
             pdf.save()
         else:raise ValueError('Unknown export type')
     response=dict(url=artifact(path),name=path.name)

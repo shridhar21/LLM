@@ -7,63 +7,93 @@ python -m pip install -r requirements-dashboard.txt
 python dashboard.py
 ```
 
-Open **http://127.0.0.1:8501** in a browser. Stop the server with **Ctrl+C**.
-Use `python dashboard.py --port 8502` if the default port is occupied.
-The server binds only to this computer. No public hosting, account, internet,
-Ollama server or inference is needed to explore existing reports.
+Open **http://127.0.0.1:8501**. Stop with **Ctrl+C**. After code updates, restart
+the command and refresh the browser. Use `--port 8502` if necessary.
+Dependencies are installed once; charts and scripts are subsequently served
+locally. No Ollama server or internet connection is needed to inspect reports.
 
-Choose three different parent folders, one per PC/laptop. Each parent contains
-its own emission-run folders. The parents may be copied onto this computer or
-be accessible network folders. They need not use e1-e5 names.
+## Selection flow
 
-1. Name each machine and choose or paste its parent folder path.
-2. Load folders, filter model/pipeline/shuffle scheme, and tick completed runs.
-3. Analyse. Questions must have identical exact text across selected runs.
-   The local questionbank verifies original identities and labels. Cancelled,
-   incomplete and invalid folders are listed under exclusions.
-4. Select the graph and question page. Execution plots can match a shuffle
-   scheme across the three machines or use individually chosen runs. Missing
-   matches are shown as unavailable, never substituted with another scheme.
-5. Click a graph for its full-resolution PNG or switch a machine to full-width
-   view. Across-machine views use shared scales, units and topic colours.
-6. Download tables or PDFs from Reports & downloads.
+Choose one to three parent folders, each containing one machine's emission-run
+folders. Leave unused paths empty. Select Normal LLM or RAG, then independently
+configure each machine:
 
-## Included views
+1. Questions: all available, original serials (`4, 13-17, 74`), topic sheets,
+   or question types across sheets. Within sheets, choose all, follow-ups only,
+   or particular question types. Preview the original serials and question text.
+2. Models: one, several, or all models with complete selected-question coverage.
+3. Shuffling schemes: one, several, or all available schemes.
+4. Runs: select the recorded runs, including which repeats to include.
 
-- Execution-order emissions: separate landscape graphs, every question labelled
-  by original serial in actual execution order, topic-coloured segments/points.
-- Per-question dot/range comparisons: 32 questions per page, original order,
-  0.025 g CO2eq tick spacing, three-decimal labels and fixed run colours.
-- Average question emissions over the selected runs of each machine.
-- Follow-up tables: original serial, each run's position, intervening questions
-  outside that chain, and recorded per-turn emissions. First gap is unavailable.
-- Overview, per-question energy/latency/emissions, averages, metadata, settings
-  and per-question RAG phase measurements. Missing measurements stay missing.
-- RAG retrieval/generation emission heatmaps, with a common absolute scale.
-- Existing full comparison and individual-run PDFs, generated through the
-  existing report engines. The full comparison requires a selected run whose
-  actual order matches the questionbank subset; different models are flagged.
-  Both report types can also be viewed in three side-by-side PDF panels.
+Question identity is exact text; serial numbers come from the current
+questionbank. Different full run question sets are acceptable when every chosen
+run covers the selected questions. Missing coverage is reported explicitly.
+Follow-up selection is analysis of saved results; it does not rerun inference.
+Follow-up gaps use the immediately preceding chain turn in the full source run,
+even if that preceding turn is outside the analysis selection.
 
-Different seeds under the same shuffle scheme need not yield identical execution
-sequences. Selected run names and seeds remain visible beside each graph and in
-the PDF run keys. Recorded failed questions are labelled rather than silently
-discarded; these are observed costs, not proven causal effects of shuffling.
+## Averaging
 
-## Files and exports
+- **No averaging:** every run remains separate.
+- **Average across selected shuffling schemes:** one mean for each question,
+  model and machine. Never pool questions, models or machines into this mean.
 
-`dashboard_outputs` contains generated exports and cached preview files, in
-separate uniquely named directories. Original reports are never written to.
-Individual PDFs are generated from temporary report copies inside this directory.
-Existing terminal pipelines and report commands remain available as before.
+If a scheme has repeated runs, average that question's repeated values within
+the scheme first, then average the scheme means with equal scheme weights.
+Example: scheme A has 0 and 4 g, scheme B has 10 g; the result is 6 g.
+All selected schemes (including original order if selected) contribute.
+The tables record scheme count, run count, source folders and valid measurement
+counts. A missing contributing measurement makes that metric's mean unavailable;
+a recorded zero remains zero. Failed/unknown attempts are labelled and their
+recorded costs remain included, with a warning.
 
-The original custom CLI still accepts its e1-e5 workbook. The dashboard adds a
-direct-folder adapter, so a run_tables.xlsx export is not needed for the UI.
-CSV downloads honour the current table search/question filters; Excel includes
-all analysis tables. The full comparison export
-also provides its existing aligned CSV. The three-machine-view PDF is deliberately
-wide so each panel retains its labels when zoomed.
+For direct cross-machine comparison, selected questions, models and schemes
+must match. One averaging mode applies to every participating machine.
+Turn off comparison to independently explore different machine selections.
+RAG and Normal LLM cannot be mixed in an analysis.
 
-This is a local personal dashboard. Do not expose the development server to the
-public internet. If you later want shared hosting, choose that separately so
-folder access and authentication can be designed for that environment.
+## Interactive graphs
+
+Graphs stack vertically by default; side-by-side layout is optional. Select one
+or several graph types for the same data, and choose emissions, energy,
+component energy, latency or available RAG phase measurements.
+
+- Execution-order lines: one graph per run with every selected original serial
+  labelled at its actual execution position; topic-coloured segments and points.
+- Original-order lines, per-question means, points and bars.
+- Per-question dot/min-max range comparisons (emissions use 0.025 g ticks).
+- Question/run heatmaps and RAG retrieval/generation heatmaps.
+- Histograms of successful question costs.
+- Total selected-question cost bars, hardware energy stacks, RAG phase stacks,
+  and topic/question-type totals.
+
+Models always have separate graph groups. Averaging disables execution-order
+graphs because there is no shared execution sequence across shuffled runs.
+Means use original questionbank order. Other summaries explicitly sum the
+selected questions; in averaging mode, these are sums of per-question means.
+
+Drag to zoom, wheel to zoom, pan or reset using the toolbar, hide traces using
+the legend, or enter axis limits below a graph. Matching graphs can synchronize
+their axis ranges. Hover shows question identity and recorded context. The
+camera button downloads the current graph as PNG. Chart interactions use the
+locally served [Plotly library](https://plotly.com/javascript/configuration-options/).
+
+## Tables and exports
+
+Tables include displayed values, raw selected measurements, per-question means,
+separate follow-up chain tables, settings/metadata and descriptive statistics.
+Statistics describe variation across the selected questions; they are not
+confidence intervals for a causal shuffle effect.
+
+CSV exports contain the full selected table (table search is display-only).
+Excel includes all selected-data tables. Files are written to unique directories
+under `dashboard_outputs`; original report files are read-only.
+
+Existing full-run PDF generators remain under **Downloads & full-run reports**,
+available in no-averaging mode. They use full original runs, not the interactive
+question filter. Full comparison requires an actual original-order reference
+and identical complete question sets. Custom full-run graphs require one model
+per machine. Existing standalone report/inference commands remain available.
+
+This dashboard binds only to localhost. Public hosting would require separate
+folder access and authentication arrangements.
