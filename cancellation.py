@@ -153,7 +153,7 @@ def _save_cancelled(state):
         # A signal during CSV publication can arrive after its row was persisted.
         already_saved = rows and rows[-1].get('execution_position') == str(question['execution_position'])
         if not already_saved:
-            result = dict(question, answer='', model_name=state['model'],
+            result = dict(question, answer='', model_name=state['model'], input_tokens=None, output_tokens=None,
                           status='cancelled', error='Interrupted by Ctrl+C; measurements are partial')
             if state['rag']:
                 parts = {name: metrics(name) for name in ('retrieval', 'generation')}
@@ -271,6 +271,15 @@ def publish_index(folder, index, chunks, embeddings, metadata, sources):
                 state['index_published'] = True
 
 
+class ModelAnswer(str):
+    """A normal answer string carrying the usage reported by this Ollama request."""
+    def __new__(cls, text, input_tokens=None, output_tokens=None):
+        instance = super().__new__(cls, text)
+        instance.input_tokens = input_tokens if type(input_tokens) is int and input_tokens >= 0 else None
+        instance.output_tokens = output_tokens if type(output_tokens) is int and output_tokens >= 0 else None
+        return instance
+
+
 def query_local_model(prompt, model, messages=None, options=None):
     """Buffer streamed Ollama output; main thread remains responsive to Ctrl+C."""
     import requests
@@ -306,7 +315,8 @@ def query_local_model(prompt, model, messages=None, options=None):
                         raise RuntimeError('Ollama response ended before completion; partial output is not a successful answer')
                     if messages is not None and last.get('done_reason') == 'length':
                         raise RuntimeError('Follow-up response reached its output/context limit; incomplete answer was not added to history.')
-                    result['answer'] = ''.join(pieces).strip() if pieces else str(last)
+                    result['answer'] = ModelAnswer(''.join(pieces).strip() if pieces else str(last),
+                                                  last.get('prompt_eval_count'), last.get('eval_count'))
         except Exception as exc:
             result['error'] = exc
         finally:

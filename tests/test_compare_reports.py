@@ -9,6 +9,37 @@ from compare_reports import load_run, validate, compare, aligned_rows, observati
 
 
 class ComparisonTests(unittest.TestCase):
+    def test_token_columns_migration_and_reports(self):
+        from add_token_columns import add_columns
+        from generate_report import generate
+        from pypdf import PdfReader
+        path=self.a/'answers.csv'
+        original=path.read_bytes()
+        with path.open(encoding='utf-8-sig',newline='') as f:before=list(csv.DictReader(f))
+        self.assertTrue(add_columns(path))
+        self.assertEqual(path.with_name(path.name+'.before_token_columns.bak').read_bytes(),original)
+        self.assertFalse(add_columns(path))
+        with path.open(encoding='utf-8-sig',newline='') as f:
+            reader=csv.DictReader(f);fields=reader.fieldnames;rows=list(reader)
+        self.assertEqual([{k:r[k] for k in before[0]} for r in rows],before)
+        self.assertTrue(all(r['input_tokens']==r['output_tokens']=='' for r in rows))
+        rows[0].update(input_tokens='234',output_tokens='0')
+        with path.open('w',encoding='utf-8',newline='') as f:
+            writer=csv.DictWriter(f,fieldnames=fields);writer.writeheader();writer.writerows(rows)
+        a=load_run(self.a);b=load_run(self.b)
+        self.assertEqual(a['questions']['Question A?']['input_tokens'],234)
+        self.assertEqual(a['questions']['Question A?']['output_tokens'],0)
+        self.assertIsNone(b['questions']['Question A?']['input_tokens'])
+        records=aligned_rows([a,b],0)
+        self.assertEqual(records[0]['input_tokens'],234)
+        pdf=generate(self.a)
+        text='\n'.join(p.extract_text() for p in PdfReader(pdf).pages)
+        self.assertIn('Per-question token counts',text);self.assertIn('234',text)
+        pdf=self.root/'token_comparison.pdf'
+        write_pdf([a,b],0,records,pdf)
+        text='\n'.join(p.extract_text() for p in PdfReader(pdf).pages)
+        self.assertIn('Input tokens',text);self.assertIn('234',text)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent.parent)
         self.root = Path(self.temp.name)

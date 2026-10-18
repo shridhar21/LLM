@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "pipeline": "normal",
+  "planned_queries": 160,
+  "attempted_queries": 160,
+  "completed_queries": 160,
+  "successful_queries": 160,
+  "failed_queries": 0,
+  "cancelled_queries": 0,
+  "unstarted_queries": 0,
+  "actual_execution": [
+    {
+      "question": "Draft a formal metadata tagging guideline for a new corporate intranet, listing the mandatory tags required for any new policy document upload.",
+      "status": "ok",
+      "position": 1
+    },
+    {
+      "question": "If a financial institution deploys a local LLM to continuously analyze live stock feeds, detail the tradeoff between the energy required for constant real-time inference versus the energy cost of maintaining a massive long-term memory context window.",
+      "status": "ok",
+      "position": 2
+    },
+    {
+      "question": "Outline a multi-step verification process to determine the factual accuracy of a viral social media claim regarding a new scientific discovery.",
+      "status": "ok",
+      "position": 3
+    },
+    {
+      "question": "How do comprehensive LLM benchmarks (like MMLU) categorize general knowledge tasks?",
+      "status": "ok",
+      "position": 4
+    },
+    {
+      "question": "What is the fundamental difference between quantitative and qualitative behavioral data?",
+      "status": "ok",
+      "position": 5
+    },
+    {
+      "question": "Which reporting standard does the GRI framework primarily address?",
+      "status": "ok",
+      "position": 6
+    },
+    {
+      "question": "Summarize how ESGBench evaluates factual consistency and traceability in ESG question answering.",
+      "status": "ok",
+      "position": 7
+    },
+    {
+      "question": "Propose a detailed logistical plan for organizing a city-wide recycling initiative, identifying key stakeholders across public and private sectors.",
+      "status": "ok",
+      "position": 8
+    },
+    {
+      "question": "Formulate a strategy for mediating a debate between two parties with strongly opposing viewpoints on a public infrastructure project, ensuring both economic and environmental concerns are addressed.",
+      "status": "ok",
+      "position": 9
+    },
+    {
+      "question": "Define intent classification in the context of an automated customer support routing system.",
+      "status": "ok",
+      "position": 10
+    },
+    {
+      "question": "What is the standard first-response protocol an AI agent should follow for a 'cancel order' request?",
+      "status": "ok",
+      "position": 11
+    },
+    {
+      "question": "When evaluating the lifecycle impact of consumer hardware used to run a general-knowledge offline LLM, how should one balance the cost of embodied manufacturing emissions versus long-term operational energy draw?",
+      "status": "ok",
+      "position": 12
+    },
+    {
+      "question": "Synthesize a hypothetical changelog for a major software version update (e.g., v2.0 to v3.0), categorizing changes clearly for both technical developers and non-technical end users.",
+      "status": "ok",
+      "position": 13
+    },
+    {
+      "question": "Explain why closed-book LLMs historically performed poorly on complex financial benchmarks compared to oracle configurations.",
+      "status": "ok",
+      "position": 14
+    },
+    {
+      "question": "Formulate a synthesis approach for a behavioral researcher who receives heavily mixed and partially contradictory survey responses regarding employee motivation.",
+      "status": "ok",
+      "position": 15
+    },
+    {
+      "question": "What is the fundamental difference between US GAAP and IFRS in terms of inventory valuation?",
+      "status": "ok",
+      "position": 16
+    },
+    {
+      "question": "Under strict IFRS guidelines, how must a company recognize revenue from a multi-year software contract entirely upfront at the time of signing?",
+      "status": "ok",
+      "position": 17
+    },
+    {
+      "question": "What is the difference between a 10-K and a 10-Q filing for publicly traded US companies?",
+      "status": "ok",
+      "position": 18
+    },
+    {
+      "question": "Assume you have a Python unit test failing with a KeyError in a dictionary parsing module. Generate a robust function that safely parses nested JSON dictionaries with deep fallbacks and explain why it resolves the error.",
+      "status": "ok",
+      "position": 19
+    },
+    {
+      "question": "What is version control, and why is it considered critical for managing internal enterprise documentation?",
+      "status": "ok",
+      "position": 20
+    },
+    {
+      "question": "Generate a hypothetical qualitative interview transcript excerpt where a participant discusses workplace stress, and then apply a basic thematic coding scheme to extract the primary stressor.",
+      "status": "ok",
+      "position": 21
+    },
+    {
+      "question": "Propose a systematic accounting reconciliation method for a scenario where a company reports a high 'Adjusted EBITDA' in a press release but a massive net loss in its official filing. What exact line items bridge this gap?",
+      "status": "ok",
+      "position": 22
+    },
+    {
+      "question": "How should financial LLM benchmarks account for forward-looking, non-verifiable statements (e.g., guidance, outlook) where there is no 'ground truth' evidence string?",
+      "status": "ok",
+      "position": 23
+    },
+    {
+      "question": "Define what constitutes total recognized revenue in a typical SaaS company's quarterly earnings report.",
+      "status": "ok",
+      "position": 24
+    },
+    {
+      "question": "What is the fundamental difference between a randomized controlled trial (RCT) and an observational study?",
+      "status": "ok",
+      "position": 25
+    },
+    {
+      "question": "Synthesize the historical and economic impacts of the transition from the Gold Standard to fiat currency.",
+      "status": "ok",
+      "position": 26
+    },
+    {
+      "question": "Outline a rigorous methodology an ESG auditor would use to compare the emissions intensity year-over-year for two competing aviation firms, detailing the specific normalization metrics they must use.",
+      "status": "ok",
+      "position": 27
+    },
+    {
+      "question": "Construct a short vignette where an individual chooses to stay in a clearly failing investment rather than selling it. What specific behavioral phenomenon does this describe?",
+      "status": "ok",
+      "position": 28
+    },
+    {
+      "question": "Since Markdown files cannot inherently store hyperlinks or image references, what alternative format is universally required for cross-linked enterprise wikis?",
+      "status": "ok",
+      "position": 29
+    },
+    {
+      "question": "How do benchmark studies define 'hallucinations' specifically within clinical QA generation?",
+      "status": "ok",
+      "position": 30
+    },
+    {
+      "question": "Explain what a 'self-invoking code generation task' means in the context of coding benchmarks.",
+      "status": "ok",
+      "position": 31
+    },
+    {
+      "question": "Outline the exact methodological guardrails and validation limits required when utilizing an LLM as a 'psychological simulator' to predict how a specific demographic group might respond to a highly sensitive political survey.",
+      "status": "ok",
+      "position": 32
+    },
+    {
+      "question": "Generate a standardized template for an IT Security Incident Response SOP, detailing the exact sequence of escalation contacts and isolation procedures.",
+      "status": "ok",
+      "position": 33
+    },
+    {
+      "question": "What specific limitations exist regarding the use of LLMs for coding complex psychotherapy process measures?",
+      "status": "ok",
+      "position": 34
+    },
+    {
+      "question": "Propose a systematic strategy for reviewing a backlog of 500 support tickets to identify a recurring hardware defect, and explain how you would format that data into an actionable product engineering report.",
+      "status": "ok",
+      "position": 35
+    },
+    {
+      "question": "Synthesize the top three physical climate risks a coastal real estate developer must disclose under the TCFD framework, providing a hypothetical mitigation strategy for each.",
+      "status": "ok",
+      "position": 36
+    },
+    {
+      "question": "What does the acronym 'SWRBench' stand for and what exactly does it benchmark in the context of LLM code review?",
+      "status": "ok",
+      "position": 37
+    },
+    {
+      "question": "What underlying psychological motivation or cognitive bias primarily explains that specific behavior?",
+      "status": "ok",
+      "position": 38
+    },
+    {
+      "question": "How should enterprise LLM systems handle knowledge conflicts that arise from legitimate regional or departmental policy differences rather than simple factual errors?",
+      "status": "ok",
+      "position": 39
+    },
+    {
+      "question": "Draft a formal standard operating procedure (SOP) for customer support agents on how to handle reports of suspected data breaches or account hacks.",
+      "status": "ok",
+      "position": 40
+    },
+    {
+      "question": "Provide a detailed explanation of the 'fundamental attribution error' and write two contrasting short stories: one demonstrating the error, and one demonstrating an accurate situational attribution.",
+      "status": "ok",
+      "position": 41
+    },
+    {
+      "question": "What is the purpose of the ICD-10 coding system in healthcare administration?",
+      "status": "ok",
+      "position": 42
+    },
+    {
+      "question": "What types of 'unanswerable questions' are typically used to evaluate LLM reasoning capabilities in behavioral contexts?",
+      "status": "ok",
+      "position": 43
+    },
+    {
+      "question": "Draft a standardized, patient-friendly information sheet explaining the importance of completing a full course of prescribed antibiotics.",
+      "status": "ok",
+      "position": 44
+    },
+    {
+      "question": "Explain the difference between 'explainable' ESG QA and standard ESG QA, referencing ESGBench's design goals.",
+      "status": "ok",
+      "position": 45
+    },
+    {
+      "question": "What costs are normally deducted from that revenue to calculate gross margin?",
+      "status": "ok",
+      "position": 46
+    },
+    {
+      "question": "Detail frameworks proposed for incorporating human-in-the-loop feedback into LLM-assisted qualitative behavioral coding.",
+      "status": "ok",
+      "position": 47
+    },
+    {
+      "question": "Construct a comprehensive checklist of biodiversity-related disclosures a mining company must provide to comply with the latest GRI biodiversity indicators.",
+      "status": "ok",
+      "position": 48
+    },
+    {
+      "question": "Formulate a strategy for an AI system to safely flag a potential misdiagnosis in a set of clinical notes without overriding the attending physician's authority.",
+      "status": "ok",
+      "position": 49
+    },
+    {
+      "question": "Generate a hypothetical, objective news summary of a major global supply chain disruption, ensuring neutral tone and no subjective analysis.",
+      "status": "ok",
+      "position": 50
+    },
+    {
+      "question": "Explain what 'pass@k' measures in a code generation benchmark and how it differs from strict single-pass (pass@1) accuracy.",
+      "status": "ok",
+      "position": 51
+    },
+    {
+      "question": "Propose a step-by-step analytical framework for processing qualitative interview transcripts to identify a recurring behavioral theme, detailing how to measure inter-rater reliability.",
+      "status": "ok",
+      "position": 52
+    },
+    {
+      "question": "What is the difference in operational scope and authority between a Tier-1 support agent and a Tier-2 technical support escalation?",
+      "status": "ok",
+      "position": 53
+    },
+    {
+      "question": "Write a comprehensive guide on basic personal digital cybersecurity hygiene, covering passwords, 2FA, and phishing awareness.",
+      "status": "ok",
+      "position": 54
+    },
+    {
+      "question": "Outline a step-by-step code review framework aligned with structured evaluation approaches, detailing how you would review a pull request that changes a synchronous database call to an asynchronous one.",
+      "status": "ok",
+      "position": 55
+    },
+    {
+      "question": "Imagine a customer writes an angry complaint claiming their newly purchased software license key is showing as 'Invalid.' What is the first diagnostic step?",
+      "status": "ok",
+      "position": 56
+    },
+    {
+      "question": "Describe a detailed step-by-step reconciliation process for dealing with fragmented enterprise documentation, specifically when two different departmental wikis contain contradictory instructions for the exact same HR onboarding procedure.",
+      "status": "ok",
+      "position": 57
+    },
+    {
+      "question": "A patient is prescribed a new statin medication. What is the primary intended medical outcome?",
+      "status": "ok",
+      "position": 58
+    },
+    {
+      "question": "Simulate diagnosing a failing CI/CD pipeline where the error log indicates a missing shared object file (.so) during a Docker build. Detail the specific Dockerfile additions and package manager commands needed to resolve it.",
+      "status": "ok",
+      "position": 59
+    },
+    {
+      "question": "Construct a hypothetical comparative sustainability scorecard between an EV manufacturer and a traditional internal combustion engine (ICE) manufacturer, justifying the weights given to Scope 3 supply chain vs. product use-phase emissions.",
+      "status": "ok",
+      "position": 60
+    },
+    {
+      "question": "Define the concept of 'confirmation bias' accurately in a single sentence.",
+      "status": "ok",
+      "position": 61
+    },
+    {
+      "question": "Explain the crucial difference between correlation and causation within the context of a behavioral science study.",
+      "status": "ok",
+      "position": 62
+    },
+    {
+      "question": "Synthesize the standard risk-factor disclosures typically found in a global semiconductor manufacturing firm's annual report regarding supply chain vulnerabilities.",
+      "status": "ok",
+      "position": 63
+    },
+    {
+      "question": "Define the purpose of a document taxonomy in enterprise knowledge management and explain how it improves searchability.",
+      "status": "ok",
+      "position": 64
+    },
+    {
+      "question": "How should general-purpose benchmarks evolve to evaluate an LLM's 'common sense' reasoning without relying on culturally biased assumptions?",
+      "status": "ok",
+      "position": 65
+    },
+    {
+      "question": "What is the difference between Scope 1, Scope 2, and Scope 3 emissions?",
+      "status": "ok",
+      "position": 66
+    },
+    {
+      "question": "What is the CDP framework used for, and which companies are required to report under it?",
+      "status": "ok",
+      "position": 67
+    },
+    {
+      "question": "Write a Python function that returns the factorial of a number using recursion, including type hints and a docstring.",
+      "status": "ok",
+      "position": 68
+    },
+    {
+      "question": "Provide a basic outline of what a standard IT onboarding SOP should say regarding employee account provisioning.",
+      "status": "ok",
+      "position": 69
+    },
+    {
+      "question": "Identify the common causes of memory leaks in long-running Python server applications and provide one code example of how to avoid them.",
+      "status": "ok",
+      "position": 70
+    },
+    {
+      "question": "How would you design an experiment to track the difference in operational compute required when an LLM simulates a 'stressed' cognitive persona versus a 'neutral' cognitive persona?",
+      "status": "ok",
+      "position": 71
+    },
+    {
+      "question": "If gross margin increases but net income drops in the same quarter, what specific expense lines could explain that divergence?",
+      "status": "ok",
+      "position": 72
+    },
+    {
+      "question": "Generate a structured SQL schema for a basic e-commerce platform (Users, Orders, Products), and write a query to find the top 5 users by total spending in the last 30 days.",
+      "status": "ok",
+      "position": 73
+    },
+    {
+      "question": "When evaluating an LLM tasked with parsing massive corporate ESG reports, how do you weigh the operational energy cost of the inference process against the potential accuracy gains of using a larger model?",
+      "status": "ok",
+      "position": 74
+    },
+    {
+      "question": "Describe a comprehensive protocol for evaluating the potential drug-drug interactions when adding a new medication to a patient's complex polypharmacy regimen.",
+      "status": "ok",
+      "position": 75
+    },
+    {
+      "question": "When using Python's Global Interpreter Lock (GIL) to execute multiple CPU-bound threads simultaneously in parallel on different CPU cores, what is the best strategy to share memory?",
+      "status": "ok",
+      "position": 76
+    },
+    {
+      "question": "Explain the differences between deep copy and shallow copy in Python, providing a clear example of when a shallow copy leads to unexpected behavior.",
+      "status": "ok",
+      "position": 77
+    },
+    {
+      "question": "Since the Earth's mantle is composed entirely of liquid magma, how do tectonic plates float on its surface without melting?",
+      "status": "ok",
+      "position": 78
+    },
+    {
+      "question": "What is the difference between deductive and inductive reasoning?",
+      "status": "ok",
+      "position": 79
+    },
+    {
+      "question": "Write a code snippet utilizing the requests library in Python to handle HTTP timeouts and retry logic cleanly, mimicking a production-grade external API call.",
+      "status": "ok",
+      "position": 80
+    },
+    {
+      "question": "What are the most common reported side effects the patient should be warned about?",
+      "status": "ok",
+      "position": 81
+    },
+    {
+      "question": "If the system shows the key was already activated from a different IP address, how do you communicate this without accusing the customer of fraud?",
+      "status": "ok",
+      "position": 82
+    },
+    {
+      "question": "Explain the typical operational tasks measured in persona-driven customer support evaluations.",
+      "status": "ok",
+      "position": 83
+    },
+    {
+      "question": "What is the functional difference between an internal knowledge base article and a technical runbook?",
+      "status": "ok",
+      "position": 84
+    },
+    {
+      "question": "According to standard PCI-DSS compliance, what is the required protocol for a customer service agent to read a customer's full CVV security code back to them over the phone for verification?",
+      "status": "ok",
+      "position": 85
+    },
+    {
+      "question": "Formulate a strategy for an automated knowledge agent to synthesize a single, authoritative summary answer when queried against a simulated legacy wiki containing five partially outdated pages on the same topic.",
+      "status": "ok",
+      "position": 86
+    },
+    {
+      "question": "What are the common question types utilized to construct multimodal document QA pairs?",
+      "status": "ok",
+      "position": 87
+    },
+    {
+      "question": "Outline a step-by-step logical reasoning process a differential diagnosis engine would use when presented with a patient experiencing acute chest pain, detailing the ruling-out of life-threatening conditions.",
+      "status": "ok",
+      "position": 88
+    },
+    {
+      "question": "Explain the behavioral economics concept of 'loss aversion' and construct a detailed real-world scenario demonstrating how it affects retail consumer purchasing decisions.",
+      "status": "ok",
+      "position": 89
+    },
+    {
+      "question": "Construct a logical reasoning sequence detailing how to analyze a company whose net income is rising while its free cash flow is severely declining over three consecutive fiscal years.",
+      "status": "ok",
+      "position": 90
+    },
+    {
+      "question": "Explain how instruction-tuning improves an LLM's ability to follow complex, multi-constraint formatting rules.",
+      "status": "ok",
+      "position": 91
+    },
+    {
+      "question": "What metrics are typically used to measure multi-turn issue resolution in customer support benchmarks?",
+      "status": "ok",
+      "position": 92
+    },
+    {
+      "question": "In a customer support setting, how should a business weigh the tradeoff between utilizing a heavy multi-agent LLM workflow that yields higher resolution accuracy, versus the reduced operational compute load of a smaller, less accurate standalone model?",
+      "status": "ok",
+      "position": 93
+    },
+    {
+      "question": "What evaluation metrics are commonly used for assessing financial QA accuracy in LLMs?",
+      "status": "ok",
+      "position": 94
+    },
+    {
+      "question": "If a separate, highly classified 'Zero Trust Security Policy' document states that local admin rights must never be granted, how does this complicate standard developer onboarding?",
+      "status": "ok",
+      "position": 95
+    },
+    {
+      "question": "How does this specific bias typically manifest in other domains, such as personal relationships or career choices?",
+      "status": "ok",
+      "position": 96
+    },
+    {
+      "question": "There is no universally agreed methodology for attributing Scope 3 emissions across multi-tier supply chains \u2014 propose an evaluation approach for how an LLM should handle this ambiguity when generating corporate guidance.",
+      "status": "ok",
+      "position": 97
+    },
+    {
+      "question": "The customer responds furiously, demanding an immediate refund. What de-escalation techniques should be used here?",
+      "status": "ok",
+      "position": 98
+    },
+    {
+      "question": "Outline a step-by-step diagnostic workflow to resolve a multimodal product complaint (e.g., a customer claiming they received a damaged item, with a text description and an image description).",
+      "status": "ok",
+      "position": 99
+    },
+    {
+      "question": "Create a simulated multi-turn support ticket log regarding a missing delivery, ending with the exact criteria an agent must verify before officially escalating the issue to a Tier-2 logistics team.",
+      "status": "ok",
+      "position": 100
+    },
+    {
+      "question": "Assume a multinational tech company operates a massive global server network powered entirely by leased renewable energy. Detail the specific GHG Protocol accounting rules for how it should report its Scope 2 market-based versus location-based emissions.",
+      "status": "ok",
+      "position": 101
+    },
+    {
+      "question": "What are the key evaluation metrics used in medical LLM benchmarks like MedQA?",
+      "status": "ok",
+      "position": 102
+    },
+    {
+      "question": "What operational factors might management typically cite during an earnings call to justify that margin divergence?",
+      "status": "ok",
+      "position": 103
+    },
+    {
+      "question": "Explain why LLMs often struggle with multi-hop clinical reasoning compared to single-fact retrieval.",
+      "status": "ok",
+      "position": 104
+    },
+    {
+      "question": "If a hospital deploys a local clinical diagnostic LLM, evaluate the tradeoff between the systemic efficiency saved from faster triage versus the massive localized energy draw of running dedicated GPU clusters on-site.",
+      "status": "ok",
+      "position": 105
+    },
+    {
+      "question": "According to literature, what answer protocol is used for uncertain responses in ESG QA benchmarks?",
+      "status": "ok",
+      "position": 106
+    },
+    {
+      "question": "What does the term 'hallucination rate' mean specifically in the context of financial evaluation results?",
+      "status": "ok",
+      "position": 107
+    },
+    {
+      "question": "What does EBITDA stand for, and how is it typically calculated on an income statement?",
+      "status": "ok",
+      "position": 108
+    },
+    {
+      "question": "How should code-review LLMs be evaluated when 'correctness' is subjective (e.g., stylistic or architectural disagreements) rather than objectively testable?",
+      "status": "ok",
+      "position": 109
+    },
+    {
+      "question": "Because viral infections are effectively cured by a standard 7-day course of Amoxicillin, what is the recommended dosage for a patient with the common cold?",
+      "status": "ok",
+      "position": 110
+    },
+    {
+      "question": "What confounding variable or alternative rational explanation could explain the pattern besides the proposed cognitive bias?",
+      "status": "ok",
+      "position": 111
+    },
+    {
+      "question": "Define 'sensitivity' and 'specificity' in the context of medical diagnostic testing.",
+      "status": "ok",
+      "position": 112
+    },
+    {
+      "question": "Identify a major recent advancement in renewable energy technology.",
+      "status": "ok",
+      "position": 113
+    },
+    {
+      "question": "Synthesize the standard pharmacological differences between broad-spectrum and narrow-spectrum antibiotics, providing a hypothetical use case for each.",
+      "status": "ok",
+      "position": 114
+    },
+    {
+      "question": "Where do these two types of documents (General HR Onboarding vs. Strict Security Policy) typically experience conflict in large organizations?",
+      "status": "ok",
+      "position": 115
+    },
+    {
+      "question": "Imagine a logistics company sets a baseline of 500,000 metric tons of Scope 1 emissions for FY2025. What specific operational factors could drive that number?",
+      "status": "ok",
+      "position": 116
+    },
+    {
+      "question": "Detail a step-by-step comparative margin analysis framework for evaluating two peer retail companies, identifying which exact financial ratios and statements are required for a definitive investment recommendation.",
+      "status": "ok",
+      "position": 117
+    },
+    {
+      "question": "Formulate a mathematical approach to estimate the life-cycle computational overhead of continuously retraining a local document-indexing model versus querying a stateless inference API.",
+      "status": "ok",
+      "position": 118
+    },
+    {
+      "question": "Since the 2024 update to the GHG Protocol mandates that Scope 4 (avoided emissions) must be subtracted from Scope 1 totals, how does a company calculate its net direct emissions?",
+      "status": "ok",
+      "position": 119
+    },
+    {
+      "question": "Define the concept of the 'Tragedy of the Commons'.",
+      "status": "ok",
+      "position": 120
+    },
+    {
+      "question": "There is currently no consensus on how to validate LLM-simulated personas against real human behavioral data at scale \u2014 propose a rigorous, compute-efficient validation protocol suitable for testing a local 8B parameter model.",
+      "status": "ok",
+      "position": 121
+    },
+    {
+      "question": "What do ablation studies reveal regarding the effect of 'angry' versus 'calm' customer personas on LLM agent performance?",
+      "status": "ok",
+      "position": 122
+    },
+    {
+      "question": "Generate a hypothetical table showing segment-level revenue data across two fiscal years for a cloud computing company, and explicitly calculate the year-over-year growth rate for each segment.",
+      "status": "ok",
+      "position": 123
+    },
+    {
+      "question": "Outline a theoretical measurement protocol for estimating the runtime energy and computational overhead of LLM-generated Python code across different hardware layers.",
+      "status": "ok",
+      "position": 124
+    },
+    {
+      "question": "What backend policy checks must be passed before a replacement key or refund can be securely issued?",
+      "status": "ok",
+      "position": 125
+    },
+    {
+      "question": "If the patient reports severe muscle pain after starting the medication, what is the immediate clinical concern?",
+      "status": "ok",
+      "position": 126
+    },
+    {
+      "question": "Explain why LLMs exhibit 'recency bias' in general knowledge tasks.",
+      "status": "ok",
+      "position": 127
+    },
+    {
+      "question": "Generate a hypothetical patient case study describing symptoms of Type 2 Diabetes, and outline the standard initial diagnostic blood tests a physician would order.",
+      "status": "ok",
+      "position": 128
+    },
+    {
+      "question": "Draft a comprehensive, empathetic customer-facing response to a user requesting a refund for a product that is two days past the standard 30-day return policy window, outlining a hypothetical store credit compromise.",
+      "status": "ok",
+      "position": 129
+    },
+    {
+      "question": "As a behavioral scientist analyzing this vignette, how confident should you be in labeling this behavior without a larger sample size, and why?",
+      "status": "ok",
+      "position": 130
+    },
+    {
+      "question": "Repeated trials of the same operational task can cause agent pass rates to drop \u2014 propose a consistency-improvement approach appropriate for a local, resource-constrained LLM agent operating without external APIs.",
+      "status": "ok",
+      "position": 131
+    },
+    {
+      "question": "What constitutes 'knowledge base refinement', and why is it treated as a distinct operational task from simple retrieval?",
+      "status": "ok",
+      "position": 132
+    },
+    {
+      "question": "Based on this pattern of rising gross margins but falling net income, is the company's core earnings quality inherently improving or deteriorating? Justify your stance.",
+      "status": "ok",
+      "position": 133
+    },
+    {
+      "question": "Outline an analytical methodology for answering a complex query that requires cross-referencing text, a hypothetical data table, and a flowchart diagram within a technical manual.",
+      "status": "ok",
+      "position": 134
+    },
+    {
+      "question": "Describe the typical structure of corpora used for enterprise RAG benchmarks.",
+      "status": "ok",
+      "position": 135
+    },
+    {
+      "question": "If they transition 20% of their fleet to electric vehicles by FY2026, what is the expected directional shift in their Scope 1 versus Scope 2 emissions?",
+      "status": "ok",
+      "position": 136
+    },
+    {
+      "question": "Formulate a resolution framework for a scenario where two regional shipping policies contradict each other regarding international customs fees. How does a global support agent determine which policy overrides the other?",
+      "status": "ok",
+      "position": 137
+    },
+    {
+      "question": "According to standard enterprise IT governance frameworks, which document strictly takes precedence during a compliance audit?",
+      "status": "ok",
+      "position": 138
+    },
+    {
+      "question": "Describe a comprehensive refactoring strategy for a legacy monolith application to reduce its overall computational cost during peak load, including algorithmic optimizations.",
+      "status": "ok",
+      "position": 139
+    },
+    {
+      "question": "Describe the core structural components of a standard Cash Flow Statement and explain how Depreciation & Amortization are treated in the Cash from Operations section.",
+      "status": "ok",
+      "position": 140
+    },
+    {
+      "question": "Given that the Hawthorne Effect proves employees always decrease their productivity when they know they are being observed, how should managers design covert monitoring systems?",
+      "status": "ok",
+      "position": 141
+    },
+    {
+      "question": "LLMs lack an inherent understanding of 'do no harm' \u2014 propose a closed-book validation framework to ensure medical LLMs default to safe refusal on high-risk diagnostic queries.",
+      "status": "ok",
+      "position": 142
+    },
+    {
+      "question": "What exact accounting initiatives and certifications would they need to claim those reductions legitimately?",
+      "status": "ok",
+      "position": 143
+    },
+    {
+      "question": "What are the primary economic barriers to widespread adoption of this technology?",
+      "status": "ok",
+      "position": 144
+    },
+    {
+      "question": "How might this technology impact existing fossil fuel industries in the next decade?",
+      "status": "ok",
+      "position": 145
+    },
+    {
+      "question": "Define 'opportunity cost' and provide a simple everyday example.",
+      "status": "ok",
+      "position": 146
+    },
+    {
+      "question": "What specific laboratory test (e.g., CK levels) would confirm or rule out this severe complication?",
+      "status": "ok",
+      "position": 147
+    },
+    {
+      "question": "Are those specific certifications typically verified by a financial auditor or an environmental engineering firm?",
+      "status": "ok",
+      "position": 148
+    },
+    {
+      "question": "Write a function in Python that sorts a list of dictionaries based on a specific key value.",
+      "status": "ok",
+      "position": 149
+    },
+    {
+      "question": "What edge cases does your sorting function fail to handle?",
+      "status": "ok",
+      "position": 150
+    },
+    {
+      "question": "Rewrite the function to safely handle missing keys and null values.",
+      "status": "ok",
+      "position": 151
+    },
+    {
+      "question": "Based on this hypothetical transition trend, how would you evaluate their operational carbon efficiency?",
+      "status": "ok",
+      "position": 152
+    },
+    {
+      "question": "How would you categorize and log this specific interaction to improve future automated fraud-detection routing?",
+      "status": "ok",
+      "position": 153
+    },
+    {
+      "question": "Detail the step-by-step logical reconciliation process required to align a company's carbon footprint reported under the EU's CSRD with the figures reported in its standard US SEC 10-K filing.",
+      "status": "ok",
+      "position": 154
+    },
+    {
+      "question": "What policy changes or subsidies are typically required to accelerate its integration?",
+      "status": "ok",
+      "position": 155
+    },
+    {
+      "question": "What is the Big-O time and space complexity of your new version?",
+      "status": "ok",
+      "position": 156
+    },
+    {
+      "question": "Can the function be made more computationally efficient for extremely large datasets using a different library?",
+      "status": "ok",
+      "position": 157
+    },
+    {
+      "question": "How should the medical guidelines recommend adjusting the treatment plan based on a positive test result?",
+      "status": "ok",
+      "position": 158
+    },
+    {
+      "question": "Draft a short, updated SOP paragraph that resolves this conflict for new software engineering hires.",
+      "status": "ok",
+      "position": 159
+    },
+    {
+      "question": "Weighing the economic costs against environmental benefits, what is the projected net impact by 2050?",
+      "status": "ok",
+      "position": 160
+    }
+  ],
+  "total_runtime_s": 9871.097170352936
+}

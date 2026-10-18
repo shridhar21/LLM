@@ -78,7 +78,7 @@ class RagReportingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=ROOT) as temp:
             data, _ = make_fixture(temp)
             workbook = load_workbook(export_workbook(temp), data_only=False)
-            self.assertEqual(workbook.sheetnames, ['Group measurements', 'Step timings', 'Evidence', 'Configuration'])
+            self.assertEqual(workbook.sheetnames, ['Group measurements', 'Step timings', 'Evidence', 'Token counts', 'Configuration'])
             group = workbook['Group measurements']
             self.assertEqual(group.max_row, 9)
             self.assertAlmostEqual(group['M2'].value, .00001)

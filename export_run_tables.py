@@ -20,7 +20,8 @@ IDENTIFIERS = ['Original question serial', 'Question type - topic sheet']
 METRICS = ['Execution position', 'CPU energy (kWh)', 'GPU energy (kWh)',
            'RAM energy (kWh)', 'Calculated CPU emissions (g CO2eq)',
            'Calculated GPU emissions (g CO2eq)', 'Calculated RAM emissions (g CO2eq)',
-           'Latency (s)']
+           'Latency (s)', 'Input tokens', 'Output tokens',
+           'Reconstructed input tokens', 'Reconstructed saved-answer tokens']
 
 
 def number(value, context):
@@ -79,7 +80,11 @@ def read_run(folder, questions):
                    else (0.0 if value == 0 and total == 0 and emissions == 0 else None)
                    for value in energies]
         result.append([int(position), *energies, *derived,
-                       number(row['latency_s'], folder.name)])
+                       number(row['latency_s'], folder.name),
+                       number(row.get('input_tokens'), folder.name),
+                       number(row.get('output_tokens'), folder.name),
+                       number(row.get('reconstructed_input_tokens'), folder.name),
+                       number(row.get('reconstructed_output_tokens'), folder.name)])
     if sorted(positions) != list(range(1, len(questions) + 1)):
         raise ValueError(f'{folder.name}: execution positions must be a permutation of 1..N')
     return result
@@ -105,7 +110,7 @@ def add_table(workbook, name, headers, rows, notes, table_number):
             if row == 1:
                 cell.alignment = Alignment(wrap_text=True)
             elif column > 2:
-                cell.number_format = ('0' if 'Execution position' in header else
+                cell.number_format = ('0' if 'Execution position' in header or 'tokens' in header.lower() else
                                       '0.000' if 'Latency' in header else '0.000000000E+00')
         if column == 1:
             for row in range(2, end + 1):
@@ -146,6 +151,7 @@ def export(folders, output, bank_path=BANK):
         'Calculated component emissions = component kWh x (recorded total kg CO2eq / recorded total kWh) x 1000.',
         'Component emissions are allocated estimates, not separately measured emissions. Blank means unavailable; zero is retained.',
         'Static snapshot calculated by export_run_tables.py. Rerun to refresh after source changes.',
+        'Reconstructed tokens recount saved text with current local tokenizer/template assets; they are not historical Ollama counters.',
         f'Question source: {Path(bank_path).resolve()}',
     ]
     headers = IDENTIFIERS + [f'{name}: {metric}' for metric in METRICS for name in names]

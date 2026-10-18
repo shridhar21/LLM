@@ -12,6 +12,10 @@ METRICS = {
     'emissions_g': 'Emissions (g CO2eq)',
     'energy_wh': 'Total energy (Wh)',
     'latency_s': 'Latency (s)',
+    'input_tokens': 'Input tokens',
+    'output_tokens': 'Output tokens',
+    'reconstructed_input_tokens': 'Reconstructed input tokens',
+    'reconstructed_output_tokens': 'Reconstructed saved-answer tokens',
     'cpu_energy_wh': 'CPU energy (Wh)',
     'gpu_energy_wh': 'GPU energy (Wh)',
     'ram_energy_wh': 'RAM energy (Wh)',
@@ -170,6 +174,10 @@ def analyse_selection(payload, catalogue, machines, bank):
                                position=rec['position'], gap=gap, status=rec['status'],
                                series_id=id_+':'+model, series=f'{model} | {entry["scheme"]} | {entry["name"]}',
                                emissions_g=rec['emissions_g'], energy_wh=rec['energy_wh'], latency_s=rec['latency_s'])
+                    row.update(input_tokens=metric(stored, 'input_tokens'), output_tokens=metric(stored, 'output_tokens'))
+                    for key in ('reconstructed_input_tokens','reconstructed_output_tokens'):
+                        row[key]=metric(stored,key)
+                    row['token_count_method']=stored.get('token_count_method','Ollama-reported if available')
                     for part in ('cpu', 'gpu', 'ram'):
                         row[part+'_energy_wh'] = metric(stored, part+'_energy_kwh', 1000)
                     for phase in ('retrieval','generation'):

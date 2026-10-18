@@ -82,6 +82,11 @@ def load_run(folder):
             'emissions_g': metric(row, 'total_emissions_kg' if rag else 'emissions_kg', 1000),
             'energy_wh': metric(row, 'energy_kwh', 1000),
             'latency_s': metric(row, 'total_latency_s' if rag else 'latency_s'),
+            'input_tokens': metric(row, 'input_tokens'),
+            'output_tokens': metric(row, 'output_tokens'),
+            'reconstructed_input_tokens': metric(row, 'reconstructed_input_tokens'),
+            'reconstructed_output_tokens': metric(row, 'reconstructed_output_tokens'),
+            'token_count_method': row.get('token_count_method',''),
         }
         if rag:
             phase_emissions[question] = {
@@ -489,6 +494,21 @@ def write_pdf(runs, reference, records, output):
                          fmt(record['energy_wh']),fmt(record['latency_s']),fmt(record['emissions_delta_g']),
                          fmt(record['emissions_change_percent'])])
         table(data,[30,48,48,55,80,45,55,62,62])
+        token_rows=[['Run','Input tokens','Output tokens']]
+        for run_index,run in enumerate(runs,1):
+            value=run['questions'][q]
+            token_rows.append([f'R{run_index}',str(value.get('input_tokens')) if value.get('input_tokens') is not None else 'N/A',
+                               str(value.get('output_tokens')) if value.get('output_tokens') is not None else 'N/A'])
+        table(token_rows,[60,140,140])
+        if any(run['questions'][q].get('reconstructed_input_tokens') is not None or
+               run['questions'][q].get('reconstructed_output_tokens') is not None for run in runs):
+            p('Reconstructed counts use saved text and current local model assets; they are not historical Ollama usage counters.')
+            reconstructed=[['Run','Reconstructed input','Saved-answer tokens']]
+            for i,run in enumerate(runs,1):
+                value=run['questions'][q]
+                reconstructed.append([f'R{i}',*[str(int(value[k])) if value.get(k) is not None else 'N/A'
+                     for k in ('reconstructed_input_tokens','reconstructed_output_tokens')]])
+            table(reconstructed,[60,140,140])
     if runs[0]['metadata']['Pipeline'] == 'RAG':
         from reportlab.platypus import KeepTogether
         page('Per-question RAG phase emissions')

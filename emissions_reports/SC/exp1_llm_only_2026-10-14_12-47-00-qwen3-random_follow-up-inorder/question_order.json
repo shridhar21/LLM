@@ -1,0 +1,1448 @@
+{
+  "mode": "global",
+  "description": "Randomly mix questions across all selected topic sheets and question types; keep each follow-up chain in turn order, allowing other questions between turns",
+  "seed": 1732934287,
+  "conversation_order_policy": "preserve_followup_turn_order; allow_interleaving",
+  "questions": [
+    {
+      "Question ID": "Coding:19",
+      "topic_sheet": "Coding",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 1,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:12",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 2,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:1",
+      "topic_sheet": "General",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 3,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:10",
+      "topic_sheet": "Customer Operations",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 4,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:9",
+      "topic_sheet": "Customer Operations",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 5,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:8",
+      "topic_sheet": "Documentation",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 6,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:12",
+      "topic_sheet": "Customer Operations",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 7,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:5",
+      "topic_sheet": "Medical",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 8,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:5",
+      "topic_sheet": "General",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 9,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:13",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 10,
+      "conversation_chain": "Human Behaviour::Human Behaviour:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "General:9",
+      "topic_sheet": "General",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 11,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:3",
+      "topic_sheet": "General",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 12,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:8",
+      "topic_sheet": "Medical",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 13,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:10",
+      "topic_sheet": "Documentation",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 14,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:20",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 15,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:5",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 16,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:12",
+      "topic_sheet": "Documentation",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 17,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:11",
+      "topic_sheet": "Sustainability",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 18,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:20",
+      "topic_sheet": "General",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 19,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:5",
+      "topic_sheet": "Finance",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 20,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:12",
+      "topic_sheet": "Coding",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 21,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:8",
+      "topic_sheet": "Coding",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 22,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:7",
+      "topic_sheet": "Medical",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 23,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:18",
+      "topic_sheet": "Customer Operations",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 24,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:10",
+      "topic_sheet": "Medical",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 25,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:8",
+      "topic_sheet": "General",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 26,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:18",
+      "topic_sheet": "Finance",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 27,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:13",
+      "topic_sheet": "Finance",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 28,
+      "conversation_chain": "Finance::Finance:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "Sustainability:4",
+      "topic_sheet": "Sustainability",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 29,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:6",
+      "topic_sheet": "Customer Operations",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 30,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:19",
+      "topic_sheet": "Sustainability",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 31,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:11",
+      "topic_sheet": "General",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 32,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:13",
+      "topic_sheet": "Sustainability",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 33,
+      "conversation_chain": "Sustainability::Sustainability:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "Documentation:7",
+      "topic_sheet": "Documentation",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 34,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:13",
+      "topic_sheet": "Documentation",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 35,
+      "conversation_chain": "Documentation::Documentation:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "Human Behaviour:14",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 36,
+      "conversation_chain": "Human Behaviour::Human Behaviour:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Finance:19",
+      "topic_sheet": "Finance",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 37,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:1",
+      "topic_sheet": "Sustainability",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 38,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:4",
+      "topic_sheet": "Customer Operations",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 39,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:6",
+      "topic_sheet": "Documentation",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 40,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:2",
+      "topic_sheet": "Customer Operations",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 41,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:10",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 42,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:2",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 43,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:6",
+      "topic_sheet": "Medical",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 44,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:18",
+      "topic_sheet": "Coding",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 45,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:2",
+      "topic_sheet": "Coding",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 46,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:20",
+      "topic_sheet": "Finance",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 47,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:2",
+      "topic_sheet": "Medical",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 48,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:18",
+      "topic_sheet": "Sustainability",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 49,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:10",
+      "topic_sheet": "Coding",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 50,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:1",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 51,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:5",
+      "topic_sheet": "Coding",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 52,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:13",
+      "topic_sheet": "General",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 53,
+      "conversation_chain": "General::General:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "Documentation:3",
+      "topic_sheet": "Documentation",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 54,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:20",
+      "topic_sheet": "Documentation",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 55,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:4",
+      "topic_sheet": "Medical",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 56,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:18",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 57,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:2",
+      "topic_sheet": "General",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 58,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:7",
+      "topic_sheet": "Finance",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 59,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:14",
+      "topic_sheet": "General",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 60,
+      "conversation_chain": "General::General:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Finance:6",
+      "topic_sheet": "Finance",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 61,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:19",
+      "topic_sheet": "Medical",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 62,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:4",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 63,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:13",
+      "topic_sheet": "Coding",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 64,
+      "conversation_chain": "Coding::Coding:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "Finance:3",
+      "topic_sheet": "Finance",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 65,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:9",
+      "topic_sheet": "Finance",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 66,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:20",
+      "topic_sheet": "Customer Operations",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 67,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:11",
+      "topic_sheet": "Finance",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 68,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:1",
+      "topic_sheet": "Customer Operations",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 69,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:1",
+      "topic_sheet": "Coding",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 70,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:19",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 71,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:2",
+      "topic_sheet": "Documentation",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 72,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:18",
+      "topic_sheet": "Medical",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 73,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:20",
+      "topic_sheet": "Coding",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 74,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:12",
+      "topic_sheet": "Medical",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 75,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:9",
+      "topic_sheet": "Medical",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 76,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:12",
+      "topic_sheet": "Sustainability",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 77,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:19",
+      "topic_sheet": "Customer Operations",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 78,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:3",
+      "topic_sheet": "Customer Operations",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 79,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:8",
+      "topic_sheet": "Customer Operations",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 80,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:14",
+      "topic_sheet": "Sustainability",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 81,
+      "conversation_chain": "Sustainability::Sustainability:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Sustainability:7",
+      "topic_sheet": "Sustainability",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 82,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:6",
+      "topic_sheet": "Sustainability",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 83,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:8",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 84,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:8",
+      "topic_sheet": "Sustainability",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 85,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:11",
+      "topic_sheet": "Coding",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 86,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:7",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 87,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:20",
+      "topic_sheet": "Medical",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 88,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:6",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 89,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:1",
+      "topic_sheet": "Finance",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 90,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:7",
+      "topic_sheet": "Customer Operations",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 91,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:20",
+      "topic_sheet": "Sustainability",
+      "question_number": 20,
+      "question_type": "False Premise",
+      "execution_position": 92,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:18",
+      "topic_sheet": "Documentation",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 93,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:3",
+      "topic_sheet": "Medical",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 94,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:1",
+      "topic_sheet": "Documentation",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 95,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:9",
+      "topic_sheet": "Coding",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 96,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:3",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 97,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:4",
+      "topic_sheet": "Documentation",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 98,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:4",
+      "topic_sheet": "General",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 99,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:12",
+      "topic_sheet": "Finance",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 100,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:14",
+      "topic_sheet": "Finance",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 101,
+      "conversation_chain": "Finance::Finance:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Finance:4",
+      "topic_sheet": "Finance",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 102,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:11",
+      "topic_sheet": "Customer Operations",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 103,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:10",
+      "topic_sheet": "General",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 104,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:6",
+      "topic_sheet": "Coding",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 105,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:13",
+      "topic_sheet": "Customer Operations",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 106,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "General:7",
+      "topic_sheet": "General",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 107,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:15",
+      "topic_sheet": "Finance",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 108,
+      "conversation_chain": "Finance::Finance:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Finance:8",
+      "topic_sheet": "Finance",
+      "question_number": 8,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 109,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:2",
+      "topic_sheet": "Finance",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 110,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:12",
+      "topic_sheet": "General",
+      "question_number": 12,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 111,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:14",
+      "topic_sheet": "Customer Operations",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 112,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Sustainability:5",
+      "topic_sheet": "Sustainability",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 113,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Finance:16",
+      "topic_sheet": "Finance",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 114,
+      "conversation_chain": "Finance::Finance:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "General:15",
+      "topic_sheet": "General",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 115,
+      "conversation_chain": "General::General:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Finance:17",
+      "topic_sheet": "Finance",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 116,
+      "conversation_chain": "Finance::Finance:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "General:6",
+      "topic_sheet": "General",
+      "question_number": 6,
+      "question_type": "Research Paper",
+      "execution_position": 117,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:13",
+      "topic_sheet": "Medical",
+      "question_number": 13,
+      "question_type": "Follow-Up 1",
+      "execution_position": 118,
+      "conversation_chain": "Medical::Medical:13",
+      "conversation_turn": 1
+    },
+    {
+      "Question ID": "General:16",
+      "topic_sheet": "General",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 119,
+      "conversation_chain": "General::General:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "Finance:10",
+      "topic_sheet": "Finance",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 120,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:15",
+      "topic_sheet": "Sustainability",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 121,
+      "conversation_chain": "Sustainability::Sustainability:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Coding:3",
+      "topic_sheet": "Coding",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 122,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:3",
+      "topic_sheet": "Sustainability",
+      "question_number": 3,
+      "question_type": "Simple/Direct",
+      "execution_position": 123,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:19",
+      "topic_sheet": "Documentation",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 124,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:4",
+      "topic_sheet": "Coding",
+      "question_number": 4,
+      "question_type": "Research Paper",
+      "execution_position": 125,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:7",
+      "topic_sheet": "Coding",
+      "question_number": 7,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 126,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Sustainability:9",
+      "topic_sheet": "Sustainability",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 127,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:11",
+      "topic_sheet": "Documentation",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 128,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:18",
+      "topic_sheet": "General",
+      "question_number": 18,
+      "question_type": "Open Problem",
+      "execution_position": 129,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:15",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 130,
+      "conversation_chain": "Human Behaviour::Human Behaviour:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Sustainability:2",
+      "topic_sheet": "Sustainability",
+      "question_number": 2,
+      "question_type": "Simple/Direct",
+      "execution_position": 131,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Human Behaviour:16",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 132,
+      "conversation_chain": "Human Behaviour::Human Behaviour:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "General:19",
+      "topic_sheet": "General",
+      "question_number": 19,
+      "question_type": "Open Problem (Optimization/Tradeoff)",
+      "execution_position": 133,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "General:17",
+      "topic_sheet": "General",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 134,
+      "conversation_chain": "General::General:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "Human Behaviour:9",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 135,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:11",
+      "topic_sheet": "Medical",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 136,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Documentation:14",
+      "topic_sheet": "Documentation",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 137,
+      "conversation_chain": "Documentation::Documentation:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Sustainability:10",
+      "topic_sheet": "Sustainability",
+      "question_number": 10,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 138,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:14",
+      "topic_sheet": "Medical",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 139,
+      "conversation_chain": "Medical::Medical:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Documentation:15",
+      "topic_sheet": "Documentation",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 140,
+      "conversation_chain": "Documentation::Documentation:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Documentation:16",
+      "topic_sheet": "Documentation",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 141,
+      "conversation_chain": "Documentation::Documentation:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "Customer Operations:5",
+      "topic_sheet": "Customer Operations",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 142,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Medical:15",
+      "topic_sheet": "Medical",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 143,
+      "conversation_chain": "Medical::Medical:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Sustainability:16",
+      "topic_sheet": "Sustainability",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 144,
+      "conversation_chain": "Sustainability::Sustainability:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "Documentation:9",
+      "topic_sheet": "Documentation",
+      "question_number": 9,
+      "question_type": "Closed-Book Scenario",
+      "execution_position": 145,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:15",
+      "topic_sheet": "Customer Operations",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 146,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Coding:14",
+      "topic_sheet": "Coding",
+      "question_number": 14,
+      "question_type": "Follow-Up 2",
+      "execution_position": 147,
+      "conversation_chain": "Coding::Coding:13",
+      "conversation_turn": 2
+    },
+    {
+      "Question ID": "Human Behaviour:17",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 148,
+      "conversation_chain": "Human Behaviour::Human Behaviour:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "Documentation:17",
+      "topic_sheet": "Documentation",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 149,
+      "conversation_chain": "Documentation::Documentation:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "Documentation:5",
+      "topic_sheet": "Documentation",
+      "question_number": 5,
+      "question_type": "Research Paper",
+      "execution_position": 150,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Customer Operations:16",
+      "topic_sheet": "Customer Operations",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 151,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "Human Behaviour:11",
+      "topic_sheet": "Human Behaviour",
+      "question_number": 11,
+      "question_type": "Multi-Step Logical Reasoning",
+      "execution_position": 152,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:15",
+      "topic_sheet": "Coding",
+      "question_number": 15,
+      "question_type": "Follow-Up 3",
+      "execution_position": 153,
+      "conversation_chain": "Coding::Coding:13",
+      "conversation_turn": 3
+    },
+    {
+      "Question ID": "Medical:1",
+      "topic_sheet": "Medical",
+      "question_number": 1,
+      "question_type": "Simple/Direct",
+      "execution_position": 154,
+      "conversation_chain": "",
+      "conversation_turn": 0
+    },
+    {
+      "Question ID": "Coding:16",
+      "topic_sheet": "Coding",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 155,
+      "conversation_chain": "Coding::Coding:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "Coding:17",
+      "topic_sheet": "Coding",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 156,
+      "conversation_chain": "Coding::Coding:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "Sustainability:17",
+      "topic_sheet": "Sustainability",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 157,
+      "conversation_chain": "Sustainability::Sustainability:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "Medical:16",
+      "topic_sheet": "Medical",
+      "question_number": 16,
+      "question_type": "Follow-Up 4",
+      "execution_position": 158,
+      "conversation_chain": "Medical::Medical:13",
+      "conversation_turn": 4
+    },
+    {
+      "Question ID": "Medical:17",
+      "topic_sheet": "Medical",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 159,
+      "conversation_chain": "Medical::Medical:13",
+      "conversation_turn": 5
+    },
+    {
+      "Question ID": "Customer Operations:17",
+      "topic_sheet": "Customer Operations",
+      "question_number": 17,
+      "question_type": "Follow-Up 5",
+      "execution_position": 160,
+      "conversation_chain": "Customer Operations::Customer Operations:13",
+      "conversation_turn": 5
+    }
+  ]
+}

@@ -145,6 +145,9 @@ def finalize_details(folder, status):
         row = by_position.get(query['execution_position'])
         query['status'] = row['status'] if row else ('cancelled' if status == 'cancelled' else 'error')
         query['error'] = row.get('error', '') if row else ''
+        query['model'] = row.get('model_name') if row else None
+        for key in ('input_tokens', 'output_tokens'):
+            query[key] = numeric(row.get(key)) if row else None
     for group in data['groups']:
         if group['status'] == 'running':
             group['status'] = 'not_completed'
@@ -207,6 +210,9 @@ def workbook_tables(data):
     sheets = {'Group measurements': groups}
     if data['kind'] == 'queries':
         sheets.update({'Step timings': timing, 'Evidence': evidence})
+        sheets['Token counts'] = [['Position','Question ID','Model','Input tokens','Output tokens']] + [
+            [q['execution_position'],q.get('question_id'),q.get('model'),q.get('input_tokens'),q.get('output_tokens')]
+            for q in data['queries']]
     sheets['Configuration'] = config
     return sheets
 

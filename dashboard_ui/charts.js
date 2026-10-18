@@ -20,6 +20,7 @@ const ChartView=(()=>{
   return traces;
  }
  function build(kind,rows,metric,result,globalRows){const series=uniq(rows.map(r=>r.series_id)).map(id=>rows.filter(r=>r.series_id===id).sort((a,b)=>a.original_question-b.original_question)),qs=uniq(rows.map(r=>r.original_question)).sort((a,b)=>a-b),labels=series.map((s,i)=>result.averaging==='schemes'?'Mean':`R${i+1}`),metricLabel=result.metrics[metric],isMean=result.averaging==='schemes';
+  if(metric.endsWith('_tokens')&&['phases','phasebars'].includes(kind))throw Error('Token counts apply to the model request. Choose a question chart for tokens, or choose energy, latency or emissions for RAG phase charts.');
   let traces=[],notes=[],height=560,xKey='question',yKey=metric;
   const maximum=Math.max(0,...globalRows.map(r=>r[metric]).filter(finite))*1.08||1;
   const l={margin:{l:85,r:50,t:65,b:110},paper_bgcolor:'white',plot_bgcolor:'white',font:{family:'Segoe UI, sans-serif',size:11,color:'#243449'},hovermode:'closest',dragmode:'zoom',legend:{orientation:'h',y:1.13},xaxis:axis('Original question serial'),yaxis:{...axis(metricLabel),range:[0,maximum]},barmode:'group'};

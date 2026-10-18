@@ -86,6 +86,22 @@ Statistics describe variation across the selected questions; they are not
 confidence intervals for a causal shuffle effect.
 
 CSV exports contain the full selected table (table search is display-only).
+Future per-question records include `input_tokens` and `output_tokens` from
+Ollama's final `prompt_eval_count` and `eval_count`. These cover the submitted
+prompt/context/history and the generated output as reported by Ollama, rather
+than text-based estimates. Missing historical counts remain blank. Tokens are
+also available as graph measurements and per-question means across schemes.
+Historical SV/SN/SC reconstruction uses separate `reconstructed_input_tokens`
+and `reconstructed_output_tokens` columns. Choose the explicitly labelled
+reconstructed measurements in the graph menu. They recount saved text using
+the local model vocabulary and template, and never replace API-reported counts.
+Each run's `token_reconstruction.json` records model/template digests, native
+library identity, coverage and limitations. Failed requests remain unavailable.
+The reusable `reconstruct_tokens.py` command defaults to a dry run; add `--write`
+to publish, with original-byte backups. Its native bindings validate the exact
+installed llama.cpp commit before use; a different binary requires updating the
+bindings against that binary's header. No model weights or inference context
+are loaded for reconstruction, only vocabularies.
 Excel includes all selected-data tables. Files are written to unique directories
 under `dashboard_outputs`; original report files are read-only.
 

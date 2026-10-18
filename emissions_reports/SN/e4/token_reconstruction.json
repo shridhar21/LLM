@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-17T18:15:27.116454+00:00",
+  "source_sha256": "482a6593b9d2ecd517f12dd2240c269592eeb786740fade4a8e4c52929b2feac",
+  "source_context_sha256": "9f1da8cf400a73b61ea16e6122c5be522f65319ee43f42472e4567f04baeb168",
+  "native_library_commit": "161755f29",
+  "native_library_sha256": "c76bc1cb14c6f0b92f912d333ccedb78e9bbca596a53382a97f2fc9003db6401",
+  "models": [
+    {
+      "model": "llama3.2:3b",
+      "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+      "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+      "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+      "vocabulary_size": 128256,
+      "add_bos": true,
+      "add_eos": false
+    }
+  ],
+  "summary": {
+    "rows": 160,
+    "inputs": 160,
+    "outputs": 160,
+    "unavailable": 0
+  },
+  "scope": "Saved text retokenization, not recovered historical Ollama usage counters",
+  "input_policy": "Current local Ollama template and tokenizer; saved successful follow-up messages or standalone question; configured BOS/EOS inserted",
+  "output_policy": "Saved answer text only; no automatic BOS/EOS; control tokens in saved text parsed",
+  "limitations": [
+    "Historical model/template digests were not recorded and cannot be verified across machines.",
+    "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+    "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+  ]
+}

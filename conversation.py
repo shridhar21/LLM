@@ -183,7 +183,9 @@ class ConversationMemory:
             record.update(status='cancelled' if isinstance(exc, KeyboardInterrupt) else 'error', error=str(exc))
             self.save()
             raise
-        record.update(status='ok', answer=answer)
+        record.update(status='ok', answer=answer,
+                      input_tokens=getattr(answer, 'input_tokens', None),
+                      output_tokens=getattr(answer, 'output_tokens', None))
         self.save()
         self.history.setdefault(chain, []).append({'question_id': str(row['Question ID']),
                                                    'question': str(row['Question']), 'answer': answer})

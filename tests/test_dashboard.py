@@ -227,6 +227,16 @@ class DashboardTests(unittest.TestCase):
         self.assertIsNone(mean['emissions_g'])
         self.assertEqual(mean['emissions_g_valid_runs'],2)
 
+    def test_token_counts_average_per_question_model_and_machine(self):
+        body=self.explorer_payload(1)
+        raw=self.client.post('/api/explore',json=body).get_json()['raw']
+        self.assertTrue(all(r['input_tokens'] is None and r['output_tokens'] is None for r in raw))
+        rows=[dict(raw[0],input_tokens=100,output_tokens=0,scheme='original'),
+              dict(raw[0],input_tokens=200,output_tokens=40,scheme='questions')]
+        average=d.analysis.average_rows(rows)[0]
+        self.assertEqual(average['input_tokens'],150)
+        self.assertEqual(average['output_tokens'],20)
+
     def test_explorer_selection_methods_and_true_followup_predecessor(self):
         questions=d.analysis.question_records(d.load_bank())
         available=set(range(1,21))

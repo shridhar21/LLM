@@ -173,6 +173,24 @@ def generate(folder):
                [str(s[0])] + [fmt(v) for v in s[1:8]]], [45] + [64] * 7)
     story.append(PageBreak())
     from report_charts import per_question, histogram, breakdown
+    paragraph('Per-question token counts', 'Title')
+    paragraph('Ollama-reported input and generated output tokens. Input includes supplied context and history. N/A means not recorded; counts are not estimated from saved text.')
+    token_rows=[['Execution position','Question ID','Input tokens','Output tokens']]
+    for index,row in enumerate(rows,1):
+        values=[number(row.get(key)) for key in ('input_tokens','output_tokens')]
+        token_rows.append([row.get('execution_position') or index,row.get('question_id') or str(index),
+                           *[str(int(v)) if v is not None and v >= 0 and v.is_integer() else 'N/A' for v in values]])
+    table(token_rows,[100,205,95,95])
+    if any(row.get('reconstructed_input_tokens') or row.get('reconstructed_output_tokens') for row in rows):
+        paragraph('Reconstructed token counts', 'Heading2')
+        paragraph('Current local model tokenizers and Ollama templates applied to saved text. Saved-answer counts exclude any omitted reasoning, removed whitespace or hidden termination tokens. Historical model/template identity cannot be verified; these are not recovered Ollama usage counters. See token_reconstruction.json for provenance.')
+        reconstructed=[['Position','Question ID','Reconstructed input','Saved-answer tokens']]
+        for index,row in enumerate(rows,1):
+            values=[number(row.get(key)) for key in ('reconstructed_input_tokens','reconstructed_output_tokens')]
+            reconstructed.append([row.get('execution_position') or index,row.get('question_id') or str(index),
+                                  *[str(int(v)) if v is not None else 'N/A' for v in values]])
+        table(reconstructed,[60,205,115,115])
+    story.append(PageBreak())
     paragraph("Which questions cost the most?", "Title")
     paragraph("Bars show individual requests; large batches use points to avoid overcrowding. Missing measurements are marked X, not shown as zero.")
     for label, vals in data[:3]:

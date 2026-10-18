@@ -12,7 +12,7 @@ import pandas as pd
 from conversation import annotate_chains, ConversationMemory, MissingHistoryError, validate_execution
 from question_order import arrange, MODES, select_questions, load_bank, range_options, save_order
 from tests.test_cancellation import load_functions
-from cancellation import query_local_model
+from cancellation import query_local_model, ModelAnswer
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -35,6 +35,49 @@ def show_response(limit=32768):
 
 
 class ConversationTests(unittest.TestCase):
+    def test_historical_reconstruction_uses_saved_history_and_keeps_reported_counts(self):
+        import csv
+        from reconstruct_tokens import reconstruct_rows, render_prompt, publish, read_csv
+        rows=[dict(question_id='A:1',question='Opening question',answer='Prior answer',model_name='llama3.2:3b',
+                   question_type='Follow-Up 1',execution_position='1',status='ok',input_tokens='101',output_tokens='7'),
+              dict(question_id='A:2',question='Continue?',answer='Follow-up answer',model_name='llama3.2:3b',
+                   question_type='Follow-Up 2',execution_position='5',status='ok',input_tokens='',output_tokens=''),
+              dict(question_id='A:3',question='Blocked?',answer='',model_name='llama3.2:3b',
+                   question_type='Follow-Up 3',execution_position='7',status='error',input_tokens='',output_tokens='')]
+        messages=[{'role':'user','content':'Opening question'},{'role':'assistant','content':'Prior answer'},
+                  {'role':'user','content':'Continue?'}]
+        context={'model':'llama3.2:3b','requests':[
+            dict(question_id='A:1',answer='Prior answer',execution_position=1,status='ok',messages=messages[:1]),
+            dict(question_id='A:2',answer='Follow-up answer',execution_position=5,status='ok',messages=messages)]}
+        calls=[]
+        def counter(model,text,prompt):
+            calls.append((model,text,prompt));return len(text)
+        result=reconstruct_rows(rows,context,counter)
+        self.assertIn('Prior answer',calls[3][1])
+        self.assertTrue(calls[3][2])
+        self.assertGreater(result[1]['reconstructed_input_tokens'],len('Continue?'))
+        self.assertEqual(result[2]['reconstructed_output_tokens'],'')
+        self.assertEqual(result[0]['input_tokens'],'101')
+        self.assertEqual(result[0]['output_tokens'],'7')
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp:
+            path=Path(temp)/'answers.csv'
+            with path.open('w',encoding='utf-8',newline='') as f:
+                writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
+            original,fields,old=read_csv(path)
+            publish(path,original,fields,old,result,{'test':True})
+            _,_,updated=read_csv(path)
+            self.assertEqual([{k:r[k] for k in fields} for r in updated],old)
+            self.assertEqual(path.with_name(path.name+'.before_token_reconstruction.bak').read_bytes(),original)
+            with self.assertRaises(FileExistsError):publish(path,original,fields,old,result,{})
+        context['requests'][1]['messages']=[]
+        partial=reconstruct_rows(rows,context,counter)
+        self.assertEqual(partial[1]['reconstructed_input_tokens'],'')
+        self.assertGreater(partial[1]['reconstructed_output_tokens'],0)
+        for model in ('llama3.2:3b','gemma3:4b','qwen3:4b'):
+            text=render_prompt(model,messages)
+            self.assertIn('Prior answer',text)
+        with self.assertRaises(ValueError):render_prompt('unknown',messages)
+
     def test_real_bank_has_eight_five_turn_chains(self):
         frame = load_bank()
         chains = frame[frame['conversation_chain'] != '']
@@ -193,6 +236,42 @@ class ConversationTests(unittest.TestCase):
         with patch('requests.Session', return_value=session):
             with self.assertRaisesRegex(RuntimeError, 'incomplete answer'):
                 query_local_model('q', 'model', messages)
+
+    def test_token_counts_come_from_final_response_for_generate_and_chat(self):
+        response=MagicMock();response.__enter__.return_value=response
+        session=MagicMock();session.__enter__.return_value=session;session.post.return_value=response
+        for messages in (None,[{'role':'user','content':'question'}]):
+            response.iter_lines.return_value=iter([b'{"response":"answer","message":{"content":"answer"},"done":false}',
+                b'{"done":true,"prompt_eval_count":123,"eval_count":0}'])
+            with patch('requests.Session',return_value=session):
+                answer=query_local_model('question','fixture',messages)
+            self.assertIsInstance(answer,str);self.assertEqual(answer,'answer')
+            self.assertEqual(answer.input_tokens,123);self.assertEqual(answer.output_tokens,0)
+        response.iter_lines.return_value=iter([b'{"response":"next","done":true}'])
+        with patch('requests.Session',return_value=session):answer=query_local_model('question','fixture')
+        self.assertIsNone(answer.input_tokens);self.assertIsNone(answer.output_tokens)
+        self.assertIsNone(ModelAnswer('x',True,-1).input_tokens)
+        self.assertIsNone(ModelAnswer('x',1,1.5).output_tokens)
+
+    def test_token_counts_reach_normal_rag_and_followup_csvs(self):
+        frame=arrange(chain_frame()).iloc[:3].copy()
+        for rag in (False,True):
+            trackers=[]
+            runner=load_functions('run.py' if rag else 'normal_llm.py',lambda *a,**kw:ModelAnswer('answer',321,42),trackers)
+            with tempfile.TemporaryDirectory(dir=ROOT) as temp,contextlib.chdir(temp),patch('requests.post',return_value=show_response()),patch('builtins.print'):
+                if rag:
+                    embedder=Mock();embedder.encode.return_value=np.ones((1,2))
+                    runner(frame,True,object(),embedder,'model')
+                else:runner(frame,True,'model')
+                folder=next(Path('emissions_reports').iterdir())
+                rows=pd.read_csv(folder/'answers.csv')
+                self.assertEqual(rows.input_tokens.tolist(),[321]*3)
+                self.assertEqual(rows.output_tokens.tolist(),[42]*3)
+                history=json.loads((folder/'conversation_context.json').read_text())
+                self.assertTrue(all(r['input_tokens']==321 for r in history['requests']))
+                if rag:
+                    details=json.loads((folder/'rag_details.json').read_text())
+                    self.assertTrue(all(r['output_tokens']==42 for r in details['queries']))
 
     def test_pipeline_integration_normal_and_rag_keep_csv_and_phase_counts(self):
         # Two chains and an independent question execute between each other's turns.
