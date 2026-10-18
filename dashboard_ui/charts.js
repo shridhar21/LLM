@@ -2,6 +2,7 @@
 const ChartView=(()=>{
  const types={execution:'Line: actual execution order',line:'Line: original question order',average:'Line: per-question mean',scatter:'Scatter: question measurements',bars:'Bars: question measurements',range:'Dots and min–max ranges',heatmap:'Heatmap: questions × runs / means',histogram:'Histogram: successful question costs',totals:'Bars: total selected-question cost',hardware:'Stacked bars: CPU, GPU and RAM energy',phases:'Heatmap: retrieval and generation',phasebars:'Stacked bars: retrieval and generation',topics:'Bars: costs by topic sheet',question_types:'Bars: costs by question type'};
  const palette=['#2563a6','#df7834','#168577','#9d5197','#c54949','#827047','#478baf','#7163a8'];
+ types.machine_range='Dots and ranges: machines grouped per question';
  let plots=[],synchronizing=false;
  const finite=v=>typeof v==='number'&&Number.isFinite(v);
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -20,6 +21,7 @@ const ChartView=(()=>{
   return traces;
  }
  function build(kind,rows,metric,result,globalRows){const series=uniq(rows.map(r=>r.series_id)).map(id=>rows.filter(r=>r.series_id===id).sort((a,b)=>a.original_question-b.original_question)),qs=uniq(rows.map(r=>r.original_question)).sort((a,b)=>a-b),labels=series.map((s,i)=>result.averaging==='schemes'?'Mean':`R${i+1}`),metricLabel=result.metrics[metric],isMean=result.averaging==='schemes';
+  if(kind==='machine_range')return machineRange(rows,metric,result);
   if(metric.endsWith('_tokens')&&['phases','phasebars'].includes(kind))throw Error('Token counts apply to the model request. Choose a question chart for tokens, or choose energy, latency or emissions for RAG phase charts.');
   let traces=[],notes=[],height=560,xKey='question',yKey=metric;
   const maximum=Math.max(0,...globalRows.map(r=>r[metric]).filter(finite))*1.08||1;
@@ -39,12 +41,33 @@ const ChartView=(()=>{
   else throw Error('Unknown chart type');
   return{traces,layout:l,height,xKey,yKey,notes,keys:series.map((s,i)=>labels[i]+': '+s[0].series)};
  }
+ function machineRange(rows,metric,result){
+  const qs=uniq(rows.map(r=>r.original_question)).sort((a,b)=>a-b),machines=result.machines.filter(m=>rows.some(r=>r.machine_index===m.machine));
+  const schemes=uniq(rows.map(r=>r.scheme)).sort(),colours=['#2563a6','#df7834','#168577','#9d5197','#c54949','#827047','#478baf','#7163a8','#708419','#d14c88','#347047'];
+  const traces=[],xs=[],ys=[],ticks=[],labels=[],shapes=[],dots=new Map(schemes.map((s,i)=>[s,{type:'scatter',mode:'markers',x:[],y:[],name:esc(s),legendgroup:s,marker:{color:colours[i%colours.length],size:7},customdata:[],hovertemplate:hover.replace('Value: %{y}','Machine: %{customdata[11]}<br>Value: %{x}')} ]));
+  for(const [qi,q] of qs.entries()){
+   for(const [mi,m] of machines.entries()){
+    const y=qi*(machines.length+1)+mi,subset=rows.filter(r=>r.original_question===q&&r.machine_index===m.machine),valid=subset.filter(r=>finite(r[metric]));
+    ticks.push(y);labels.push(`${mi===0?'Q'+q+' · '+esc(subset[0]?.topic||rows.find(r=>r.original_question===q).topic)+' — ':''}${esc(m.name)}`);
+    if(valid.length){xs.push(Math.min(...valid.map(r=>r[metric])),Math.max(...valid.map(r=>r[metric])),null);ys.push(y,y,null);}
+    for(const [ri,r] of valid.entries()){const trace=dots.get(r.scheme);trace.x.push(r[metric]);trace.y.push(y+(ri-(valid.length-1)/2)*Math.min(.09,.5/valid.length));trace.customdata.push([...details(r),esc(m.name)]);}
+   }
+   if(qi<qs.length-1)shapes.push({type:'line',xref:'paper',x0:0,x1:1,y0:qi*(machines.length+1)+machines.length,y1:qi*(machines.length+1)+machines.length,line:{color:'#e6ebf0',width:1}});
+  }
+  // One legend item per scheme; all of its dots across machines toggle together.
+  traces.push(...[...dots.values()].filter(t=>t.x.length));
+  traces.unshift({type:'scatter',mode:'lines',x:xs,y:ys,line:{color:'#9ca8b3',width:2},hoverinfo:'skip',showlegend:false});
+  return {traces,height:Math.max(560,qs.length*(machines.length+1)*23+160),layout:{margin:{l:250,r:40,t:100,b:70},paper_bgcolor:'white',plot_bgcolor:'white',font:{family:'Segoe UI, sans-serif',size:11,color:'#243449'},hovermode:'closest',dragmode:'zoom',legend:{orientation:'h',y:1.01,groupclick:'togglegroup'},xaxis:{...axis(result.metrics[metric]),range:[0,Math.max(0,...rows.map(r=>r[metric]).filter(finite))*1.08||1]},yaxis:{...axis('Question / machine'),tickmode:'array',tickvals:ticks,ticktext:labels,autorange:'reversed',showgrid:false},shapes},notes:['One row per machine within each question. Dots are selected runs; colours identify shuffling schemes. Grey spans include all selected runs, even when a scheme is hidden in the legend. Missing values have no dot. Scroll to see further questions, or filter question serials for a shorter graph.'],keys:[]};
+ }
  async function sync(source,event){if(synchronizing||!$('sync').checked)return;const updates={};for(const [k,v] of Object.entries(event))if(/^[xy]axis\.(range(\[[01]\])?|autorange)$/.test(k))updates[k]=v;if(!Object.keys(updates).length)return;synchronizing=true;try{await Promise.all(plots.filter(p=>p!==source&&p.syncKey===source.syncKey).map(p=>Plotly.relayout(p.div,updates)));}finally{synchronizing=false;}}
  function limits(panel,p){const row=el('div',undefined,'row limits');const inputs={};for(const axisName of ['x','y'])for(const end of ['min','max']){const input=el('input');input.type='number';input.step='any';input.placeholder=axisName.toUpperCase()+' '+end;input.setAttribute('aria-label',axisName.toUpperCase()+' '+end);inputs[axisName+end]=input;row.append(input);}const apply=el('button','Apply axis limits'),reset=el('button','Reset ranges');apply.onclick=async()=>{const u={};for(const a of ['x','y']){const lo=inputs[a+'min'].value,hi=inputs[a+'max'].value;if(lo===''&&hi==='')continue;if(lo===''||hi===''||!Number.isFinite(Number(lo))||!Number.isFinite(Number(hi))||Number(lo)>=Number(hi)){status('Enter both limits with minimum less than maximum.',true);return;}u[a+'axis.range']=[Number(lo),Number(hi)];u[a+'axis.autorange']=false;}await Plotly.relayout(p.div,u);};reset.onclick=()=>Plotly.relayout(p.div,{'xaxis.autorange':true,'yaxis.autorange':p.reversed?'reversed':true});row.append(apply,reset);panel.append(row);}
  async function draw(result){if(!result)return;if(typeof Plotly==='undefined')throw Error('Interactive chart library unavailable. Install requirements-dashboard.txt and restart.');const chosen=[...document.querySelectorAll('#graphTypes input:checked')].map(b=>b.value);if(!chosen.length)throw Error('Choose at least one graph type');clear();const metric=$('metric').value;
+  if(chosen.includes('machine_range')&&(result.averaging!=='none'||uniq(result.rows.map(r=>r.model)).length!==1))throw Error('For the combined machine graph, select one model across the machines and choose No averaging.');
   for(const kind of chosen){for(const model of uniq(result.rows.map(r=>r.model))){const globalRows=result.rows.filter(r=>r.model===model),section=el('section');section.append(el('h3',types[kind]+' — '+model));const group=el('div',undefined,'graph-group');group.style.setProperty('--count',result.machines.length);section.append(group);$('panels').append(section);
-    for(const machine of result.machines){const rows=globalRows.filter(r=>r.machine_index===machine.machine);if(!rows.length)continue;const runs=kind==='execution'?uniq(rows.map(r=>r.series_id)).map(id=>rows.filter(r=>r.series_id===id)):[rows];const column=el('div');group.append(column);
+    if(kind==='machine_range')group.style.setProperty('--count',1);
+    for(const machine of (kind==='machine_range'?[{name:'All selected machines'}]:result.machines)){const rows=kind==='machine_range'?globalRows:globalRows.filter(r=>r.machine_index===machine.machine);if(!rows.length)continue;const runs=kind==='execution'?uniq(rows.map(r=>r.series_id)).map(id=>rows.filter(r=>r.series_id===id)):[rows];const column=el('div');group.append(column);
      for(const subset of runs){const panel=el('div',undefined,'panel');panel.append(el('h3',machine.name+(kind==='execution'?' — '+subset[0].run:'')));const figure=build(kind,subset,metric,result,globalRows),div=el('div',undefined,'plot');div.style.height=figure.height+'px';panel.append(div);column.append(panel);await Plotly.newPlot(div,figure.traces,figure.layout,{responsive:true,scrollZoom:true,displaylogo:false,toImageButtonOptions:{format:'png',width:1800,height:figure.height,scale:2}});const p={div,syncKey:kind+'|'+model+'|'+metric,reversed:['range','heatmap','phases'].includes(kind)};plots.push(p);div.on('plotly_relayout',event=>sync(p,event));limits(panel,p);figure.notes.forEach(n=>panel.append(el('p',n,'muted')));figure.keys.forEach(k=>panel.append(el('p',k,'key')));
+      if(kind==='machine_range')p.reversed=true;
      }
     }
    }

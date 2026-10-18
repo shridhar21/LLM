@@ -113,3 +113,11 @@ per machine. Existing standalone report/inference commands remain available.
 
 This dashboard binds only to localhost. Public hosting would require separate
 folder access and authentication arrangements.
+
+**Dots and ranges: machines grouped per question** draws one combined chart.
+Select one model across the machines and use **No averaging**. Each question
+has one horizontal row per selected machine, with dots for its selected runs
+and a grey minimum–maximum span. Scheme colours are shared across machines;
+hover shows the machine and run. Missing measurements are omitted, not zeroed.
+The chart grows vertically to keep rows readable; use question filters for a
+shorter view. The layout selector does not split this combined chart.
