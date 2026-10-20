@@ -253,6 +253,18 @@ class ConversationTests(unittest.TestCase):
         self.assertIsNone(ModelAnswer('x',True,-1).input_tokens)
         self.assertIsNone(ModelAnswer('x',1,1.5).output_tokens)
 
+    def test_shared_local_endpoint_and_extra_ollama_counters(self):
+        from cancellation import ollama_base_url
+        with patch.dict('os.environ', {'OLLAMA_URL':'127.0.0.1:11435', 'OLLAMA_HOST':'127.0.0.1:11434'}):
+            self.assertEqual(ollama_base_url(), 'http://127.0.0.1:11435')
+        with patch.dict('os.environ', {'OLLAMA_URL':'http://example.com:11434'}):
+            with self.assertRaises(ValueError): ollama_base_url()
+        answer = ModelAnswer('answer', metrics=dict(prompt_eval_count=21, eval_count=7, total_duration=99,
+                             prompt_eval_cached_count=0, eval_duration=40, load_duration=10, done_reason='stop'))
+        self.assertEqual((answer.input_tokens, answer.output_tokens, answer.total_duration), (21,7,99))
+        self.assertEqual(answer.prompt_eval_cached_count, 0)
+        self.assertEqual(answer.done_reason, 'stop')
+
     def test_token_counts_reach_normal_rag_and_followup_csvs(self):
         frame=arrange(chain_frame()).iloc[:3].copy()
         for rag in (False,True):

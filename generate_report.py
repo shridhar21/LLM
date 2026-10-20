@@ -75,6 +75,8 @@ def generate(folder):
                                                   ("emissions (g CO2e)", "emissions_kg", 1000))]
     definitions += [(f"{part.upper()} energy (Wh)", f"{part}_energy_kwh", 1000)
                     for part in ("cpu", "gpu", "ram")]
+    if any(number(row.get('ane_energy_kwh')) is not None for row in rows):
+        definitions.append(('ANE energy (Wh)', 'ane_energy_kwh', 1000))
     def series(key, scale):
         return [None if (v := number(row.get(key))) is None else v * scale for row in rows]
     data = [(label, series(key, scale)) for label, key, scale in definitions]
@@ -146,6 +148,12 @@ def generate(folder):
         paragraph("UNVERIFIED: This batch has no runtime measurement metadata. Its historical hardware coverage and backend methods cannot be established. Earlier zero defaults cannot be recovered.")
     else:
         paragraph(metadata.get("scope_note", "Measurement scope not documented."))
+        paragraph('Measurement backend: ' + ', '.join(sorted({s.get('measurement_backend', 'codecarbon') for s in sessions})))
+        if any(s.get('measurement_backend') == 'apple_powermetrics' for s in sessions):
+            paragraph('Apple primary total is idle-subtracted SoC energy. RAM energy is N/A; ANE is reported when exposed. It is not comparable to historical CodeCarbon machine totals.')
+            for session in sessions:
+                result = session.get('result') or {}
+                paragraph(f"{session.get('run_id')}: coverage={result.get('coverage_ratio', 'N/A')}; {result.get('attribution_status', 'unavailable')}; carbon factor={session.get('carbon_intensity_g_per_kwh')} g CO2eq/kWh")
         paragraph(f"Tracking sessions recorded: {len(sessions)}. Expected for this CSV: {len(rows) * (2 if rag else 1)}. Metadata describes configuration and backend evidence, not independent meter validation.")
         for key in ("codecarbon_version", "os", "effective_scope", "measure_power_secs", "pue", "country_iso_code"):
             paragraph(key + ": " + ", ".join(sorted({str(s.get(key, 'unknown')) for s in sessions})))
@@ -161,7 +169,7 @@ def generate(folder):
         paragraph(f"Tracker stop failures: {len(failures)}")
         for error in sorted({str(s['stop_error']) for s in failures}):
             paragraph(error)
-        if any(s.get('effective_scope') != 'machine' for s in sessions):
+        if any(s.get('effective_scope') != ('idle_subtracted_apple_soc' if s.get('measurement_backend') == 'apple_powermetrics' else 'machine') for s in sessions):
             paragraph("WARNING: Machine scope was not confirmed for every tracking session.")
     paragraph("A partial observed sum excludes unavailable readings. A complete batch cost cannot be claimed when coverage is incomplete. Zero readings are retained; unknown hardware coverage must not be interpreted as zero consumption.")
     story.append(PageBreak())
@@ -203,7 +211,7 @@ def generate(folder):
     story.append(PageBreak())
     paragraph("Where is energy spent?", "Title")
     paragraph("Compare observed component costs below. Amber bars indicate incomplete coverage; comparisons with different coverage may be misleading. These are tracking estimates, not isolated model or wall-socket measurements.")
-    story.append(breakdown("Hardware energy (Wh)", [(label.split()[0], vals) for label, vals in data[-3:]]))
+    story.append(breakdown("Hardware energy (Wh)", [(label.split()[0], vals) for label, vals in data if label.split()[0] in ('CPU', 'GPU', 'RAM', 'ANE')]))
     if rag:
         paragraph("Retrieval versus generation", "Heading2")
         for offset, title in enumerate(("Time (s)", "Energy (Wh)", "Emissions (g CO2e)")):

@@ -108,8 +108,11 @@ def stopped_phase(state, tracker, phase, emissions, wall_time):
     group.update(status='measured', wall_time_s=wall_time, duration_s=numeric(row.get('duration')),
                  emissions_kg=numeric(emissions))
     for target, source in [('energy_kwh', 'energy_consumed'), ('cpu_energy_kwh', 'cpu_energy'),
-                           ('gpu_energy_kwh', 'gpu_energy'), ('ram_energy_kwh', 'ram_energy')]:
+                           ('gpu_energy_kwh', 'gpu_energy'), ('ram_energy_kwh', 'ram_energy'), ('ane_energy_kwh', 'ane_energy')]:
         group[target] = numeric(row.get(source))
+    group['measurement_basis'] = row.get('measurement_basis', 'codecarbon_machine')
+    group['attribution_status'] = row.get('attribution_status', '')
+    group['powermetrics_coverage_ratio'] = numeric(row.get('powermetrics_coverage_ratio'))
     write_details(state['folder'], data)
 
 
@@ -199,15 +202,19 @@ def workbook_tables(data):
     config = [['Setting', 'Recorded value'], ['Run kind', data['kind']], ['Run status', data['status']],
               ['Index generation', data.get('index_generation')],
               ['Missing readings', 'Blank means unavailable, not zero.'],
-              ['Duration / wall time', 'Duration comes from raw CodeCarbon; wall time also includes tracker lifecycle and bookkeeping.'],
+              ['Duration / wall time', 'Duration comes from the active measurement backend; wall time also includes tracker lifecycle and bookkeeping.'],
               ['Long text', 'Excel cell text is limited to 32,767 characters; rag_details.json retains the full question.'],
-              ['Energy / emissions scope', 'CodeCarbon supported hardware estimates; not isolated model or wall-socket power.'],
+              ['Energy / emissions scope', 'Read group measurement basis: CodeCarbon supported hardware or idle-subtracted Apple SoC rails. Not isolated model or wall-socket power. Apple RAM energy is unavailable.'],
               ['Unsupported hardware', 'A zero GPU field does not prove zero physical consumption. Check measurement_metadata.json for backend coverage.'],
               ['Step timings', 'Wall-clock timings only; no separately measured step emissions.'],
               ['Corpus costs', 'Separate indexing workbook; excluded from question totals.']]
     config.extend([[key, value if isinstance(value, (str, int, float, bool)) else json.dumps(value)]
                    for key, value in data['settings'].items()])
     sheets = {'Group measurements': groups}
+    if any(g.get('measurement_basis') == 'idle_subtracted_apple_soc' for g in data['groups']):
+        sheets['Apple measurement evidence'] = [['Phase', 'Position', 'Basis', 'Coverage', 'Attribution', 'ANE energy (kWh)']] + [
+            [g['phase'], g.get('execution_position'), g.get('measurement_basis'), g.get('powermetrics_coverage_ratio'),
+             g.get('attribution_status'), g.get('ane_energy_kwh')] for g in data['groups']]
     if data['kind'] == 'queries':
         sheets.update({'Step timings': timing, 'Evidence': evidence})
         sheets['Token counts'] = [['Position','Question ID','Model','Input tokens','Output tokens']] + [

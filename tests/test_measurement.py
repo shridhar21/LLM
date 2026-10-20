@@ -166,5 +166,200 @@ class MeasurementTests(unittest.TestCase):
             self.assertIn('UNVERIFIED', text)
 
 
+class ApplePowerTests(unittest.TestCase):
+    def monitor(self, *, seconds=2, samples=2, baseline=2):
+        import threading
+        from powermetrics_ollama import OllamaPowerMonitor
+        monitor = object.__new__(OllamaPowerMonitor)
+        monitor._lock = threading.Lock()
+        monitor.power_samples = [dict(end_wall_ns=i * 1000000000, elapsed_ns=1000000000,
+                                     cpu_w=2., gpu_w=3., ane_w=1., soc_w=6.) for i in range(1, samples + 1)]
+        monitor.baseline = dict(cpu_w=1., gpu_w=1., ane_w=0., soc_w=baseline)
+        monitor.sample_interval_ms = 250
+        monitor.carbon_intensity = 500.
+        monitor.ollama_pid_source = 'test fixture'
+        monitor._process_delta = lambda *args: {'python_ollama_cpu_share': .99}
+        monitor._append_request = lambda result: None
+        window = SimpleNamespace(start_wall_ns=0, end_wall_ns=seconds * 1000000000, request_id='q', phase='generation')
+        return monitor, window
+
+    def test_non_mac_never_loads_mac_config_or_backend(self):
+        from measurement import use_apple_powermetrics
+        for system in ('Windows', 'Linux'):
+            with patch('measurement.platform.system', return_value=system), patch.dict('os.environ', {'LLM_MAC_POWER_BACKEND': 'invalid'}), patch('pathlib.Path.read_text', side_effect=AssertionError('Mac config accessed')):
+                self.assertFalse(use_apple_powermetrics())
+
+    def test_apple_selector_and_explicit_legacy_override(self):
+        from measurement import use_apple_powermetrics
+        with patch('measurement.platform.system', return_value='Darwin'), patch('measurement.platform.machine', return_value='arm64'), patch.dict('os.environ', {'LLM_MAC_POWER_BACKEND': 'auto'}):
+            self.assertTrue(use_apple_powermetrics())
+            with patch('mac_power.PowermetricsTracker', return_value='apple') as factory:
+                self.assertEqual(make_codecarbon_tracker('inference', 'test', 'ignored'), 'apple')
+                factory.assert_called_once()
+            with patch.dict('os.environ', {'LLM_MAC_POWER_BACKEND': 'codecarbon'}):
+                self.assertFalse(use_apple_powermetrics())
+        with patch('measurement.platform.system', return_value='Darwin'), patch('measurement.platform.machine', return_value='x86_64'), patch.dict('os.environ', {'LLM_MAC_POWER_BACKEND': 'auto'}):
+            self.assertFalse(use_apple_powermetrics())
+
+    def test_plist_parser_missing_ane_and_process_values(self):
+        from powermetrics_ollama import _power_sample
+        sample = _power_sample({'processor': {'cpu_power': 2000, 'gpu_power': 3000, 'combined_power': 6000},
+                                'tasks': [{'cpu_power': 999999}]}, 10)
+        self.assertEqual(sample['cpu_w'], 2)
+        self.assertIsNone(sample['ane_w'])
+        self.assertIsNone(_power_sample({'tasks': [{'cpu_power': 999999}]}, 10))
+
+    def test_stream_parser_accepts_null_and_xml_boundaries(self):
+        import io, plistlib, threading
+        monitor, _ = self.monitor()
+        monitor.power_samples = []
+        record = {'elapsed_ns': 250000000, 'processor': {'cpu_power': 2000, 'gpu_power': 3000, 'combined_power': 6000}}
+        raw = plistlib.dumps(record)
+        monitor._proc = SimpleNamespace(stdout=io.BytesIO(raw + b'\0' + raw))
+        monitor._stop, monitor._raw_handle = threading.Event(), io.BytesIO()
+        monitor._power_jsonl, monitor._stderr_handle = io.StringIO(), io.BytesIO()
+        monitor.session_tag = 'test'
+        monitor._read_power()
+        self.assertEqual(len(monitor.power_samples), 2)
+        self.assertTrue(all(s['ane_w'] is None for s in monitor.power_samples))
+
+    def test_energy_integration_baseline_and_carbon_units(self):
+        monitor, window = self.monitor()
+        with patch('powermetrics_ollama.time.sleep'):
+            result = monitor.finish_window(window)
+        self.assertEqual(result['raw_soc_energy_j'], 12)
+        self.assertEqual(result['incremental_soc_energy_j_signed'], 8)
+        self.assertAlmostEqual(result['energy_kwh'], 8 / 3600000)
+        self.assertAlmostEqual(result['emissions_g'], 8 / 3600000 * 500)
+        self.assertEqual(result['coverage_ratio'], 1)
+
+    def test_partial_negative_and_zero_energy_are_distinct(self):
+        for samples, baseline, expected in [(1, 2, None), (2, 10, None), (2, 6, 0)]:
+            monitor, window = self.monitor(samples=samples, baseline=baseline)
+            with patch('powermetrics_ollama.time.sleep'):
+                result = monitor.finish_window(window)
+            self.assertEqual(result['energy_kwh'], expected)
+            if baseline == 10:
+                self.assertEqual(result['incremental_soc_energy_j_signed'], -8)
+        monitor, window = self.monitor()
+        monitor.carbon_intensity = None
+        with patch('powermetrics_ollama.time.sleep'):
+            result = monitor.finish_window(window)
+        self.assertGreater(result['energy_kwh'], 0)
+        self.assertIsNone(result['emissions_g'])
+
+    def test_short_phase_is_integrated_and_overlap_not_double_counted(self):
+        monitor, _ = self.monitor(samples=1)
+        raw, signed, duration, covered, _ = monitor._integrate(980000000, 1000000000)
+        self.assertAlmostEqual(raw['soc'], .12)
+        self.assertAlmostEqual(covered, .02)
+        monitor.power_samples.append(dict(monitor.power_samples[0]))
+        raw, _, _, covered, _ = monitor._integrate(0, 1000000000)
+        self.assertEqual(raw['soc'], 6)
+        self.assertEqual(covered, 1)
+
+    def test_missing_ane_stays_unavailable(self):
+        monitor, window = self.monitor()
+        monitor.baseline['ane_w'] = None
+        for sample in monitor.power_samples:
+            sample['ane_w'] = None
+        with patch('powermetrics_ollama.time.sleep'):
+            result = monitor.finish_window(window)
+        self.assertIsNone(result['raw_ane_energy_j'])
+        self.assertIsNone(result['incremental_ane_energy_j_signed'])
+        self.assertIsNotNone(result['energy_kwh'])
+
+    def test_mac_adapter_evidence_schema_and_rag_retrieval(self):
+        from mac_power import PowermetricsTracker
+        monitor, window = self.monitor()
+        with patch('powermetrics_ollama.time.sleep'):
+            result = monitor.finish_window(window)
+        fake = SimpleNamespace(start=lambda: None, calibrate_idle=lambda *a: None, stop=lambda: None)
+        class Window:
+            def __enter__(self): return self
+            def __exit__(self, *args): self.result = result
+        fake.request = lambda *a, **k: Window()
+        with tempfile.TemporaryDirectory() as temp, patch('mac_power.OllamaPowerMonitor', return_value=fake) as factory:
+            tracker = PowermetricsTracker('inference', 'RAG_ret_q1_test', temp)
+            tracker.start()
+            self.assertFalse(factory.call_args.kwargs['require_ollama'])
+            self.assertAlmostEqual(stop_tracker(tracker, temp), result['emissions_g'] / 1000)
+            with (Path(temp)/'emissions.csv').open(newline='') as handle:
+                row = next(csv.DictReader(handle))
+            self.assertEqual(row['measurement_basis'], 'idle_subtracted_apple_soc')
+            self.assertEqual(row['ram_energy'], 'nan')
+            self.assertGreater(float(row['ane_energy']), 0)
+            meta = json.loads((Path(temp)/'measurement_metadata.json').read_text())
+            self.assertEqual(meta['sessions'][0]['measurement_backend'], 'apple_powermetrics')
+            with (Path(temp)/'answers.csv').open('w', newline='') as handle:
+                writer = csv.DictWriter(handle, ['model_name','status','latency_s','energy_kwh','emissions_kg','ane_energy_kwh','ram_energy_kwh','measurement_basis'])
+                writer.writeheader()
+                writer.writerow(dict(model_name='test', status='ok', latency_s=2, energy_kwh=row['energy_consumed'],
+                                     emissions_kg=row['emissions'], ane_energy_kwh=row['ane_energy'],
+                                     ram_energy_kwh='nan', measurement_basis=row['measurement_basis']))
+            from pypdf import PdfReader
+            text = '\n'.join(p.extract_text() for p in PdfReader(generate(Path(temp))).pages)
+            self.assertIn('ANE energy', text)
+            self.assertIn('RAM energy is N/A', text)
+
+    def test_start_failure_closes_monitor_and_does_not_fallback(self):
+        from mac_power import PowermetricsTracker
+        from unittest.mock import Mock
+        fake = Mock()
+        fake.start.side_effect = PermissionError('sudo unavailable')
+        with tempfile.TemporaryDirectory() as temp, patch('mac_power.OllamaPowerMonitor', return_value=fake):
+            tracker = PowermetricsTracker('inference', 'LLM_only_q1', temp)
+            with self.assertRaises(PermissionError): tracker.start()
+            fake.stop.assert_called_once()
+            self.assertFalse(tracker.started)
+
+    def test_comparisons_reject_different_energy_definitions(self):
+        from compare_reports import validate
+        runs = [dict(folder=Path('a'), metadata={'Pipeline':'Normal LLM', 'Measurement basis':'codecarbon_machine'}, questions={'q':{}}),
+                dict(folder=Path('b'), metadata={'Pipeline':'Normal LLM', 'Measurement basis':'idle_subtracted_apple_soc'}, questions={'q':{}})]
+        with self.assertRaisesRegex(ValueError, 'different energy definitions'): validate(runs)
+
+    def test_request_csv_preserves_header_order_and_rejects_drift(self):
+        from powermetrics_ollama import OllamaPowerMonitor
+        with tempfile.TemporaryDirectory() as temp:
+            monitor = object.__new__(OllamaPowerMonitor)
+            monitor._request_csv = Path(temp) / 'requests.csv'
+            monitor._append_request({'a': 1, 'b': 2})
+            monitor._append_request({'b': 4, 'a': 3})
+            with monitor._request_csv.open(newline='') as handle:
+                self.assertEqual(list(csv.DictReader(handle)), [{'a':'1','b':'2'}, {'a':'3','b':'4'}])
+            with self.assertRaisesRegex(ValueError, 'Incompatible'):
+                monitor._append_request({'a': 5})
+
+    def test_cleanup_even_when_process_termination_fails(self):
+        import io
+        import threading
+        from unittest.mock import Mock
+        from powermetrics_ollama import OllamaPowerMonitor
+        monitor = object.__new__(OllamaPowerMonitor)
+        monitor._stop = threading.Event()
+        monitor._proc = Mock()
+        monitor._proc.poll.return_value = None
+        monitor._proc.send_signal.side_effect = OSError('signal failed')
+        monitor._proc.kill.side_effect = OSError('kill failed')
+        monitor._proc.stdout = io.BytesIO()
+        streams = [io.BytesIO() for _ in range(4)]
+        for name, stream in zip(('_power_jsonl','_process_jsonl','_raw_handle','_stderr_handle'), streams):
+            setattr(monitor, name, stream)
+        with self.assertRaises(OSError): monitor.stop()
+        self.assertTrue(monitor._proc.stdout.closed)
+        self.assertTrue(all(s.closed for s in streams))
+
+    def test_ollama_pid_matches_configured_listening_port(self):
+        from powermetrics_ollama import _discover_ollama_roots
+        from unittest.mock import Mock
+        proc = Mock(pid=123, info={'pid':123, 'name':'ollama', 'cmdline':['ollama','serve'], 'ppid':1})
+        proc.net_connections.return_value = [SimpleNamespace(status='LISTEN', laddr=SimpleNamespace(port=11435))]
+        with patch.dict('os.environ', {'OLLAMA_URL':'http://127.0.0.1:11435', 'OLLAMA_SERVER_PID':'123'}), patch('powermetrics_ollama.psutil.process_iter', return_value=[proc]):
+            self.assertEqual(_discover_ollama_roots()[0], [123])
+            proc.net_connections.return_value[0].laddr.port = 11434
+            self.assertEqual(_discover_ollama_roots()[0], [])
+
+
 if __name__ == '__main__':
     unittest.main()

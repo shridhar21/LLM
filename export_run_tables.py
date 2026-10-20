@@ -21,7 +21,7 @@ METRICS = ['Execution position', 'CPU energy (kWh)', 'GPU energy (kWh)',
            'RAM energy (kWh)', 'Calculated CPU emissions (g CO2eq)',
            'Calculated GPU emissions (g CO2eq)', 'Calculated RAM emissions (g CO2eq)',
            'Latency (s)', 'Input tokens', 'Output tokens',
-           'Reconstructed input tokens', 'Reconstructed saved-answer tokens']
+           'Reconstructed input tokens', 'Reconstructed saved-answer tokens', 'ANE energy (kWh)']
 
 
 def number(value, context):
@@ -84,7 +84,8 @@ def read_run(folder, questions):
                        number(row.get('input_tokens'), folder.name),
                        number(row.get('output_tokens'), folder.name),
                        number(row.get('reconstructed_input_tokens'), folder.name),
-                       number(row.get('reconstructed_output_tokens'), folder.name)])
+                       number(row.get('reconstructed_output_tokens'), folder.name),
+                       number(row.get('ane_energy_kwh'), folder.name)])
     if sorted(positions) != list(range(1, len(questions) + 1)):
         raise ValueError(f'{folder.name}: execution positions must be a permutation of 1..N')
     return result
@@ -139,6 +140,12 @@ def export(folders, output, bank_path=BANK):
         raise FileExistsError(f'Output already exists; choose another --output path: {output}')
     bank = load_bank(bank_path)
     questions = bank['Question'].tolist()
+    bases = set()
+    for folder in folders:
+        with (folder / 'answers.csv').open(encoding='utf-8-sig', newline='') as handle:
+            bases.update(row.get('measurement_basis') or 'codecarbon_machine' for row in csv.DictReader(handle))
+    if len(bases) > 1:
+        raise ValueError('Cannot export a comparison mixing CodeCarbon and idle-subtracted Apple SoC energy')
     if len(set(questions)) != len(questions):
         raise ValueError('Questionbank contains duplicate question text; matching is ambiguous')
     labels = [[i, f'{row.question_type} - {row.topic_sheet}']

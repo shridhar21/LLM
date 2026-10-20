@@ -1,0 +1,665 @@
+{
+  "schema_version": 1,
+  "claim_id": "llama-three-machine-descriptive-comparison",
+  "repository": {
+    "commit": "3de2fc756d4a0501f56c099cd10949381631c8a0",
+    "dirty": true
+  },
+  "command": "C:\\Users\\Asus\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe analyse_llama_machines.py --local-models C:/Users/Asus/.ollama/models",
+  "environment": {
+    "software": [
+      "Python 3.14.3",
+      "Matplotlib 3.10.8"
+    ],
+    "hardware": "Windows-11-10.0.26200-SP0"
+  },
+  "mathematics": {
+    "assertion_tested": "Descriptive question/machine emissions variation and token associations on the supplied matched runs",
+    "coefficient_domain": "IEEE-754 double precision; source decimal measurements converted to float",
+    "conventions": "sample variance ddof=1; average ranks for ties; within-question/machine OLS; actual/reconstructed token bases separate",
+    "inputs": [
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\questionbank.xlsx",
+        "sha256": "05d6a2a27b93bacf99885650a64575d50cf3a8ff652ee577a019ba0b5989a258"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\analyse_llama_machines.py",
+        "sha256": "289998f71a97a3edb62bdf325738eb6b6c88fae1780a0165bb814023d34123c9"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\question_order.py",
+        "sha256": "9c41591504b7470194abe366b9360c93f05e26f3438e77b6de9ea48bf807bf4b"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\conversation.py",
+        "sha256": "fe8918c47982caae4e17c8efe4b0ab70eadd8eb4c5208372e24bb34eb69d1d29"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original\\answers.csv",
+        "sha256": "33095ef79d0b6d033be99f62e29ea862bde6b9c78972193bb075daa5d933570c"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original\\question_order.json",
+        "sha256": "499986b57528bea589ab626241dc5950f5f758060b6a2f43a19b3e179cb490e6"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original\\emissions.csv",
+        "sha256": "d0c99fe01c08a178f15a8196cee2dd2366b341546585bcfc44e1a330e6135ae0"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original\\measurement_metadata.json",
+        "sha256": "d4e39899817e185b5e4995c153e945debb2aed7d14791a88647dd8f843079784"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original\\conversation_context.json",
+        "sha256": "e5c14640c2ea792bade9c4794c866eb10b8b1507fd83740651a290241eb7be01"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original\\token_reconstruction.json",
+        "sha256": "824c976ab9e5959eaa46b7b9c8e2bf257acc90bd64f81975e79a0f4d95f6f656"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics\\answers.csv",
+        "sha256": "1004ed5d94a5ae359feb5a152c801efe0b3a9f0d71437ed85155f41a6760f117"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics\\question_order.json",
+        "sha256": "bc1dbed24c9cf1026f34120029aa4372f9104b56064d03c8311eb0ca9293334e"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics\\emissions.csv",
+        "sha256": "8da5329151a4b4644bc9ac0f1b245526620f5e4bcede4f3ce1b3c76ebcdf684a"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics\\measurement_metadata.json",
+        "sha256": "89fcfaed49391c541691176fe027090b92de343eac127af7e4f13f9f224bd71d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics\\conversation_context.json",
+        "sha256": "6dd8a8648a0cdcafb689b1a3b7f7fc11960a136bbf7116a3d61cafb4370ffec0"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics\\token_reconstruction.json",
+        "sha256": "696ba6128e749535ebfd6d6937d3959fa7e62ba839f2e86160afa765d5c0c01e"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all\\answers.csv",
+        "sha256": "40cab4880d7a4fe8d0a9f32be7cac584657e04fbcf311621c077b4611965cd8a"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all\\question_order.json",
+        "sha256": "ae3aea6143436a8937d67d5d27db8bcdaf200908d81f3eb9e5bafdc56c779625"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all\\emissions.csv",
+        "sha256": "2851c71ddbc8bde93c27591985d8f0c30dae1d9ebe1aa49a0c506f7116aa0383"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all\\measurement_metadata.json",
+        "sha256": "794a78318e751b4cb34c4249d2d48276391ba8e32c6386594e3ca0f8fa20c690"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all\\conversation_context.json",
+        "sha256": "49556a3b9c69ca6f02e63071f9b2cff07abd0fd14293ee101cf59e558c119de7"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all\\token_reconstruction.json",
+        "sha256": "f3640eb1dee33e3c5bd00600ec0c8bbecbb4975bbef11adc0ab47e765451ff45"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics\\answers.csv",
+        "sha256": "e9585d1702d29b3ac0022dce1e3299c3cee42f416b0657bfc7684a21dd6f1b5d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics\\question_order.json",
+        "sha256": "d069259b10bc25bf9a2af107c07414bacf6e1c8f0b05426a4d23c49e1080331f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics\\emissions.csv",
+        "sha256": "ef02e7096969f15481514211a650ab1de3b9a4e9b051a5a8700946ff39741e6d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics\\measurement_metadata.json",
+        "sha256": "8ae42328d75e1160d8e012e2152e91c351a300ce9ef035c876868ebc17a405f9"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics\\conversation_context.json",
+        "sha256": "c94e96bb7a39619c18a0f1c848c99c38fbe696c3ede95b8a7b2678e1e28b5622"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics\\token_reconstruction.json",
+        "sha256": "39ae181a9d54017a87dfb5925f847f914b44d0e2930d6ae60c73fb49b2ff5705"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions\\answers.csv",
+        "sha256": "e87e8948befad4f8690baf6ea18085254d60ea2608d779dba9589da48b03eb99"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions\\question_order.json",
+        "sha256": "26e9f922cacc16aceb3e2c6075921099f3c6ae25e6211339f2d8235177e3e77f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions\\emissions.csv",
+        "sha256": "8f87623e4fb10267ccc7ce9b0a9170b60ce9a82f5ff830aa0f3606c6f9f1298e"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions\\measurement_metadata.json",
+        "sha256": "19daf59803990dde9960b9c5fb5e32d816bc59a0297d3bcd58569a15cfcae586"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions\\conversation_context.json",
+        "sha256": "d9ee573eeaf86511c7b57f961ae0f96f786ad3a3c7c3ea26344a55267c75d672"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions\\token_reconstruction.json",
+        "sha256": "ba9f9fc92932bd23a55584ac4e72bb906e3ec9a1c9519108152d9edf154e89fb"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-16_02-03-52-gemma3_4b-original\\answers.csv",
+        "sha256": "0525ee04ebe2e0517eaa9664e56b6309dc6a03b8c834686e892f16fdae751f69"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-16_02-03-52-gemma3_4b-original\\question_order.json",
+        "sha256": "499986b57528bea589ab626241dc5950f5f758060b6a2f43a19b3e179cb490e6"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-16_10-13-53-gemma3_4b-mix_questions-keep_topics\\answers.csv",
+        "sha256": "63f5720e36e79d4cdb28541242da642978feba5b193e48b0ab643c709e7aa6ce"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SV\\exp1_llm_only_2026-10-16_10-13-53-gemma3_4b-mix_questions-keep_topics\\question_order.json",
+        "sha256": "93286abf2f170c8e06032fa4b751e44bc48fac794cef57b122c24f15ec2cfc46"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e1\\answers.csv",
+        "sha256": "2ce30ffa68bd0b6bf76a9bdf78f27ce7d4f628d7a34dc8375d0769e5401ca5f7"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e1\\question_order.json",
+        "sha256": "499986b57528bea589ab626241dc5950f5f758060b6a2f43a19b3e179cb490e6"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e1\\emissions.csv",
+        "sha256": "53eeb9658ee3ec009a4b1562cdcd55e33af3f76fd92ec416a7f7bdb2ddee3efb"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e1\\measurement_metadata.json",
+        "sha256": "0517b9fc8eea5ab4e1962bc400fd626870396e5df85f3eab2cb43cbd394056f7"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e1\\conversation_context.json",
+        "sha256": "6411bd7fe42dd7c64cc52fabf0f805225ea0c3ade4eb5a35232ec8e6e2f7b09a"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e1\\token_reconstruction.json",
+        "sha256": "b0c69389a0927f8db35a400fec0906927a1c9cfe6831a62865f0b53a456da198"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e2\\answers.csv",
+        "sha256": "836cbd99bc324d2b36afa90fcfa963a3a000c5c2a2c8a50d79d661446aab66b2"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e2\\question_order.json",
+        "sha256": "d5bdb0bbb5ccd03d49e5b66fc56d3242d268e778f82a9b420d7326ee94939243"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e2\\emissions.csv",
+        "sha256": "18afcbdf092d36164801c8711eb3c2b243388a19563df915be9fce3d48f79131"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e2\\measurement_metadata.json",
+        "sha256": "3fd3cb243f6f97b28d3eeca95fcd69bce05f7d83f2b2e1cfe59459f0e7f0ea75"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e2\\conversation_context.json",
+        "sha256": "67456aedbdd05fc6b7f8853626429e738b01c8a09efd33674d181b2061c6dcb5"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e2\\token_reconstruction.json",
+        "sha256": "80b5af9922169611ba679154219acebb03d3e07b5934be3ffb5668c96434d761"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e3\\answers.csv",
+        "sha256": "8dbac719290477442b82288bf65ef7d1121cd18638c2258d870dc2531db7fbf7"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e3\\question_order.json",
+        "sha256": "ca66d2532cf22c14e6910986afae0c1793c00386bd1556b585c647a963c868bb"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e3\\emissions.csv",
+        "sha256": "139e8eb7b4eb8d9a7d8371acc81de657b54ebfbb7e9eda5a51879e76b0f6d988"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e3\\measurement_metadata.json",
+        "sha256": "f75912188e6a6f0d0e630c342b229467fe20a52c962e5739758a492981c69b27"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e3\\conversation_context.json",
+        "sha256": "cae77b9003f66151e8c22a977ce12a7030c2c33a657424f69075514f85ab1751"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e3\\token_reconstruction.json",
+        "sha256": "9e79176518e2e7dcbf39ef5b93d7d15a69c74d71bd1eb37d2b69b6961ddfa235"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e4\\answers.csv",
+        "sha256": "1ae7a920d1e97cc3e47f7126e3264ccb0f5cb1f30a0c01fb921fed371910ec0f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e4\\question_order.json",
+        "sha256": "f7b4c2454b81df26a4f6ef84c4c1c4a81a8f7aec68692cd49fdbfe8ed62bd2f3"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e4\\emissions.csv",
+        "sha256": "14a505bd9c7b02ea80d140c11fef2dbd6872510a388e89f3840fa806713966c5"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e4\\measurement_metadata.json",
+        "sha256": "73a1d4fc9a2d879ea867c4490592c1fbd1c57faa204f9a8f17286ffa29903e42"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e4\\conversation_context.json",
+        "sha256": "9f1da8cf400a73b61ea16e6122c5be522f65319ee43f42472e4567f04baeb168"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e4\\token_reconstruction.json",
+        "sha256": "3cb4ed34455ed25c54dac8d3ce94c62db5188877768272700b5c2720ad032e15"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e5\\answers.csv",
+        "sha256": "22e4dd1b802f2e8b37c3034fcf788c4783894f861e152ffcc12d9f248c5358b2"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e5\\question_order.json",
+        "sha256": "d297d62dc74312237613bc7a6c5e3f7055fef6a132df4ec30d7f1338868fb010"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e5\\emissions.csv",
+        "sha256": "8216ed885d919b155695c71898441f2b216a33c7abc18ab73ab6ccc50e642dbc"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e5\\measurement_metadata.json",
+        "sha256": "218719952618356afb5c7f8f0cf882712488eb0f9bdedf9be96ec3f0edbd7c90"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e5\\conversation_context.json",
+        "sha256": "15a055742a84eb9d06d2783ac16138c89097c61131931478263f0eac1b76ad62"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\e5\\token_reconstruction.json",
+        "sha256": "5639299e9abe1c1a47cc96b7cfc0780c5d5066fb91168b61b67f6305890f67e6"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\h1\\answers.csv",
+        "sha256": "24ad41390dc583bbc2c5e75dbbe1bcd7175202e9689af3c8ba02f6ac0538296f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\h1\\question_order.json",
+        "sha256": "499986b57528bea589ab626241dc5950f5f758060b6a2f43a19b3e179cb490e6"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\h2\\answers.csv",
+        "sha256": "27a4749461ce261be22febd91abefac9ee147e2707624dcb8b070a893d57f335"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\h2\\question_order.json",
+        "sha256": "add5fad56e7aa345d9f07a0a9871a9be135dde3bec44989e49bf9ed00057cb9a"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\h3\\answers.csv",
+        "sha256": "3a1410ecbe1894997eff5fd7f74cf391dd229d49cb1ce4688aa59654327f4547"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SN\\h3\\question_order.json",
+        "sha256": "b67a85aa687733f4c65971a5b3ff08bfff1d80fa2ed433024ed0e2928c020668"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order\\answers.csv",
+        "sha256": "369669b7bc5946fb310fe594c9d27c4cd21fd987d22e0536c9aac4cc5a4e6a14"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order\\question_order.json",
+        "sha256": "578c7c8f33a63de381230131f1e42d2b47a70b14e7faa46e47d03cd11cbbe8d4"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order\\emissions_llama3.2_original_order.csv",
+        "sha256": "bf1a2c15e561c5260d322d09710401345989c371522f6e7ffe495a3395a1853a"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order\\measurement_metadata.json",
+        "sha256": "373ec148f2d2023e461ef41090605c086e820f1927957af66b4f5780a8f709d2"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order\\conversation_context.json",
+        "sha256": "2e762b7385dfd0301fdb017b4224971dcbdbf052f5167d7c612815f914914bdc"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order\\token_reconstruction.json",
+        "sha256": "5e31aec35f79ae1edff3118c979ca9be76be9c35b5d2c1993074def863c732bd"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics\\answers.csv",
+        "sha256": "a7c6651d45e43a449515a7d783f1420e9fed78eb6af727ace7252e8b677d2961"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics\\question_order.json",
+        "sha256": "b0ed3ed4bdb6dfeb7ba90f9c730326de4c21377109642d70aecc57d747d7ed5d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics\\emissions_randomly_mix_only_within_topics_llama3.2.csv",
+        "sha256": "06a2a607616569d07aee5536aecc5bcb767f80b3903a581102cba81f5dcd8d53"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics\\measurement_metadata.json",
+        "sha256": "c15ef331469089d67afc2519a957cc839a5e8f6882015ebe21fcae87f29ed328"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics\\conversation_context.json",
+        "sha256": "ff1bece317d5af078399c62a30852411e4f810af7d17da42496ecde7b980a292"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics\\token_reconstruction.json",
+        "sha256": "6ba058bb3fd531a7ae364090a66570a0a7ec07c72d1bf6ba27c01088043a66dd"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder\\answers.csv",
+        "sha256": "e77b4c16a2f19faa2a696c5a2b21151929db1458cb22bc0479b79914af5dd85e"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder\\question_order.json",
+        "sha256": "b8c5386ee56b99d11d39a811432a238fde119859a20c535649bd5fbd6dee974c"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder\\emissions_llama3.2_random_follow-up_inorder.csv",
+        "sha256": "0bc9041d10a09633395439820bd47403b59926ba2d4ec0ad21a97da0795c4f45"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder\\measurement_metadata.json",
+        "sha256": "d7e0b3e125a75a4c02da33504723511c36ef8c844cc2e13fd3ffaeb001dd3c7e"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder\\conversation_context.json",
+        "sha256": "55f8a77d8d8d5d61c2418431e29ee39215a132c36e72f7f3cc417a3a3af2f056"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder\\token_reconstruction.json",
+        "sha256": "b22f789be420ebf81fa8a06d3126d2fe93bd1af221e5882681ca13023396f1f1"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_14-33-16-qwen3_original_order\\answers.csv",
+        "sha256": "576cce9f69f3fac6a6894b17677bec4dd6ca1588aec09cae5d6a76f562ed3a28"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-13_14-33-16-qwen3_original_order\\question_order.json",
+        "sha256": "578c7c8f33a63de381230131f1e42d2b47a70b14e7faa46e47d03cd11cbbe8d4"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-14_05-26-43-qwen3_random_mix_only_within_topics\\answers.csv",
+        "sha256": "be5d4ec920b8f688c3157f7ffda405f2d464218a12295e895825b3430b2f9ffa"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-14_05-26-43-qwen3_random_mix_only_within_topics\\question_order.json",
+        "sha256": "3d4dd42a6435370000096ec340aabf0708bb35f348925a8005ab56a45fcb6424"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-14_12-47-00-qwen3-random_follow-up-inorder\\answers.csv",
+        "sha256": "6f6548f499a4c1ae983b7f74ba42396bbdac38f8bef229785d4b9fa9182d67d8"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-14_12-47-00-qwen3-random_follow-up-inorder\\question_order.json",
+        "sha256": "dcada70e978c4dfd2de502031ad4964ef30389af4d806f6c4eaf13f23477010b"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-15_05-13-57-gemma3-original_order\\answers.csv",
+        "sha256": "6874032acf2e7e812d150d016e3edb030db8ffd16e9b3a433e7735493de13d49"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-15_05-13-57-gemma3-original_order\\question_order.json",
+        "sha256": "578c7c8f33a63de381230131f1e42d2b47a70b14e7faa46e47d03cd11cbbe8d4"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-15_10-41-52-gemma3-random_mix_only_within_topics\\answers.csv",
+        "sha256": "3aeb21dc8d6bea16e46ccebb5521c52565489328de7b8b9bbb2df0cbfd479f2f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-15_10-41-52-gemma3-random_mix_only_within_topics\\question_order.json",
+        "sha256": "901ec8b30d9fed94112b487488b97d3661742c548a589b389e8d271d5ff94a66"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-15_12-57-32-gemma3-random_follow-up-inorder\\answers.csv",
+        "sha256": "7228fe1e299b1b4e2d5b5e0df5bda56febade7ccc2c564ede5224bed255c06cf"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-15_12-57-32-gemma3-random_follow-up-inorder\\question_order.json",
+        "sha256": "4301ccdd9eab14cfcf6edbcaa312885e6cd84322d6754767b7bd07293c01231e"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics\\answers.csv",
+        "sha256": "2a96e8e22c0180ba698c29c6fa24ae824f622300ce06b5bb9cc957e40f823ba0"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics\\question_order.json",
+        "sha256": "548cf73e2fa0355c9d9ebee5b0f862467df136f968d7a5c58e987ccdcdc1017f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics\\emissions_llama3.2_3b-shuffle_types_questions-keep_topics.csv",
+        "sha256": "f998614af5d4bcaeaf865030ee8b2146275fc959d42a724234d2fa5ab16410b0"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics\\measurement_metadata.json",
+        "sha256": "9d8f302ac43813dd8365bf3045fc0009404fe31ca7e8f57e403c63801b434453"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics\\conversation_context.json",
+        "sha256": "326984d955eb2f18c6c86b79a96a99b0abec8b998dc5d80d65fe2cfaa9d717c6"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics\\token_reconstruction.json",
+        "sha256": "8250f6645dd9990dcbf016fa42224ab70c891e9d0bb385da27352bf0570bc7d0"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions\\answers.csv",
+        "sha256": "68ec790d0839755b1c87268e71b8a0a6690d2b08a6f1f09d3dec6164a3eadb9d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions\\question_order.json",
+        "sha256": "659ad30ba0058aaa07933c8bab03ef6aa4c19728228da25a1b91e837b892719f"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions\\emissions_llama3.2_3b-shuffle_topics-keep_types_questions.csv",
+        "sha256": "0ba911ec15f073fd1bf4531a5b289334d83579e0c7d4acee824b48d64b64a7c9"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions\\measurement_metadata.json",
+        "sha256": "b5319845dd2802242b801e962aaa16a87191c000f5b5c122166e4dd547acb015"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions\\conversation_context.json",
+        "sha256": "9bec1b50dd45f9a0c4ffef40e5511786c92c4e5d9efdca4b10c3cfed2a3aee9d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions\\token_reconstruction.json",
+        "sha256": "9cdf3659c702e36abd78c30a4243948ea32215f2d9a0a3d6f973c336ca35f7c5"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_07-48-46-gemma3_4b-shuffle_types_questions-keep_topics\\answers.csv",
+        "sha256": "2dddbc027799d201dd27f16147d578ab7958ea2c7b5d9478f9d3cf2821de6b0d"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_07-48-46-gemma3_4b-shuffle_types_questions-keep_topics\\question_order.json",
+        "sha256": "a63abe45ae83a80f4317f3a6a1b7a9b07759409c65ffbe2fd090e878de9ebe79"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_10-52-34-gemma3_4b-shuffle_topics-keep_types_questions\\answers.csv",
+        "sha256": "3a7bfe7cfd48daba56c2d1b560260696f07e8e42cd1ebccaded476a3bc40f32c"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_10-52-34-gemma3_4b-shuffle_topics-keep_types_questions\\question_order.json",
+        "sha256": "74ab7644a7cf27a6144b62fcbc98338f5d298ca41e00f61629c9d87f75a6fd0b"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_13-33-34-qwen3_4b-shuffle_types_questions-keep_topics\\answers.csv",
+        "sha256": "46d9e00f0cb7c5bee7abd9b5f053cfa1b5f636568294224bd99cb483dc61d887"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_13-33-34-qwen3_4b-shuffle_types_questions-keep_topics\\question_order.json",
+        "sha256": "5f6e7bb459cdd3dcbff95499e812e9c999460fc5e81aa1f89af1c74896f80c4b"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_19-48-58-qwen3_4b-shuffle_topics-keep_types_questions\\answers.csv",
+        "sha256": "7725a5a8e36981ca048fb8dd56eae7dae50609624a3edb973b079576cf49ee7c"
+      },
+      {
+        "path": "C:\\Users\\Asus\\Desktop\\llmtest\\emissions_reports\\SC\\exp1_llm_only_2026-10-16_19-48-58-qwen3_4b-shuffle_topics-keep_types_questions\\question_order.json",
+        "sha256": "971692313ae7737ce91f86fc3a2f7e5927699e52582c59318ff326c547035f1c"
+      },
+      {
+        "path": "C:\\Users\\Asus\\.ollama\\models\\manifests\\registry.ollama.ai\\library\\llama3.2\\3b",
+        "sha256": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+      },
+      {
+        "path": "C:\\Users\\Asus\\.ollama\\models\\blobs\\sha256-34bb5ab01051a11372a91f95f3fbbc51173eed8e7f13ec395b9ae9b8bd0e242b",
+        "sha256": "34bb5ab01051a11372a91f95f3fbbc51173eed8e7f13ec395b9ae9b8bd0e242b"
+      }
+    ],
+    "bounds": {
+      "machines": 3,
+      "runs": 15,
+      "questions": 160,
+      "observations": 2400
+    },
+    "non_claims": [
+      "No causal shuffle effect",
+      "No universal proportionality",
+      "No verified historical model-binary identity",
+      "No replicate-based uncertainty"
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "none; deterministic descriptive analysis",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-10-18T11:33:00.033907+00:00",
+    "runtime_seconds": 14.34392910002498,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "report_assets/llama_comparison/cross_machine_questions.csv",
+      "sha256": "b0a717616764eeb07ee5ffe6ac299581896f3bbc7ec42b17181be419d84f59c1"
+    },
+    {
+      "path": "report_assets/llama_comparison/metadata.json",
+      "sha256": "60f29487ffdcaf5ac11760ac736ad7c7a097914280aa770cb915095b816f8c24"
+    },
+    {
+      "path": "report_assets/llama_comparison/model_inventory.csv",
+      "sha256": "5489f820076d8da9ccd05e85a3294093d873fc2443c72cdf08a761583ab23a10"
+    },
+    {
+      "path": "report_assets/llama_comparison/observations.csv",
+      "sha256": "a806e8a515a1dbb30134cd96ff78bb3bd8f26abcde2f06d4c3058807ab259ade"
+    },
+    {
+      "path": "report_assets/llama_comparison/question_statistics.csv",
+      "sha256": "d35301977d80664ab03070a468b531f98fc471152e761146c6f9b838cbf3935a"
+    },
+    {
+      "path": "report_assets/llama_comparison/run_totals.csv",
+      "sha256": "5af5b144bd1bd0b81fafecb13e190435bcff5ace4b7319699811716641a6f6c0"
+    },
+    {
+      "path": "report_assets/llama_comparison/token_overview.pdf",
+      "sha256": "9bfd2dc654c7e8d0fdf2749edd4ce4213f111b53214cdce23b1a69db7278a2c2"
+    },
+    {
+      "path": "report_assets/llama_comparison/token_relationships.csv",
+      "sha256": "c25859898ba6e8a0fff88a2241db18ba4933522f00dfe7b9ae205f7c45e8c90d"
+    },
+    {
+      "path": "report_assets/llama_comparison/tokens_q001_reconstructed.pdf",
+      "sha256": "713226d7945aead276cb4eba6f81db4e37ca9ff48711ad2e700a6d190fd5d143"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_all_questions.pdf",
+      "sha256": "267bcc60338534d369f59420ef313666293634027fbacdfe0d17e657b7b72260"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q001_012.pdf",
+      "sha256": "6b2a6220f7c6b3e7f1cf46adc3a0154c41bcc794ad0607d27410d0ad2aa89de1"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q013_024.pdf",
+      "sha256": "781f52cd8de120bc8c04c91d9abaea260937bebca78f81303a639f33c5f38738"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q025_036.pdf",
+      "sha256": "6fcf79b34d1a9907ae2631e9e1f85a7d64650713a2e7b63a4a530dff175e2acb"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q037_048.pdf",
+      "sha256": "c4e5bae4c7d86b89e585e7241ec2ab4ddec295df8bce49c1f22126f3572f3f29"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q049_060.pdf",
+      "sha256": "09b18c028961aebb2d226c1f7ce271be6c1150bcb9071adceb0db2f9e57bf8b9"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q061_072.pdf",
+      "sha256": "701717aa528b4013d56e87b214722a964e4306545a6045b8e32d9f2813322505"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q073_084.pdf",
+      "sha256": "cad57d248e4adb2af8da48df6d269b28ed58638d314a7b39facd14cd8512a61c"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q085_096.pdf",
+      "sha256": "69017838c6c1deff7392936667c983b27376ef8f7745911475483365fb6ee9bb"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q097_108.pdf",
+      "sha256": "00d7b214b32eb8a63c6e8de21ec18e241e68ed1b3b91acfb80d9e9cf14d60a4e"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q109_120.pdf",
+      "sha256": "addf26336c093930fd993f61fb27a295c698cdedc42b14b3ddc75b39f6971b35"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q121_132.pdf",
+      "sha256": "ea4292a060b5f47ce5fa4efac3a8f6e0f269b41e419a16085eb114458b33f560"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q133_144.pdf",
+      "sha256": "4b05673f06d1eb81e6228c381817eed623451c6fb17fa35a41f1d149a01f38df"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q145_156.pdf",
+      "sha256": "cd0a02af1d38b687cceb9083520aa593ae21f76d68ccdfccf8052483e660ded0"
+    },
+    {
+      "path": "report_assets/llama_comparison/unified_q157_160.pdf",
+      "sha256": "0cac8c26ffbaf130f22607999ba470dae0b330643b5b54f6aabbe24dfa26fde3"
+    }
+  ],
+  "checks": [
+    "Exact question sets",
+    "Follow-up prerequisite order",
+    "Raw emissions/energy prefix agrees",
+    "One run per matched scheme/machine",
+    "Source hashes unchanged"
+  ],
+  "result": "Execution completed; numerical benchmark checks are documented in the project tests.",
+  "residual_risks": [
+    "exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "Five non-replicated scheme observations per fit",
+    "Historical saved-answer reconstruction",
+    "Different hardware measurement backends"
+  ]
+}

@@ -1,5 +1,6 @@
 """Select an installed generation model from the local Ollama server."""
 import requests
+from cancellation import ollama_base_url
 
 OLLAMA_URL = "http://127.0.0.1:11434"
 
@@ -7,7 +8,7 @@ OLLAMA_URL = "http://127.0.0.1:11434"
 def select_model():
     """Return the exact installed model name, or explain why selection cannot start."""
     try:
-        response = requests.get(f"{OLLAMA_URL}/api/tags", timeout=10)
+        response = requests.get(f"{ollama_base_url()}/api/tags", timeout=10)
         response.raise_for_status()
         data = response.json()
     except (requests.RequestException, ValueError) as exc:

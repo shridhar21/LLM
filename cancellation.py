@@ -3,6 +3,7 @@ import csv
 import functools
 import json
 import math
+import os
 import signal
 import shutil
 import tempfile
@@ -143,9 +144,12 @@ def _save_cancelled(state):
                     if r.get('run_id') == tracker_run_id(phase['tracker'])), {})
         return {'emissions': phase.get('emissions', float('nan')),
                 'latency': phase.get('latency', time.time() - phase['started']),
+                'measurement_basis': row.get('measurement_basis', getattr(phase['tracker'], '_measurement_basis', 'codecarbon_machine')),
+                'measurement_backend': row.get('measurement_backend', getattr(phase['tracker'], '_measurement_backend', 'codecarbon')),
+                'attribution_status': row.get('attribution_status', ''),
                 **{key: finite(row.get(column)) for key, column in
                    [('energy', 'energy_consumed'), ('cpu', 'cpu_energy'),
-                    ('gpu', 'gpu_energy'), ('ram', 'ram_energy')]}}
+                    ('gpu', 'gpu_energy'), ('ram', 'ram_energy'), ('ane', 'ane_energy')]}}
     if state.get('question') and phases:
         path = folder / 'answers.csv'
         rows = _rows(path)
@@ -166,14 +170,19 @@ def _save_cancelled(state):
                 result.update(total_latency_s=observed('latency'), total_emissions_kg=observed('emissions'),
                               total_emissions_g=observed('emissions') * 1000, energy_kwh=observed('energy'),
                               chunks=[], retrieved_k=0)
-                for key in ('cpu', 'gpu', 'ram'):
+                for key in ('cpu', 'gpu', 'ram', 'ane'):
                     result[f'{key}_energy_kwh'] = observed(key)
+                last = parts['generation'] or parts['retrieval'] or {}
+                for key in ('measurement_basis', 'measurement_backend', 'attribution_status'):
+                    result[key] = last.get(key, '')
             else:
-                values = metrics('generation') or dict.fromkeys(('emissions', 'latency', 'energy', 'cpu', 'gpu', 'ram'), float('nan'))
+                values = metrics('generation') or dict.fromkeys(('emissions', 'latency', 'energy', 'cpu', 'gpu', 'ram', 'ane'), float('nan'))
                 result.update(latency_s=values['latency'], emissions_kg=values['emissions'],
                               emissions_g=values['emissions'] * 1000, energy_kwh=values['energy'])
-                for key in ('cpu', 'gpu', 'ram'):
+                for key in ('cpu', 'gpu', 'ram', 'ane'):
                     result[f'{key}_energy_kwh'] = values[key]
+                for key in ('measurement_basis', 'measurement_backend', 'attribution_status'):
+                    result[key] = values.get(key, '')
             # Reuse the existing schema so completed rows are never reinterpreted.
             fields = list(rows[0]) if rows else list(result)
             with path.open('a', encoding='utf-8', newline='') as handle:
@@ -273,11 +282,34 @@ def publish_index(folder, index, chunks, embeddings, metadata, sources):
 
 class ModelAnswer(str):
     """A normal answer string carrying the usage reported by this Ollama request."""
-    def __new__(cls, text, input_tokens=None, output_tokens=None):
+    def __new__(cls, text, input_tokens=None, output_tokens=None, *, metrics=None):
         instance = super().__new__(cls, text)
+        metrics = metrics if isinstance(metrics, dict) else {}
+        instance.ollama_metrics = dict(metrics)
+        input_tokens = metrics.get('prompt_eval_count', input_tokens)
+        output_tokens = metrics.get('eval_count', output_tokens)
         instance.input_tokens = input_tokens if type(input_tokens) is int and input_tokens >= 0 else None
         instance.output_tokens = output_tokens if type(output_tokens) is int and output_tokens >= 0 else None
+        for name in ('prompt_eval_count', 'prompt_eval_cached_count', 'eval_count', 'total_duration',
+                     'load_duration', 'prompt_eval_duration', 'eval_duration'):
+            value = metrics.get(name)
+            setattr(instance, name, value if type(value) is int and value >= 0 else None)
+        instance.done_reason = metrics.get('done_reason')
         return instance
+
+
+def ollama_base_url():
+    """One local endpoint for selection, context checks, warm-up and inference."""
+    from urllib.parse import urlsplit
+    value = (os.getenv('OLLAMA_URL') or os.getenv('OLLAMA_HOST') or 'http://127.0.0.1:11434').strip().rstrip('/')
+    if not value.startswith(('http://', 'https://')):
+        value = 'http://' + value
+    parsed = urlsplit(value)
+    if parsed.scheme not in ('http', 'https') or parsed.hostname not in ('localhost', '127.0.0.1', '::1', '0.0.0.0', '::') or parsed.username or parsed.password or parsed.path or parsed.query or parsed.fragment:
+        raise ValueError('Ollama must use a local HTTP(S) address, e.g. http://127.0.0.1:11435')
+    host = '127.0.0.1' if parsed.hostname in ('0.0.0.0', '::') else parsed.hostname
+    host = '[' + host + ']' if ':' in host else host
+    return f'{parsed.scheme}://{host}:{parsed.port or 11434}'
 
 
 def query_local_model(prompt, model, messages=None, options=None):
@@ -296,7 +328,7 @@ def query_local_model(prompt, model, messages=None, options=None):
                 if options is not None:
                     payload['options'] = options
                 endpoint = 'generate' if messages is None else 'chat'
-                with session.post(f'http://127.0.0.1:11434/api/{endpoint}',
+                with session.post(f'{ollama_base_url()}/api/{endpoint}',
                                   json=payload,
                                   timeout=9000, stream=True) as response:
                     resources['response'] = response
@@ -315,8 +347,7 @@ def query_local_model(prompt, model, messages=None, options=None):
                         raise RuntimeError('Ollama response ended before completion; partial output is not a successful answer')
                     if messages is not None and last.get('done_reason') == 'length':
                         raise RuntimeError('Follow-up response reached its output/context limit; incomplete answer was not added to history.')
-                    result['answer'] = ModelAnswer(''.join(pieces).strip() if pieces else str(last),
-                                                  last.get('prompt_eval_count'), last.get('eval_count'))
+                    result['answer'] = ModelAnswer(''.join(pieces).strip() if pieces else str(last), metrics=last)
         except Exception as exc:
             result['error'] = exc
         finally:

@@ -149,7 +149,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
             print(f"  ✗ Error: {error_msg}")
             
         emissions_kg = stop_tracker(tracker, run_dir)
-        latency_s = time.time() - t0
+        latency_s = max(0.0, time.time() - t0 - (tracker.prepare_time_s if getattr(tracker, '_measurement_backend', '') == 'apple_powermetrics' else 0.0))
         
         row = latest_row_for_run(emissions_csv, known_run_ids, tracker_run_id(tracker))
         if row and "run_id" in row:
@@ -172,6 +172,12 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
             "model_name": model_name,
             "input_tokens": getattr(ans, 'input_tokens', None),
             "output_tokens": getattr(ans, 'output_tokens', None),
+            "ollama_total_duration_ns": getattr(ans, 'total_duration', None),
+            "ollama_load_duration_ns": getattr(ans, 'load_duration', None),
+            "ollama_prompt_eval_duration_ns": getattr(ans, 'prompt_eval_duration', None),
+            "ollama_eval_duration_ns": getattr(ans, 'eval_duration', None),
+            "ollama_prompt_eval_cached_count": getattr(ans, 'prompt_eval_cached_count', None),
+            "ollama_done_reason": getattr(ans, 'done_reason', None),
             "latency_s": latency_s,
             "status": status,
             "error": error_msg,
@@ -181,6 +187,12 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
             "cpu_energy_kwh": reading(row, "cpu_energy"),
             "gpu_energy_kwh": reading(row, "gpu_energy"),
             "ram_energy_kwh": reading(row, "ram_energy"),
+            "ane_energy_kwh": reading(row, "ane_energy"),
+            "measurement_backend": (row or {}).get('measurement_backend', 'apple_powermetrics' if getattr(tracker, '_measurement_backend', '') == 'apple_powermetrics' else 'codecarbon'),
+            "measurement_basis": (row or {}).get('measurement_basis', 'idle_subtracted_apple_soc' if getattr(tracker, '_measurement_backend', '') == 'apple_powermetrics' else 'codecarbon_machine'),
+            "measurement_prepare_time_s": tracker.prepare_time_s if getattr(tracker, '_measurement_backend', '') == 'apple_powermetrics' else 0.0,
+            "attribution_status": (row or {}).get('attribution_status', ''),
+            "powermetrics_coverage_ratio": reading(row, 'powermetrics_coverage_ratio'),
         })
         # Save each result as it completes.
         live_csv = run_dir / "answers.csv"

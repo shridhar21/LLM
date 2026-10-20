@@ -19,6 +19,10 @@ METRICS = {
     'cpu_energy_wh': 'CPU energy (Wh)',
     'gpu_energy_wh': 'GPU energy (Wh)',
     'ram_energy_wh': 'RAM energy (Wh)',
+    'ane_energy_wh': 'ANE energy (Wh)',
+    'ollama_load_duration_s': 'Ollama model load time (s)',
+    'ollama_eval_duration_s': 'Ollama generation time (s)',
+    'ollama_prompt_eval_duration_s': 'Ollama prompt processing time (s)',
     'retrieval_emissions_g': 'Retrieval emissions (g CO2eq)',
     'generation_emissions_g': 'Generation emissions (g CO2eq)',
     'retrieval_energy_wh': 'Retrieval energy (Wh)',
@@ -98,6 +102,7 @@ def average_rows(rows):
         row = {key: base[key] for key in ('machine_index', 'machine', 'model', 'pipeline',
                'original_question', 'question', 'topic', 'question_type', 'chain', 'turn')}
         row.update(series_id='mean:'+base['model'], series=base['model']+' | mean across schemes',
+                   measurement_basis=base.get('measurement_basis', 'codecarbon_machine'),
                    scheme=', '.join(schemes), run='Mean across selected schemes', position=None,
                    gap=None, scheme_count=len(schemes), run_count=len(group),
                    status='ok' if all(r['status']=='ok' for r in group) else 'Includes failed/unknown',
@@ -178,7 +183,10 @@ def analyse_selection(payload, catalogue, machines, bank):
                     for key in ('reconstructed_input_tokens','reconstructed_output_tokens'):
                         row[key]=metric(stored,key)
                     row['token_count_method']=stored.get('token_count_method','Ollama-reported if available')
-                    for part in ('cpu', 'gpu', 'ram'):
+                    row['measurement_basis'] = run['metadata'].get('Measurement basis', 'codecarbon_machine')
+                    for target in ('load', 'eval', 'prompt_eval'):
+                        row['ollama_' + target + '_duration_s'] = metric(stored, 'ollama_' + target + '_duration_ns', 1e-9)
+                    for part in ('cpu', 'gpu', 'ram', 'ane'):
                         row[part+'_energy_wh'] = metric(stored, part+'_energy_kwh', 1000)
                     for phase in ('retrieval','generation'):
                         for target, field, scale in (('emissions_g','emissions_kg',1000),('energy_wh','energy_kwh',1000),('latency_s','latency_s',1)):
@@ -197,6 +205,8 @@ def analyse_selection(payload, catalogue, machines, bank):
             for key, description in [('questions','questions'), ('models','models'), ('schemes','shuffling schemes')]:
                 if other[key] != first[key]:
                     raise ValueError(f'Cross-machine comparison requires the same selected {description}. Adjust selections or turn off comparison.')
+    if len({r['measurement_basis'] for r in raw}) > 1:
+        raise ValueError('Select one measurement method: CodeCarbon machine energy and idle-subtracted Apple SoC energy cannot be combined.')
     means = average_rows(raw)
     displayed = means if mode == 'schemes' else raw
     if any(r['status']!='ok' for r in raw):

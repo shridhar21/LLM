@@ -1,0 +1,9 @@
+{
+  "backend": "auto",
+  "sample_interval_ms": 250,
+  "process_interval_ms": 100,
+  "idle_baseline_seconds": 5.0,
+  "idle_settle_seconds": 1.0,
+  "carbon_intensity_g_per_kwh": null,
+  "notes": "auto activates powermetrics on native Apple Silicon only. Windows/Linux and Intel Macs use CodeCarbon. Apple setup failures stop measurement; select codecarbon explicitly to use the legacy method. RAM energy is unavailable in the SoC backend."
+}

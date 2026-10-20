@@ -90,7 +90,8 @@ class ConversationMemory:
             if self.settings.get('overflow_policy') != 'reject_without_truncation' or self.settings.get('budget_method') != 'conservative_utf8_bytes':
                 raise ValueError('Unsupported conversation context policy.')
             try:
-                response = requests.post('http://127.0.0.1:11434/api/show', json={'model': model}, timeout=10)
+                from cancellation import ollama_base_url
+                response = requests.post(f'{ollama_base_url()}/api/show', json={'model': model}, timeout=10)
                 response.raise_for_status()
                 info = response.json().get('model_info', {})
                 architecture_key = str(info.get('general.architecture', '')) + '.context_length'

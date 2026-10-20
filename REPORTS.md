@@ -294,3 +294,36 @@ Manual queries still use `temp_manual_run`, replacing its answers on each run an
 Existing historical reports are preserved. The PDF generators also support older per-question report filenames.
 
 Column names, precision, units, model identifiers and calculated totals remain compatible with existing consumers. Kilogram/gram columns and RAG totals are retained for compatibility; no measurement values are rounded or changed by this cleanup.
+# Three-machine Llama analysis
+
+Run `python analyse_llama_machines.py` to analyse `emissions_reports/SV`,
+`emissions_reports/SN` and `emissions_reports/SC`. Alternatively pass three
+machine folders explicitly. It selects `llama3.2:3b` and requires exactly one
+run per machine for each of the five matched schemes. It does not run inference
+or edit source reports.
+
+Outputs are in `report_assets/llama_comparison`: CSV observations, per-question
+sample statistics, separate actual/reconstructed token relationships,
+cross-machine means, machine/model metadata, Python-generated vector figures,
+and an inline section inside the main dissertation `.tex` file. Regenerate the
+analysis before rebuilding LaTeX after input data changes. The existing earlier
+report figures still require the original PDF referenced by `\SourcePDF`.
+
+`--tick-step 0.025` controls emissions-axis density; `--questions-per-figure 12`
+controls readable combined graph pages; `--scatter-questions 1,17` chooses
+illustrative token scatter plots (all questions still receive statistics).
+The complete tall unified graph is also saved separately. Historical model
+binary identity is unverified; current local model config is labelled as such.
+Use `--local-models PATH` if Ollama assets are outside the default user folder.
+
+Pearson/Spearman/OLS are calculated within each question and machine. Missing
+and constant values are explicit, average ranks handle ties, and sample SD uses
+`n-1`. No correlations mix actual Ollama counters with reconstructed counts.
+`computation_manifest.json` records input/output hashes and generation settings.
+
+# Platform-aware Mac measurement
+
+Windows/Linux keep the existing CodeCarbon configuration. Native Apple Silicon
+uses the optional powermetrics adapter automatically. See [MAC_POWER.md](MAC_POWER.md)
+for Mac permissions, the explicit carbon-intensity setting, raw evidence files
+and the different energy scope. Historical reports are not converted.

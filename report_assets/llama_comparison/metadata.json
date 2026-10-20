@@ -1,0 +1,595 @@
+{
+  "machines": {
+    "SV": {
+      "cpu_model": "Intel(R) Core(TM) Ultra 7 155H",
+      "gpu_model": "",
+      "gpu_count": "0",
+      "ram_total_size": "15.708366394042969",
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26300-SP0",
+      "effective_scope": "machine",
+      "measure_power_secs": "1",
+      "pue": "1.0",
+      "country_iso_code": "IND",
+      "RAM_backend": "unknown",
+      "CPU_backend": "windows_emi",
+      "cpu_count": "22",
+      "python_version": "3.14.7"
+    },
+    "SN": {
+      "cpu_model": "12th Gen Intel(R) Core(TM) i5-1235U",
+      "gpu_model": "",
+      "gpu_count": "0",
+      "ram_total_size": "15.69796371459961",
+      "codecarbon_version": "3.3.0",
+      "os": "Windows-11-10.0.26200-SP0",
+      "effective_scope": "machine",
+      "measure_power_secs": "1",
+      "pue": "1.0",
+      "country_iso_code": "IND",
+      "RAM_backend": "unknown",
+      "CPU_backend": "windows_emi",
+      "cpu_count": "12",
+      "python_version": "3.14.3"
+    },
+    "SC": {
+      "cpu_model": "Apple M4",
+      "gpu_model": "",
+      "gpu_count": "0",
+      "ram_total_size": "16.0",
+      "codecarbon_version": "3.3.1",
+      "os": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+      "effective_scope": "machine",
+      "measure_power_secs": "1",
+      "pue": "1.0",
+      "country_iso_code": "IND",
+      "RAM_backend": "unknown",
+      "CPU_backend": "cpu_load",
+      "cpu_count": "10",
+      "python_version": "3.14.6"
+    }
+  },
+  "model": {
+    "model_type": "3.2B",
+    "file_type": "Q4_K_M",
+    "model_family": "llama",
+    "model_format": "gguf",
+    "name": "Llama 3.2 3B Instruct"
+  },
+  "contexts": [
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SN",
+      "run": "e1",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SN",
+      "run": "e2",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SN",
+      "run": "e3",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SN",
+      "run": "e4",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SN",
+      "run": "e5",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions",
+      "effective_options": {
+        "num_ctx": 32768,
+        "num_predict": 2048
+      },
+      "settings": {
+        "num_ctx": 32768,
+        "num_predict": 2048,
+        "template_margin_tokens": 1024,
+        "overflow_policy": "reject_without_truncation",
+        "budget_method": "conservative_utf8_bytes"
+      }
+    }
+  ],
+  "reconstruction_assets": [
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SV",
+      "run": "exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SN",
+      "run": "e1",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SN",
+      "run": "e2",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SN",
+      "run": "e3",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SN",
+      "run": "e4",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SN",
+      "run": "e5",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    },
+    {
+      "machine": "SC",
+      "run": "exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions",
+      "models": [
+        {
+          "model": "llama3.2:3b",
+          "declared_model_blob_digest": "sha256:dde5aa3fc5ffc17176b5e8bdc82f587b24b2678c6c66101bf7da77af9f7ccdff",
+          "template_digest": "sha256:966de95ca8a62200913e3f8bfbf84c8494536f1b94b49166851e76644e966396",
+          "current_manifest_digest": "sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+          "vocabulary_size": 128256,
+          "add_bos": true,
+          "add_eos": false
+        }
+      ],
+      "limitations": [
+        "Historical model/template digests were not recorded and cannot be verified across machines.",
+        "Removed whitespace, omitted thinking, hidden termination tokens and generation token boundaries cannot be recovered.",
+        "Failed/unknown requests remain unavailable; original API-count fields are not populated."
+      ]
+    }
+  ],
+  "warnings": [
+    "exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only.",
+    "exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions: 159 raw rows have shortened metadata; hardware comes from measurement_metadata.json and aligned rows only."
+  ]
+}

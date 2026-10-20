@@ -116,6 +116,12 @@ def load_run(folder):
         'Completion evidence': 'Summary present' if summary else 'No summary; completion unverified',
     }
     sessions = measurement.get('sessions', [])
+    bases = {row.get('measurement_basis') or 'codecarbon_machine' for row in rows}
+    metadata['Measurement basis'] = '; '.join(sorted(bases))
+    if len(bases) != 1:
+        raise ValueError(f'{folder.name}: measurement methods are mixed within this run')
+    if any(row.get('retrieval_measurement_basis') and row['retrieval_measurement_basis'] not in bases for row in rows):
+        raise ValueError(f'{folder.name}: retrieval and generation measurement methods differ')
     for key in ('codecarbon_version', 'os', 'effective_scope', 'measure_power_secs', 'pue', 'country_iso_code',
                 'config_profile', 'configured_settings', 'hardware', 'backends', 'hardware_evidence'):
         metadata[key] = '; '.join(sorted({json.dumps(s[key], sort_keys=True) for s in sessions if key in s})) or 'Not recorded'
@@ -179,6 +185,8 @@ def validate(runs):
         raise ValueError('The same folder was selected more than once')
     if len({r['metadata']['Pipeline'] for r in runs}) != 1:
         raise ValueError('Normal LLM and RAG runs cannot be mixed')
+    if len({r['metadata'].get('Measurement basis', 'codecarbon_machine') for r in runs}) != 1:
+        raise ValueError('Cannot compare different energy definitions: idle-subtracted Apple SoC energy and CodeCarbon machine energy. Select runs measured with the same method.')
     expected = set(runs[0]['questions'])
     for run in runs[1:]:
         actual = set(run['questions'])

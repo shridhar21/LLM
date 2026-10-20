@@ -1,0 +1,16 @@
+machine,run,scheme,seed,n,n_valid,total_emissions_g,observed_emissions_g,folder
+SV,exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original,original,,160,160,59.405767988865314,59.405767988865314,C:\Users\Asus\Desktop\llmtest\emissions_reports\SV\exp1_llm_only_2026-10-15_01-52-06-llama3.2_3b-original
+SV,exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics,within_topics,790060499,160,160,61.12538797314414,61.12538797314414,C:\Users\Asus\Desktop\llmtest\emissions_reports\SV\exp1_llm_only_2026-10-15_09-04-15-llama3.2_3b-mix_questions-keep_topics
+SV,exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all,global,3377560157,160,160,63.89540044746124,63.89540044746124,C:\Users\Asus\Desktop\llmtest\emissions_reports\SV\exp1_llm_only_2026-10-15_13-11-19-llama3.2_3b-mix_all
+SV,exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics,question_types_questions,2145675272,160,160,62.66045760158609,62.66045760158609,C:\Users\Asus\Desktop\llmtest\emissions_reports\SV\exp1_llm_only_2026-10-15_17-38-49-llama3.2_3b-shuffle_types_questions-keep_topics
+SV,exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions,topics,103069212,160,160,59.64343904303585,59.64343904303585,C:\Users\Asus\Desktop\llmtest\emissions_reports\SV\exp1_llm_only_2026-10-15_20-57-58-llama3.2_3b-shuffle_topics-keep_types_questions
+SN,e1,original,,160,160,40.78904839412066,40.78904839412066,C:\Users\Asus\Desktop\llmtest\emissions_reports\SN\e1
+SN,e2,global,3420447396,160,160,43.74880506464025,43.74880506464025,C:\Users\Asus\Desktop\llmtest\emissions_reports\SN\e2
+SN,e3,question_types_questions,2319657636,160,160,38.290817626233235,38.290817626233235,C:\Users\Asus\Desktop\llmtest\emissions_reports\SN\e3
+SN,e4,topics,3182556472,160,160,39.15459094821231,39.15459094821231,C:\Users\Asus\Desktop\llmtest\emissions_reports\SN\e4
+SN,e5,within_topics,352392466,160,160,40.449001738587825,40.449001738587825,C:\Users\Asus\Desktop\llmtest\emissions_reports\SN\e5
+SC,exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order,original,,160,160,6.969678914415761,6.969678914415761,C:\Users\Asus\Desktop\llmtest\emissions_reports\SC\exp1_llm_only_2026-10-12_22-04-51-llama3.2-original_order
+SC,exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics,within_topics,825396371,160,160,7.113646500884583,7.113646500884583,C:\Users\Asus\Desktop\llmtest\emissions_reports\SC\exp1_llm_only_2026-10-13_06-14-03-llama3.2-random_mix_only_within_topics
+SC,exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder,global,1308207411,160,160,7.223403769413786,7.223403769413786,C:\Users\Asus\Desktop\llmtest\emissions_reports\SC\exp1_llm_only_2026-10-13_08-17-33-llama3.2random_follow-up_inorder
+SC,exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics,question_types_questions,3470985686,160,160,6.226233818622648,6.226233818622648,C:\Users\Asus\Desktop\llmtest\emissions_reports\SC\exp1_llm_only_2026-10-16_05-28-35-llama3.2_3b-shuffle_types_questions-keep_topics
+SC,exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions,topics,1519108883,160,160,7.998929829725515,7.998929829725515,C:\Users\Asus\Desktop\llmtest\emissions_reports\SC\exp1_llm_only_2026-10-16_06-13-25-llama3.2_3b-shuffle_topics-keep_types_questions

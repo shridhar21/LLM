@@ -14,6 +14,17 @@ from cancellation import safe_finalization
 
 CODECARBON_CONFIG_PATH = Path(__file__).resolve().with_name('codecarbon_config.json')
 
+
+def use_apple_powermetrics():
+    """No Mac-specific dependencies, probes or config reads on Windows/Linux."""
+    if platform.system() != 'Darwin':
+        return False
+    path = Path(__file__).with_name('mac_power_config.json')
+    backend = os.getenv('LLM_MAC_POWER_BACKEND') or json.loads(path.read_text(encoding='utf-8')).get('backend', 'auto')
+    if backend not in ('auto', 'powermetrics', 'codecarbon'):
+        raise ValueError('Mac backend must be auto, powermetrics or codecarbon')
+    return backend == 'powermetrics' or (backend == 'auto' and platform.machine().lower() in ('arm64', 'aarch64'))
+
 # CodeCarbon 3.3.0's first CSV row includes these fields; its append writer
 # incorrectly drops None-valued cloud_region/longitude/latitude afterwards.
 _CSV_330_COLUMNS = ('timestamp project_name run_id experiment_id duration emissions emissions_rate '
@@ -122,11 +133,18 @@ def load_codecarbon_config(profile):
 
 def make_codecarbon_tracker(profile, project_name, output_dir, output_file='emissions.csv'):
     """Create an offline tracker using the selected project configuration profile."""
+    if use_apple_powermetrics():
+        from mac_power import PowermetricsTracker
+        return PowermetricsTracker(profile, project_name, output_dir, output_file)
     from codecarbon import OfflineEmissionsTracker
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     if (output_dir / output_file).exists():
+        with (output_dir / output_file).open(encoding='utf-8-sig', newline='') as handle:
+            existing = csv.DictReader(handle)
+            if 'measurement_basis' in (existing.fieldnames or []) and any(row.get('measurement_basis') == 'idle_subtracted_apple_soc' for row in existing):
+                raise ValueError('This folder contains Apple SoC measurements. Use a new run folder for CodeCarbon.')
         repair_emissions_csv(output_dir / output_file)
     settings = load_codecarbon_config(profile)
     tracker = OfflineEmissionsTracker(
@@ -138,6 +156,8 @@ def make_codecarbon_tracker(profile, project_name, output_dir, output_file='emis
     tracker._app_config_profile = profile
     tracker._app_config_settings = settings
     tracker._app_config_path = str(CODECARBON_CONFIG_PATH)
+    tracker._measurement_backend = 'codecarbon'
+    tracker._measurement_basis = 'codecarbon_' + settings.get('tracking_mode', 'machine')
     if isinstance(getattr(tracker, '_output_handlers', None), list):
         from codecarbon.output_methods.file import FileOutput
         tracker._output_handlers = [_AlignedFileOutput(handler) if isinstance(handler, FileOutput)
@@ -226,11 +246,25 @@ def stop_tracker(tracker, directory):
             'hardware': {key: conf.get(key, 'unknown') for key in ('cpu_model', 'gpu_model', 'gpu_count', 'ram_total_size')},
             'stop_error': error, 'emissions_available': math.isfinite(result),
         }
+        session['measurement_backend'] = getattr(tracker, '_measurement_backend', 'codecarbon')
+        session['measurement_basis'] = getattr(tracker, '_measurement_basis', 'codecarbon_machine')
+        if session['measurement_backend'] == 'apple_powermetrics':
+            session.update(codecarbon_version='not used', country_iso_code='not inferred', requested_scope='idle_subtracted_apple_soc',
+                           backends=dict(cpu='powermetrics', gpu='powermetrics', ane='powermetrics if exposed', ram='unavailable'),
+                           hardware_evidence=[dict(**{'class': 'Apple SoC'}, mode='powermetrics')],
+                           result=getattr(tracker, 'result', None),
+                           carbon_intensity_g_per_kwh=tracker.settings.get('carbon_intensity_g_per_kwh'),
+                           measurement_prepare_time_s=tracker.prepare_time_s)
         metadata['sessions'].append(session)
         metadata['scope_note'] = ('Machine scope includes supported CPU/GPU/RAM activity from local Ollama and other processes; '
                                   'it does not isolate model energy or measure wall-socket whole-system power. '
                                   'Unknown backends are unverified; RAM is an energy estimate, not memory usage. '
                                   'A local endpoint does not prove all accelerator hardware is supported.')
+        if session['measurement_backend'] == 'apple_powermetrics':
+            metadata['scope_note'] = ('Idle-subtracted Apple CPU/GPU/ANE SoC energy, with Python/Ollama process evidence; '
+                                      'not exact per-process or wall-socket energy. RAM energy is unavailable and is not added to total. '
+                                      'ANE/component estimates need not add to reported SoC total. Signed values and raw samples are retained. '
+                                      'Incomplete coverage or negative incremental totals remain unavailable. No carbon factor is inferred.')
         temporary = path.with_suffix('.json.tmp')
         temporary.write_text(json.dumps(metadata, indent=2, default=str), encoding='utf-8')
         temporary.replace(path)

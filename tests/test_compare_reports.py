@@ -331,5 +331,43 @@ class ComparisonTests(unittest.TestCase):
         self.assertIn('No overall efficiency winner',text)
 
 
+class MachineStatisticsTests(unittest.TestCase):
+    def test_sample_statistics_and_proportional_fit(self):
+        from analyse_llama_machines import describe, relationship
+        stats = describe([1, 2, 3, None])
+        self.assertEqual((stats['n'], stats['mean'], stats['variance'], stats['sd']), (3, 2, 1, 1))
+        fit = relationship([(1, 2), (2, 4), (3, 6), (None, 9)])
+        for key in ('pearson_r', 'spearman_rho', 'r_squared'):
+            self.assertAlmostEqual(fit[key], 1)
+        self.assertEqual(fit['slope_g_per_token'], 2)
+        self.assertEqual(fit['intercept_g'], 0)
+        self.assertEqual(fit['ratio_cv'], 0)
+        self.assertEqual(fit['zero_intercept_rmse_g'], 0)
+
+    def test_ties_constant_values_and_nonproportional_association(self):
+        from analyse_llama_machines import ranks, relationship
+        self.assertEqual(ranks([10, 10, 30]), [1.5, 1.5, 3])
+        fit = relationship([(1, 3), (2, 5), (3, 7)])
+        self.assertEqual(fit['pearson_r'], 1)
+        self.assertEqual(fit['intercept_g'], 1)
+        self.assertGreater(fit['ratio_cv'], 0)
+        self.assertIsNone(relationship([(2, 1), (2, 3), (2, 4)])['pearson_r'])
+        self.assertIsNone(relationship([(1, 2), (2, 3)])['spearman_rho'])
+
+    def test_question_machine_and_token_bases_stay_separate(self):
+        from analyse_llama_machines import statistics_tables
+        rows = [dict(machine=m, original_question=q, topic='Topic', question_type='Direct', status='ok',
+                     emissions_g=q * multiplier * i, actual_output_tokens=None,
+                     reconstructed_output_tokens=100 * i)
+                for m, multiplier in [('A', 1), ('B', 10)] for q in (1, 2) for i in (1, 2, 3, 4, 5)]
+        stats, relationships, cross = statistics_tables(rows)
+        self.assertEqual(len(stats), 4)
+        self.assertEqual(len(relationships), 8)
+        self.assertTrue(all(r['n_pairs'] == 0 for r in relationships if r['token_basis'] == 'actual'))
+        self.assertTrue(all(r['n_pairs'] == 5 for r in relationships if r['token_basis'] == 'reconstructed'))
+        self.assertEqual(cross[0]['A_mean_g'], 3)
+        self.assertEqual(cross[0]['B_mean_g'], 30)
+
+
 if __name__=='__main__':
     unittest.main()
