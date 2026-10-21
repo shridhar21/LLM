@@ -327,3 +327,50 @@ Windows/Linux keep the existing CodeCarbon configuration. Native Apple Silicon
 uses the optional powermetrics adapter automatically. See [MAC_POWER.md](MAC_POWER.md)
 for Mac permissions, the explicit carbon-intensity setting, raw evidence files
 and the different energy scope. Historical reports are not converted.
+
+# Per-request Ollama and memory metrics
+
+Future normal LLM and RAG runs retain the existing input/output token counts,
+batch token totals, latency columns and hardware energy fields. They additionally
+save request IDs, Ollama-reported timings and cached counts (when available),
+token rates, client first-chunk timings and sampled process-tree memory usage.
+These additions work on Windows, macOS and Linux; they do not activate Apple's
+power sampler on another OS. No historical reports are rewritten.
+
+New evidence files inside each run folder:
+
+- `ollama_requests.csv`: request-level metrics, also appended as columns to `answers.csv`.
+- `ollama_requests.jsonl`: detailed records including the final API response.
+- `request_memory_samples.jsonl`: sampled Python/Ollama process memory.
+- `ollama_attempts.jsonl`: interrupted inference attempts, when present.
+
+For an optional generation-only summary:
+
+```text
+python ollama_metrics.py --report PATH_TO_RUN_FOLDER
+```
+
+This creates `metrics_summary.csv` and `metrics_report.md`; it does not alter
+the main PDF or its graphs. Summary totals are observed partial sums with valid
+record counts. They are not a substitute for complete-run totals.
+
+RAM usage (RSS) is not RAM energy. RSS tree sums may double-count shared mappings;
+sampled peaks can miss brief allocations. `METRICS_MEMORY_INTERVAL_MS` defaults
+to 250; `METRICS_CAPTURE_USS=1` requests private-memory readings where supported.
+The sampler identifies the Ollama server at the configured local port, or checks
+`OLLAMA_SERVER_PID` against that port. Missing or denied readings stay unavailable.
+Sampling adds overhead, reported separately, and cannot be perfectly removed
+from the concurrent energy measurement.
+
+Generation energy is joined by tracker/request ID. CodeCarbon ratios use its
+generation energy estimate; Apple ratios use idle-subtracted SoC energy. For
+RAG they exclude retrieval/indexing. Joules per token divide whole-request
+energy by reported token counts; they are not isolated prefill/decode energy.
+Original latency columns keep their existing boundaries; new client/server
+timings use their own labelled boundaries. Old reconstructed token columns
+are unchanged; actual API token counts are not retokenized or estimated.
+
+Optional `OLLAMA_THINK` (true/false or low/medium/high, model permitting) and
+`OLLAMA_KEEP_ALIVE` are recorded in request metadata. Without those overrides,
+the existing request defaults are retained. Thinking characters are counted
+when streamed, but no separate thinking-token count is invented.

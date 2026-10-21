@@ -48,6 +48,9 @@ def safe_finalization(function):
 
 
 def configure_run(folder, planned, model, rag=False, indexing=False):
+    if not indexing:
+        from ollama_metrics import configure_session
+        configure_session(folder)
     state = _current.get()
     if state is not None:
         state.update(folder=Path(folder), planned=planned, model=model,
@@ -183,13 +186,13 @@ def _save_cancelled(state):
                     result[f'{key}_energy_kwh'] = values[key]
                 for key in ('measurement_basis', 'measurement_backend', 'attribution_status'):
                     result[key] = values.get(key, '')
-            # Reuse the existing schema so completed rows are never reinterpreted.
-            fields = list(rows[0]) if rows else list(result)
-            with path.open('a', encoding='utf-8', newline='') as handle:
-                writer = csv.DictWriter(handle, fields, extrasaction='ignore')
-                if not rows:
-                    writer.writeheader()
-                writer.writerow(result)
+            from ollama_metrics import append_csv, persist_optional_metrics
+            generation = phases.get('generation')
+            if generation:
+                result.update(persist_optional_metrics('', generation['tracker'], folder, result))
+            # Expand by column name, retaining completed rows and all new fields.
+            append_csv(path, {k: str(v) if isinstance(v, float) and not math.isfinite(v) else v
+                              for k, v in result.items()})
     _write_status(state, True)
     if not state.get('indexing'):
         rows = _rows(folder / 'answers.csv')
@@ -313,59 +316,6 @@ def ollama_base_url():
 
 
 def query_local_model(prompt, model, messages=None, options=None):
-    """Buffer streamed Ollama output; main thread remains responsive to Ctrl+C."""
-    import requests
-    finished = threading.Event()
-    cancelled = threading.Event()
-    resources = {}
-    result = {}
-    def worker():
-        try:
-            with requests.Session() as session:
-                resources['session'] = session
-                payload = {'model': model, 'stream': True, 'keep_alive': '15m'}
-                payload['prompt' if messages is None else 'messages'] = prompt if messages is None else messages
-                if options is not None:
-                    payload['options'] = options
-                endpoint = 'generate' if messages is None else 'chat'
-                with session.post(f'{ollama_base_url()}/api/{endpoint}',
-                                  json=payload,
-                                  timeout=9000, stream=True) as response:
-                    resources['response'] = response
-                    response.raise_for_status()
-                    pieces = []
-                    last = {}
-                    for line in response.iter_lines():
-                        if cancelled.is_set():
-                            return
-                        if line:
-                            last = json.loads(line)
-                            if last.get('error'):
-                                raise RuntimeError(last['error'])
-                            pieces.append(last.get('response', last.get('message', {}).get('content', '')))
-                    if not last.get('done'):
-                        raise RuntimeError('Ollama response ended before completion; partial output is not a successful answer')
-                    if messages is not None and last.get('done_reason') == 'length':
-                        raise RuntimeError('Follow-up response reached its output/context limit; incomplete answer was not added to history.')
-                    result['answer'] = ModelAnswer(''.join(pieces).strip() if pieces else str(last), metrics=last)
-        except Exception as exc:
-            result['error'] = exc
-        finally:
-            finished.set()
-    threading.Thread(target=worker, daemon=True).start()
-    try:
-        while not finished.wait(.1):
-            pass
-    except KeyboardInterrupt:
-        cancelled.set()
-        # Close asynchronously: a socket close itself can block behind a read.
-        def close():
-            for name in ('response', 'session'):
-                resource = resources.get(name)
-                if resource is not None:
-                    resource.close()
-        threading.Thread(target=close, daemon=True).start()
-        raise
-    if 'error' in result:
-        raise result['error']
-    return result['answer']
+    """Shared cancellable request with detailed, optional per-run metrics."""
+    from ollama_metrics import query_local_model as request
+    return request(prompt, model, messages=messages, options=options)

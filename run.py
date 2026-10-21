@@ -79,6 +79,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
 
 @cancellable_run
 def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder, model_name: str):
+    import ollama_metrics as metrics
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
     if batch_mode:
@@ -168,7 +169,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
         
         try:
             # generate() rejects missing chain history and records that decision.
-            ans = conversation.generate(query_llm, row_data, augmented_prompt, model_name)
+            ans = metrics.measured_generate(conversation.generate, query_llm, row_data, augmented_prompt, model_name, tracker=tracker_gen, directory=run_dir)
             status = "ok"
             error_msg = ""
         except Exception as e:
@@ -247,7 +248,9 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, index, embedder,
         # Save each result as it completes.
         live_csv = run_dir / "answers.csv"
         with protect_cleanup(defer_interrupt=True):
-            pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+            rows[-1].update(metrics.persist_optional_metrics(ans, tracker_gen, run_dir, rows[-1]))
+            metrics.print_brief(rows[-1])
+            metrics.append_csv(live_csv, rows[-1])
             question_saved()
     total_runtime_s = time.time() - run_start
     answers_df = pd.DataFrame(rows)

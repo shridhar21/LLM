@@ -279,6 +279,11 @@ class ConversationTests(unittest.TestCase):
                 rows=pd.read_csv(folder/'answers.csv')
                 self.assertEqual(rows.input_tokens.tolist(),[321]*3)
                 self.assertEqual(rows.output_tokens.tolist(),[42]*3)
+                summary = pd.read_csv(folder/'summary.csv')
+                self.assertEqual(summary.iloc[0]['total_input_tokens'], 963)
+                self.assertEqual(summary.iloc[0]['total_output_tokens'], 126)
+                self.assertIn('inference_call_wall_s', rows.columns)
+                self.assertIn('request_id', rows.columns)
                 history=json.loads((folder/'conversation_context.json').read_text())
                 self.assertTrue(all(r['input_tokens']==321 for r in history['requests']))
                 if rag:
@@ -408,6 +413,141 @@ class ConversationTests(unittest.TestCase):
             saved = json.loads((Path(temp) / 'conversation_context.json').read_text())['requests'][-1]
             self.assertTrue(saved['retrieval_context']['encoder_truncated'])
             self.assertFalse(saved['truncated'])
+
+
+class RequestMetricsTests(unittest.TestCase):
+    def setUp(self):
+        import ollama_metrics as om
+        self.om = om
+        self.token = om._LAST.set(None)
+
+    def tearDown(self):
+        self.om._LAST.reset(self.token)
+
+    def test_normalized_counts_rates_and_missing_cache(self):
+        row = self.om.normalize(dict(prompt_eval_count=20, eval_count=10, eval_duration=2000000000,
+                                     prompt_eval_duration=1000000000, prompt_eval_cached_count=5))
+        self.assertEqual(row['input_tokens'], 20)
+        self.assertEqual(row['uncached_prompt_tokens'], 15)
+        self.assertEqual(row['prompt_cache_hit_ratio'], .25)
+        self.assertEqual(row['output_tokens_per_s'], 5)
+        self.assertIsNone(self.om.normalize({'eval_count':10})['prompt_cache_hit_ratio'])
+        bad = self.om.normalize(dict(prompt_eval_count=2, prompt_eval_cached_count=3))
+        self.assertEqual(bad['cache_count_consistency'], 'cached_exceeds_prompt')
+        self.assertIsNone(bad['uncached_prompt_tokens'])
+
+    def test_sampled_memory_summary_is_not_energy_and_missing_stays_missing(self):
+        sampler = object.__new__(self.om.MemorySampler)
+        sampler.interval, sampler.capture_uss, sampler.errors = .25, False, set()
+        sampler.rows = [dict(monotonic_ns=t*1000000000, sample_overhead_s=.001, system_swap_used_bytes=0,
+                             python=dict(rss_bytes=rss, uss_bytes=None),
+                             ollama=dict(rss_bytes=None, uss_bytes=None),
+                             combined=dict(rss_bytes=None, uss_bytes=None)) for t,rss in ((0,100),(1,300),(2,200))]
+        row = sampler.summary()
+        self.assertEqual(row['python_rss_bytes_peak'],300)
+        self.assertEqual(row['python_rss_bytes_mean'],225)
+        self.assertEqual(row['python_rss_bytes_delta'],100)
+        self.assertIsNone(row['ollama_rss_bytes_peak'])
+        self.assertIsNone(row['python_uss_bytes_mean'])
+        self.assertFalse(row['memory_sampler_measures_ram_energy'])
+
+    def test_stream_records_first_chunk_and_keeps_authoritative_usage(self):
+        import requests
+        events = [dict(message={'thinking':'thinking'}), dict(message={'content':'answer'}),
+                  dict(done=True, prompt_eval_count=12, eval_count=7, eval_duration=1000000000)]
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.iter_lines.return_value = [json.dumps(e).encode() for e in events]
+        session = MagicMock()
+        session.__enter__.return_value = session
+        session.post.return_value = response
+        with patch.object(requests, 'Session', return_value=session):
+            answer = self.om.query_local_model('q','model',messages=[dict(role='user',content='q')])
+        self.assertEqual(answer, 'answer')
+        self.assertEqual((answer.input_tokens, answer.output_tokens), (12,7))
+        self.assertEqual(answer.eval_duration, 1000000000)
+        self.assertEqual(answer.request_metrics['thinking_characters'],8)
+        self.assertLessEqual(answer.request_metrics['client_first_generated_chunk_s'], answer.request_metrics['client_first_visible_chunk_s'])
+        self.assertTrue(session.post.call_args.args[0].endswith('/api/chat'))
+
+    def test_original_model_answer_constructor_and_local_guard_preserved(self):
+        answer = ModelAnswer('answer', 321, 42)
+        self.assertEqual((answer.input_tokens, answer.output_tokens), (321,42))
+        with patch.dict('os.environ', {'OLLAMA_URL':'https://example.com'}):
+            with self.assertRaises(ValueError): self.om.base_url()
+
+    def test_csv_expansion_retains_column_alignment_and_rejects_corruption(self):
+        import csv
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'answers.csv'
+            self.om.append_csv(path, dict(question='a', energy_kwh=.123456789123456))
+            self.om.append_csv(path, dict(output_tokens=42, question='b', energy_kwh=0))
+            with path.open(newline='') as handle: rows = list(csv.DictReader(handle))
+            self.assertEqual(float(rows[0]['energy_kwh']), .123456789123456)
+            self.assertEqual(rows[0]['output_tokens'], '')
+            self.assertEqual(rows[1]['question'], 'b')
+            path.write_text('a,b\n1\n', encoding='utf-8')
+            with self.assertRaises(ValueError): self.om.append_csv(path, {'a':2})
+
+    def test_cross_platform_generation_energy_only_and_request_id_matching(self):
+        import csv
+        from types import SimpleNamespace
+        for backend in ('codecarbon', 'apple_powermetrics'):
+            with self.subTest(backend=backend), tempfile.TemporaryDirectory() as temp:
+                folder = Path(temp)
+                tracker = SimpleNamespace(run_id='generation', _measurement_backend=backend)
+                row = dict(question_id='q', execution_position=1, model_name='model', status='ok',
+                           generation_energy_kwh=.001, generation_emissions_kg=.0005,
+                           energy_kwh=.010, total_emissions_kg=.005, input_tokens=20, output_tokens=10,
+                           measurement_backend=backend, measurement_basis='idle_subtracted_apple_soc' if backend=='apple_powermetrics' else 'codecarbon_machine')
+                if backend == 'codecarbon':
+                    self.om.append_csv(folder/'emissions.csv', dict(run_id='retrieval', energy_consumed=.009))
+                    self.om.append_csv(folder/'emissions.csv', dict(run_id='generation', energy_consumed=.001))
+                else:
+                    self.om.append_csv(folder/'powermetrics_requests.csv', dict(request_id='generation', energy_kwh=.001,
+                        incremental_soc_energy_j=3600, raw_soc_energy_j=4000, carbon_intensity_g_per_kwh=500, emissions_g=.5))
+                record = dict(request_id='generation', eval_count=10, prompt_eval_count=20, total_reported_tokens=30,
+                              request_status='ok', generation_request_id='generation')
+                self.om._LAST.set(record)
+                added = self.om.persist_metrics('', tracker, folder, row)
+                self.assertAlmostEqual(added['request_joules_per_output_token'], 360)
+                self.assertNotIn('energy_kwh', added)
+                self.assertNotIn('input_tokens', added)
+                self.assertEqual(added['generation_energy_measurement_basis'], row['measurement_basis'])
+                if backend == 'codecarbon': self.assertEqual(added['generation_incremental_soc_energy_j'], '')
+                with (folder/'ollama_requests.csv').open(newline='') as handle: saved = next(csv.DictReader(handle))
+                self.assertEqual(saved['request_id'], 'generation')
+                self.om._LAST.set(dict(request_id='other', eval_count=999))
+                unmatched = self.om.persist_metrics('', tracker, folder, row)
+                self.assertEqual(unmatched['request_status'], 'metrics_unavailable')
+                self.assertEqual(unmatched['request_joules_per_output_token'], '')
+
+    def test_optional_metrics_failure_does_not_block_primary_answer(self):
+        with patch.object(self.om, 'persist_metrics', side_effect=OSError('file locked')):
+            with self.assertWarns(UserWarning):
+                row = self.om.persist_optional_metrics('', object(), Path('.'), {})
+            self.assertIn('file locked', row['request_metrics_error'])
+
+    def test_measured_generate_keeps_tokens_and_records_failures(self):
+        from types import SimpleNamespace
+        tracker = SimpleNamespace(run_id='test')
+        sampler = Mock()
+        sampler.start.return_value = sampler
+        sampler.summary.return_value = dict(memory_sample_count=2)
+        sampler.rows = []
+        with patch.object(self.om, 'MemorySampler', return_value=sampler), tempfile.TemporaryDirectory() as temp:
+            answer = self.om.measured_generate(lambda:ModelAnswer('answer',321,42), tracker=tracker, directory=temp)
+            self.assertEqual(answer.output_tokens, 42)
+            self.assertEqual(self.om._LAST.get()['eval_count'], 42)
+            self.assertEqual(self.om._LAST.get()['memory_sample_count'], 2)
+            self.assertGreaterEqual(self.om.last_inference_wall_s(), 0)
+            with self.assertRaisesRegex(RuntimeError, 'failed'):
+                self.om.measured_generate(Mock(side_effect=RuntimeError('failed')), tracker=tracker, directory=temp)
+            self.assertEqual(self.om._LAST.get()['request_status'], 'error')
+            self.assertIsNone(self.om._LAST.get()['eval_count'])
+            with self.assertRaises(KeyboardInterrupt):
+                self.om.measured_generate(Mock(side_effect=KeyboardInterrupt), tracker=tracker, directory=temp)
+            self.assertTrue((Path(temp)/'ollama_attempts.jsonl').is_file())
 
 
 if __name__ == '__main__':

@@ -73,6 +73,7 @@ def latest_row_for_run(emissions_csv: Path, known_run_ids: set, expected_run_id=
 
 @cancellable_run
 def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str):
+    import ollama_metrics as metrics
     # Generate a unique timestamp string for this specific run
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
@@ -139,7 +140,7 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         tracker.start()
         
         try:
-            ans = conversation.generate(query_llm, row_data, q, model_name)
+            ans = metrics.measured_generate(conversation.generate, query_llm, row_data, q, model_name, tracker=tracker, directory=run_dir)
             status = "ok"
             error_msg = ""
         except Exception as e:
@@ -197,7 +198,9 @@ def process_queries(queries_df: pd.DataFrame, batch_mode: bool, model_name: str)
         # Save each result as it completes.
         live_csv = run_dir / "answers.csv"
         with protect_cleanup(defer_interrupt=True):
-            pd.DataFrame([rows[-1]]).to_csv(live_csv, mode='a', header=not live_csv.exists(), index=False)
+            rows[-1].update(metrics.persist_optional_metrics(ans, tracker, run_dir, rows[-1]))
+            metrics.print_brief(rows[-1])
+            metrics.append_csv(live_csv, rows[-1])
             question_saved()
         
     total_runtime_s = time.time() - run_start
